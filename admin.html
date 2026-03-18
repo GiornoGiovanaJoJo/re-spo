@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель Загрузки Изображений</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen py-10">
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Менеджер Медиафайлов</h1>
+            <a href="/" class="text-blue-500 hover:text-blue-700 font-medium">Вернуться на сайт &rarr;</a>
+        </div>
+        <p class="text-gray-600 mb-6">Загрузите недостающие изображения. Все загруженные файлы будут сохранены в папке <code class="bg-gray-100 px-2 py-1 rounded text-sm text-pink-600">assets/</code>.</p>
+        
+        <div id="images-list" class="space-y-4">
+            <div class="animate-pulse flex space-x-4">
+                <div class="rounded bg-slate-200 h-16 w-16"></div>
+                <div class="flex-1 space-y-4 py-1">
+                    <div class="h-4 bg-slate-200 rounded w-3/4"></div>
+                    <div class="h-4 bg-slate-200 rounded w-1/2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let requiredImages = [];
+
+        async function loadImages() {
+            try {
+                const res = await fetch('/api/required-images');
+                if (!res.ok) throw new Error('Failed to fetch');
+                requiredImages = await res.json();
+                renderImages();
+            } catch (err) {
+                document.getElementById('images-list').innerHTML = `<p class="text-red-500">Ошибка загрузки: ${err.message}</p>`;
+            }
+        }
+
+        function renderImages() {
+            const container = document.getElementById('images-list');
+            container.innerHTML = '';
+            
+            if (requiredImages.length === 0) {
+                container.innerHTML = '<p class="text-gray-500">Изображения не требуются.</p>';
+                return;
+            }
+
+            requiredImages.forEach((img, index) => {
+                const div = document.createElement('div');
+                div.className = 'flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg hover:shadow-md transition-shadow bg-gray-50';
+                
+                const imgSrc = img.exists ? `/assets/${img.filename}?t=${new Date().getTime()}` : '';
+                const imgPlaceholder = img.exists 
+                    ? `<img src="${imgSrc}" class="w-full h-full object-cover">` 
+                    : `<span class="text-[10px] text-gray-400 font-medium text-center leading-tight">Нет<br>фото</span>`;
+
+                div.innerHTML = `
+                    <div class="flex items-center space-x-5 mb-4 sm:mb-0">
+                        <div class="w-16 h-16 bg-gray-200 rounded-md flex-shrink-0 flex items-center justify-center overflow-hidden border">
+                            ${imgPlaceholder}
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-800 break-all">${img.filename}</p>
+                            <p class="text-sm font-semibold mt-1 ${img.exists ? 'text-green-600' : 'text-red-500'}">
+                                ${img.exists ? '✅ Загружено' : '❌ Требуется фото'}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3 w-full sm:w-auto">
+                        <input type="file" id="file-${index}" accept="image/*" class="text-sm w-full sm:w-auto file:cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <button onclick="uploadImage(${index})" class="bg-blue-600 text-white px-5 py-2 rounded-md font-medium text-sm hover:bg-blue-700 transition-colors shadow-sm flex-shrink-0">
+                            Загрузить
+                        </button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        async function uploadImage(index) {
+            const imgData = requiredImages[index];
+            const input = document.getElementById(`file-${index}`);
+            if (!input.files || input.files.length === 0) {
+                alert('Сначала выберите файл для ' + imgData.filename);
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', input.files[0]);
+            formData.append('targetFilename', imgData.filename);
+            
+            try {
+                const res = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await res.json();
+                
+                if (res.ok) {
+                    input.value = ''; // clear
+                    loadImages(); // reload
+                } else {
+                    alert('Ошибка загрузки: ' + (result.error || 'Неизвестная ошибка'));
+                }
+            } catch (e) {
+                alert('Сетевая ошибка: ' + e.message);
+            }
+        }
+        
+        loadImages();
+    </script>
+</body>
+</html>

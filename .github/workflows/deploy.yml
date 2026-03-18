@@ -1,0 +1,51 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Deploy via SSH
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: "60f67cfaba8e.vps.myjino.ru"
+          username: "root"
+          password: "Nikitoso02"
+          port: 49340
+          script: |
+            # Create deployment directory if not exists
+            mkdir -p /var/www/re-spo/assets
+            cd /var/www/re-spo
+
+            # Install node and npm if not present (assuming Debian/Ubuntu)
+            if ! command -v node > /dev/null; then
+              curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+              apt-get install -y nodejs
+            fi
+
+            # Install PM2 globally if not present
+            if ! command -v pm2 > /dev/null; then
+              npm install -g pm2
+            fi
+
+            # Check if git is initialized here
+            if [ ! -d ".git" ]; then
+              # Initialize fresh clone if it's an empty dir
+              git clone https://github.com/GiornoGiovanaJoJo/re-spo.git .
+            else
+              # Pull latest changes
+              git pull origin main
+            fi
+
+            # Install production dependencies
+            npm install --production
+
+            # Restart application with PM2
+            pm2 restart ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
+
+            echo "✅ Deployment complete!"
