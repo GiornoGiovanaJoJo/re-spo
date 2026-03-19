@@ -8,9 +8,17 @@
 </head>
 <body class="bg-gray-100 min-h-screen py-10">
     <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg">
-        <div class="flex items-center justify-between mb-8">
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <h1 class="text-3xl font-bold text-gray-800">Менеджер Медиафайлов</h1>
-            <a href="/" class="text-blue-500 hover:text-blue-700 font-medium">Вернуться на сайт &rarr;</a>
+            <div class="flex flex-wrap items-center gap-3">
+                <button onclick="clearCache()" class="bg-amber-50 text-amber-700 px-4 py-2 rounded-md font-medium text-sm hover:bg-amber-100 transition-colors border border-amber-200">
+                    Очистить кэш сайта
+                </button>
+                <button onclick="deleteAllImages()" class="bg-red-600 text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-red-700 transition-colors shadow-sm">
+                    Удалить всё
+                </button>
+                <a href="/" class="text-blue-500 hover:text-blue-700 font-medium ml-2 text-sm">На сайт &rarr;</a>
+            </div>
         </div>
         <p class="text-gray-600 mb-6">Загрузите недостающие изображения. Все загруженные файлы будут сохранены в папке <code class="bg-gray-100 px-2 py-1 rounded text-sm text-pink-600">assets/</code>.</p>
         
@@ -69,11 +77,19 @@
                             </p>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-3 w-full sm:w-auto">
+                    <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
                         <input type="file" id="file-${index}" accept="image/*" class="text-sm w-full sm:w-auto file:cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                        <button onclick="uploadImage(${index})" class="bg-blue-600 text-white px-5 py-2 rounded-md font-medium text-sm hover:bg-blue-700 transition-colors shadow-sm flex-shrink-0">
-                            Загрузить
-                        </button>
+                        
+                        <div class="flex items-center space-x-2">
+                            <button onclick="uploadImage(${index})" class="bg-blue-600 text-white px-5 py-2 rounded-md font-medium text-sm hover:bg-blue-700 transition-colors shadow-sm flex-shrink-0">
+                                ${img.exists ? 'Заменить' : 'Загрузить'}
+                            </button>
+                            ${img.exists ? `
+                                <button onclick="deleteImage('${img.filename}')" class="bg-red-50 text-red-600 px-4 py-2 rounded-md font-medium text-sm hover:bg-red-100 transition-colors border border-red-100">
+                                    Удалить
+                                </button>
+                            ` : ''}
+                        </div>
                     </div>
                 `;
                 container.appendChild(div);
@@ -115,6 +131,41 @@
                 loadImages(); // reload
             } catch (e) {
                 alert('Локальная сетевая ошибка: ' + e.message);
+            }
+        }
+        async function deleteImage(filename) {
+            if (!confirm(`Вы уверены, что хотите удалить ${filename}?`)) return;
+            try {
+                const res = await fetch(`/api/images/${encodeURIComponent(filename)}`, { method: 'DELETE' });
+                if (res.ok) loadImages();
+                else alert('Ошибка удаления');
+            } catch (err) {
+                alert('Ошибка сети при удалении');
+            }
+        }
+
+        async function deleteAllImages() {
+            if (!confirm('Вы уверены, что хотите удалить ВСЕ загруженные фотографии? Это действие необратимо.')) return;
+            try {
+                const res = await fetch('/api/images', { method: 'DELETE' });
+                if (res.ok) loadImages();
+                else alert('Ошибка массового удаления');
+            } catch (err) {
+                alert('Ошибка сети при массовом удалении');
+            }
+        }
+
+        async function clearCache() {
+            try {
+                const res = await fetch('/api/clear-cache', { method: 'POST' });
+                if (res.ok) {
+                    alert('Запрос на очистку кэша отправлен. Страница будет перезагружена.');
+                    window.location.reload(true);
+                } else {
+                    alert('Ошибка при очистке кэша');
+                }
+            } catch (err) {
+                alert('Ошибка сети при очистке кэша');
             }
         }
         

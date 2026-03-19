@@ -80,6 +80,41 @@ app.post('/api/upload', (req, res, next) => {
     }
 });
 
+app.delete('/api/images/:filename', (req, res) => {
+    const filename = req.params.filename;
+    const filepath = path.join(assetsDir, filename);
+    if (fs.existsSync(filepath)) {
+        try {
+            fs.unlinkSync(filepath);
+            res.json({ success: true, message: `File ${filename} deleted` });
+        } catch (e) {
+            res.status(500).json({ error: `Failed to delete file: ${e.message}` });
+        }
+    } else {
+        res.status(404).json({ error: 'File not found' });
+    }
+});
+
+app.delete('/api/images', (req, res) => {
+    try {
+        const files = fs.readdirSync(assetsDir);
+        for (const file of files) {
+            const filepath = path.join(assetsDir, file);
+            if (fs.lstatSync(filepath).isFile()) {
+                fs.unlinkSync(filepath);
+            }
+        }
+        res.json({ success: true, message: 'All photos deleted from assets folder' });
+    } catch (e) {
+        res.status(500).json({ error: `Bulk deletion failed: ${e.message}` });
+    }
+});
+
+app.post('/api/clear-cache', (req, res) => {
+    res.setHeader('Clear-Site-Data', '"cache"');
+    res.json({ success: true, message: 'Cache clear signal sent to browser' });
+});
+
 // --- SPA Fallback: serve index.html for any unknown route ---
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
