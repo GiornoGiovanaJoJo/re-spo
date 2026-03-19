@@ -65,7 +65,14 @@ app.get('/api/required-images', (req, res) => {
     }
 });
 
-app.post('/api/upload', upload.single('image'), (req, res) => {
+app.post('/api/upload', (req, res, next) => {
+    upload.single('image')(req, res, function (err) {
+        if (err) {
+            return res.status(400).json({ error: err.message });
+        }
+        next();
+    });
+}, (req, res) => {
     if (req.file) {
         res.json({ success: true, filename: req.file.filename });
     } else {

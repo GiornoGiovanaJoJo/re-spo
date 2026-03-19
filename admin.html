@@ -97,16 +97,24 @@
                     method: 'POST',
                     body: formData
                 });
-                const result = await res.json();
                 
-                if (res.ok) {
-                    input.value = ''; // clear
-                    loadImages(); // reload
-                } else {
-                    alert('Ошибка загрузки: ' + (result.error || 'Неизвестная ошибка'));
+                if (!res.ok) {
+                    const contentType = res.headers.get('content-type');
+                    if (contentType && contentType.includes('application/json')) {
+                        const result = await res.json();
+                        alert('Ошибка загрузки: ' + (result.error || 'Неизвестная ошибка'));
+                    } else {
+                        const text = await res.text();
+                        alert(`Сетевая ошибка ${res.status}: файл возможно слишком велик.`);
+                    }
+                    return;
                 }
+                
+                const result = await res.json();
+                input.value = ''; // clear
+                loadImages(); // reload
             } catch (e) {
-                alert('Сетевая ошибка: ' + e.message);
+                alert('Локальная сетевая ошибка: ' + e.message);
             }
         }
         
