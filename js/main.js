@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!href || href === '#') return;
 
             const target = document.querySelector(href);
-            if (!target) return;
+            if (!target) return; // If target is not on this page, let it navigate naturally (if needed) or just don't scroll
 
             e.preventDefault();
             const headerHeight = header.offsetHeight;
@@ -190,12 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // =====================================================
     // "Перейти в каталог" Links
     // =====================================================
-    document.querySelectorAll('a.group').forEach(link => {
-        const text = link.textContent?.trim();
-        if (text && text.includes('Перейти в каталог')) {
-            link.setAttribute('href', '#catalog');
-        }
-    });
+    // Removed forced redirection to #catalog to allow natural navigation to production.html
 
     // =====================================================
     // Category Cards — scroll to audit section
@@ -279,11 +274,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // =====================================================
     // Logo Click — scroll to top
     // =====================================================
-    const logo = document.querySelector('header a[href="/"]');
+    const logo = document.querySelector('header a[href="/"], header a[href="index.html"]');
     if (logo) {
         logo.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            const isHomePage = window.location.pathname === '/' || window.location.pathname.endsWith('index.html') || window.location.pathname === '';
+            if (isHomePage && window.location.hash === '') {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            // else let it navigate naturally
         });
     }
 });
