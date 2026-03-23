@@ -7,35 +7,118 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen py-10">
-    <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg">
-        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-            <h1 class="text-3xl font-bold text-gray-800">Менеджер Медиафайлов</h1>
+    <div class="max-w-6xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b pb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">Панель управления RESPO</h1>
+                <p class="text-gray-500 text-sm mt-1">Управление контентом и медиафайлами</p>
+            </div>
             <div class="flex flex-wrap items-center gap-3">
                 <button onclick="clearCache()" class="bg-amber-50 text-amber-700 px-4 py-2 rounded-md font-medium text-sm hover:bg-amber-100 transition-colors border border-amber-200">
                     Очистить кэш сайта
                 </button>
-                <button onclick="deleteAllImages()" class="bg-red-600 text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-red-700 transition-colors shadow-sm">
-                    Удалить всё
-                </button>
-                <a href="/" class="text-blue-500 hover:text-blue-700 font-medium ml-2 text-sm">На сайт &rarr;</a>
+                <a href="index.html" class="bg-blue-600 text-white px-6 py-2 rounded-md font-medium text-sm hover:bg-blue-700 transition-colors shadow-sm">На сайт &rarr;</a>
             </div>
         </div>
-        <p class="text-gray-600 mb-6">Загрузите недостающие изображения. Все загруженные файлы будут сохранены в папке <code class="bg-gray-100 px-2 py-1 rounded text-sm text-pink-600">assets/</code>.</p>
+
+        <div class="flex space-x-1 mb-8 bg-gray-100 p-1 rounded-lg w-fit">
+            <button onclick="switchTab('media')" id="tab-media" class="px-6 py-2 rounded-md text-sm font-medium transition-all bg-white shadow-sm text-blue-600">Медиафайлы</button>
+            <button onclick="switchTab('products')" id="tab-products" class="px-6 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Товары (Каталог)</button>
+        </div>
         
-        <div id="images-list" class="space-y-4">
-            <div class="animate-pulse flex space-x-4">
-                <div class="rounded bg-slate-200 h-16 w-16"></div>
-                <div class="flex-1 space-y-4 py-1">
-                    <div class="h-4 bg-slate-200 rounded w-3/4"></div>
-                    <div class="h-4 bg-slate-200 rounded w-1/2"></div>
-                </div>
+        <!-- Media Tab -->
+        <div id="content-media">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-gray-800">Менеджер изображений</h2>
+                <button onclick="deleteAllImages()" class="text-red-600 hover:text-red-700 text-sm font-medium">Удалить все фото</button>
             </div>
+            <p class="text-gray-600 mb-6 bg-blue-50 p-4 rounded-lg text-sm">Здесь отображаются изображения, которые используются на сайте. Если вы добавили новый товар, загрузите его фото сюда.</p>
+            <div id="images-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Loaded via JS -->
+            </div>
+        </div>
+
+        <!-- Products Tab -->
+        <div id="content-products" class="hidden">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-gray-800">Управление товарами</h2>
+                <button onclick="openProductModal()" class="bg-green-600 text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-green-700 transition-colors shadow-sm">
+                    + Добавить товар
+                </button>
+            </div>
+            
+            <div class="overflow-x-auto border rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Фото</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Название</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Категория</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-table-body" class="bg-white divide-y divide-gray-200">
+                        <!-- Loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="product-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[100] p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-8">
+            <h3 id="modal-title" class="text-2xl font-bold mb-6">Добавить товар</h3>
+            <form id="product-form" onsubmit="saveProduct(event)" class="space-y-4">
+                <input type="hidden" id="edit-id">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Название товара</label>
+                    <input type="text" id="prod-name" required class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Категория</label>
+                    <select id="prod-category" required class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <!-- Loaded via JS -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Имя файла изображения (в assets/)</label>
+                    <input type="text" id="prod-image" placeholder="example.png" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                    <p class="text-[10px] text-gray-400 mt-1">Загрузите файл во вкладке "Медиафайлы" и вставьте его имя здесь.</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Ссылка на страницу</label>
+                    <input type="text" id="prod-link" value="product.html" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" onclick="closeProductModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">Отмена</button>
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors shadow-sm">Сохранить</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <script>
         let requiredImages = [];
+        let productData = { categories: [], products: [] };
 
+        function switchTab(tab) {
+            document.getElementById('content-media').classList.toggle('hidden', tab !== 'media');
+            document.getElementById('content-products').classList.toggle('hidden', tab !== 'products');
+            
+            document.getElementById('tab-media').className = tab === 'media' 
+                ? 'px-6 py-2 rounded-md text-sm font-medium transition-all bg-white shadow-sm text-blue-600'
+                : 'px-6 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800';
+            
+            document.getElementById('tab-products').className = tab === 'products'
+                ? 'px-6 py-2 rounded-md text-sm font-medium transition-all bg-white shadow-sm text-blue-600'
+                : 'px-6 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800';
+            
+            if (tab === 'products') loadProducts();
+            else loadImages();
+        }
+
+        // --- Media Logic ---
         async function loadImages() {
             try {
                 const res = await fetch('/api/required-images');
@@ -66,30 +149,27 @@
                     : `<span class="text-[10px] text-gray-400 font-medium text-center leading-tight">Нет<br>фото</span>`;
 
                 div.innerHTML = `
-                    <div class="flex items-center space-x-5 mb-4 sm:mb-0">
-                        <div class="w-16 h-16 bg-gray-200 rounded-md flex-shrink-0 flex items-center justify-center overflow-hidden border">
+                    <div class="flex items-center space-x-4 mb-4 sm:mb-0">
+                        <div class="w-12 h-12 bg-gray-200 rounded-md flex-shrink-0 flex items-center justify-center overflow-hidden border">
                             ${imgPlaceholder}
                         </div>
-                        <div>
-                            <p class="font-medium text-gray-800 break-all">${img.filename}</p>
-                            <p class="text-sm font-semibold mt-1 ${img.exists ? 'text-green-600' : 'text-red-500'}">
-                                ${img.exists ? '✅ Загружено' : '❌ Требуется фото'}
+                        <div class="min-w-0">
+                            <p class="font-medium text-gray-800 text-sm truncate w-40" title="${img.filename}">${img.filename}</p>
+                            <p class="text-[10px] font-semibold ${img.exists ? 'text-green-600' : 'text-red-500'}">
+                                ${img.exists ? '✅ Есть' : '❌ Нет'}
                             </p>
                         </div>
                     </div>
-                    <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-                        <input type="file" id="file-${index}" accept="image/*" class="text-sm w-full sm:w-auto file:cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                        
-                        <div class="flex items-center space-x-2">
-                            <button onclick="uploadImage(${index})" class="bg-blue-600 text-white px-5 py-2 rounded-md font-medium text-sm hover:bg-blue-700 transition-colors shadow-sm flex-shrink-0">
-                                ${img.exists ? 'Заменить' : 'Загрузить'}
+                    <div class="flex items-center gap-2">
+                        <label class="bg-blue-50 text-blue-700 px-3 py-1.5 rounded text-xs font-semibold cursor-pointer hover:bg-blue-100 transition-colors">
+                            Выбрать
+                            <input type="file" id="file-${index}" accept="image/*" class="hidden" onchange="uploadImage(${index})">
+                        </label>
+                        ${img.exists ? `
+                            <button onclick="deleteImage('${img.filename}')" class="text-red-400 hover:text-red-600 p-1">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                             </button>
-                            ${img.exists ? `
-                                <button onclick="deleteImage('${img.filename}')" class="bg-red-50 text-red-600 px-4 py-2 rounded-md font-medium text-sm hover:bg-red-100 transition-colors border border-red-100">
-                                    Удалить
-                                </button>
-                            ` : ''}
-                        </div>
+                        ` : ''}
                     </div>
                 `;
                 container.appendChild(div);
@@ -99,74 +179,169 @@
         async function uploadImage(index) {
             const imgData = requiredImages[index];
             const input = document.getElementById(`file-${index}`);
-            if (!input.files || input.files.length === 0) {
-                alert('Сначала выберите файл для ' + imgData.filename);
-                return;
-            }
+            if (!input.files || input.files.length === 0) return;
 
             const formData = new FormData();
             formData.append('image', input.files[0]);
             formData.append('targetFilename', imgData.filename);
             
             try {
-                const res = await fetch('/api/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                if (!res.ok) {
-                    const contentType = res.headers.get('content-type');
-                    if (contentType && contentType.includes('application/json')) {
-                        const result = await res.json();
-                        alert('Ошибка загрузки: ' + (result.error || 'Неизвестная ошибка'));
-                    } else {
-                        const text = await res.text();
-                        alert(`Сетевая ошибка ${res.status}: файл возможно слишком велик.`);
-                    }
-                    return;
-                }
-                
-                const result = await res.json();
-                input.value = ''; // clear
-                loadImages(); // reload
-            } catch (e) {
-                alert('Локальная сетевая ошибка: ' + e.message);
-            }
-        }
-        async function deleteImage(filename) {
-            if (!confirm(`Вы уверены, что хотите удалить ${filename}?`)) return;
-            try {
-                const res = await fetch(`/api/images/${encodeURIComponent(filename)}`, { method: 'DELETE' });
+                const res = await fetch('/api/upload', { method: 'POST', body: formData });
                 if (res.ok) loadImages();
-                else alert('Ошибка удаления');
-            } catch (err) {
-                alert('Ошибка сети при удалении');
+                else alert('Ошибка загрузки');
+            } catch (e) {
+                alert('Ошибка сети: ' + e.message);
             }
         }
 
+        async function deleteImage(filename) {
+            if (!confirm(`Удалить ${filename}?`)) return;
+            try {
+                const res = await fetch(`/api/images/${encodeURIComponent(filename)}`, { method: 'DELETE' });
+                if (res.ok) loadImages();
+            } catch (err) { alert('Ошибка сети'); }
+        }
+
         async function deleteAllImages() {
-            if (!confirm('Вы уверены, что хотите удалить ВСЕ загруженные фотографии? Это действие необратимо.')) return;
+            if (!confirm('Удалить ВСЕ фотографии?')) return;
             try {
                 const res = await fetch('/api/images', { method: 'DELETE' });
                 if (res.ok) loadImages();
-                else alert('Ошибка массового удаления');
+            } catch (err) { alert('Ошибка сети'); }
+        }
+
+        // --- Products Logic ---
+        async function loadProducts() {
+            try {
+                const res = await fetch('/api/products');
+                productData = await res.json();
+                renderProducts();
+                populateCategorySelect();
             } catch (err) {
-                alert('Ошибка сети при массовом удалении');
+                console.error(err);
             }
+        }
+
+        function renderProducts() {
+            const tbody = document.getElementById('products-table-body');
+            tbody.innerHTML = '';
+            
+            productData.products.forEach(p => {
+                const tr = document.createElement('tr');
+                const cat = productData.categories.find(c => c.id === p.category);
+                
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="w-10 h-10 bg-gray-100 rounded overflow-hidden border">
+                            <img src="${p.image}?t=${new Date().getTime()}" onerror="this.src='https://via.placeholder.com/40?text=?'" class="w-full h-full object-cover">
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="text-sm font-medium text-gray-900">${p.name}</div>
+                        <div class="text-xs text-gray-500">${p.link}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                            ${cat ? cat.name : p.category}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onclick="openProductModal('${p.id}')" class="text-indigo-600 hover:text-indigo-900 mr-4">Изменить</button>
+                        <button onclick="deleteProduct('${p.id}')" class="text-red-600 hover:text-red-900">Удалить</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function populateCategorySelect() {
+            const select = document.getElementById('prod-category');
+            select.innerHTML = productData.categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        }
+
+        function openProductModal(id = null) {
+            const modal = document.getElementById('product-modal');
+            const form = document.getElementById('product-form');
+            const title = document.getElementById('modal-title');
+            
+            form.reset();
+            document.getElementById('edit-id').value = id || '';
+            
+            if (id) {
+                const p = productData.products.find(x => x.id === id);
+                if (p) {
+                    title.innerText = 'Изменить товар';
+                    document.getElementById('prod-name').value = p.name;
+                    document.getElementById('prod-category').value = p.category;
+                    document.getElementById('prod-image').value = p.image.replace('assets/', '');
+                    document.getElementById('prod-link').value = p.link;
+                }
+            } else {
+                title.innerText = 'Добавить товар';
+            }
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeProductModal() {
+            const modal = document.getElementById('product-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        async function saveProduct(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit-id').value;
+            const newProd = {
+                id: id || Date.now().toString(),
+                name: document.getElementById('prod-name').value,
+                category: document.getElementById('prod-category').value,
+                image: 'assets/' + document.getElementById('prod-image').value,
+                link: document.getElementById('prod-link').value
+            };
+            
+            if (id) {
+                const idx = productData.products.findIndex(x => x.id === id);
+                productData.products[idx] = newProd;
+            } else {
+                productData.products.push(newProd);
+            }
+            
+            try {
+                const res = await fetch('/api/products', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(productData)
+                });
+                if (res.ok) {
+                    closeProductModal();
+                    loadProducts();
+                }
+            } catch (err) { alert('Ошибка сохранения'); }
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm('Удалить этот товар?')) return;
+            productData.products = productData.products.filter(x => x.id !== id);
+            try {
+                const res = await fetch('/api/products', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(productData)
+                });
+                if (res.ok) loadProducts();
+            } catch (err) { alert('Ошибка удаления'); }
         }
 
         async function clearCache() {
             try {
                 const res = await fetch('/api/clear-cache', { method: 'POST' });
                 if (res.ok) {
-                    alert('Запрос на очистку кэша отправлен. Страница будет перезагружена.');
+                    alert('Кэш очищен. Страница будет перезагружена.');
                     window.location.reload(true);
-                } else {
-                    alert('Ошибка при очистке кэша');
                 }
-            } catch (err) {
-                alert('Ошибка сети при очистке кэша');
-            }
+            } catch (err) { alert('Ошибка сети'); }
         }
         
         loadImages();

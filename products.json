@@ -1,0 +1,77 @@
+{
+  "categories": [
+    {
+      "id": "equipment",
+      "name": "Оборудование",
+      "display": "list"
+    },
+    {
+      "id": "valves",
+      "name": "Клапана",
+      "display": "grid"
+    },
+    {
+      "id": "heat_exchangers",
+      "name": "Теплообменники",
+      "display": "grid"
+    }
+  ],
+  "products": [
+    {
+      "id": "1",
+      "category": "equipment",
+      "name": "Система охлаждения закупорочных плит фасовочных упаковочных автоматов",
+      "image": "assets/product_placeholder.png",
+      "link": "product.html"
+    },
+    {
+      "id": "2",
+      "category": "equipment",
+      "name": "Узел Раскачки и Дозировки концентратов хим реактивов",
+      "image": "assets/product_placeholder.png",
+      "link": "product.html"
+    },
+    {
+      "id": "3",
+      "category": "equipment",
+      "name": "Модульная СИП станция",
+      "image": "assets/product_placeholder.png",
+      "link": "product.html"
+    },
+    {
+      "id": "4",
+      "category": "valves",
+      "name": "Butterfly valves, SS304",
+      "image": "assets/product_placeholder.png",
+      "link": "product.html"
+    },
+    {
+      "id": "5",
+      "category": "valves",
+      "name": "Butterfly valves, SS304 (Type 2)",
+      "image": "assets/product_placeholder.png",
+      "link": "product.html"
+    },
+    {
+      "id": "6",
+      "category": "heat_exchangers",
+      "name": "Размер 1",
+      "image": "assets/product_placeholder.png",
+      "link": "product.html"
+    },
+    {
+      "id": "7",
+      "category": "heat_exchangers",
+      "name": "Размер 2",
+      "image": "assets/product_placeholder.png",
+      "link": "product.html"
+    },
+    {
+      "id": "8",
+      "category": "heat_exchangers",
+      "name": "Размер 3",
+      "image": "assets/product_placeholder.png",
+      "link": "product.html"
+    }
+  ]
+}

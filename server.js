@@ -110,6 +110,31 @@ app.delete('/api/images', (req, res) => {
     }
 });
 
+// --- Products API ---
+const productsFile = path.join(__dirname, 'products.json');
+
+app.get('/api/products', (req, res) => {
+    try {
+        if (!fs.existsSync(productsFile)) {
+            return res.json({ categories: [], products: [] });
+        }
+        const data = fs.readFileSync(productsFile, 'utf8');
+        res.json(JSON.parse(data));
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+app.post('/api/products', express.json(), (req, res) => {
+    try {
+        const data = JSON.stringify(req.body, null, 2);
+        fs.writeFileSync(productsFile, data, 'utf8');
+        res.json({ success: true });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 app.post('/api/clear-cache', (req, res) => {
     res.setHeader('Clear-Site-Data', '"cache"');
     res.json({ success: true, message: 'Cache clear signal sent to browser' });
