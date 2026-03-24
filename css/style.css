@@ -101,13 +101,9 @@
 }
 
 /* Base Body Parts */
-.cow-body {
+/* No separate head/legs for user asset, using group transformations if needed */
+.cow-main-path {
   transition: transform 0.3s ease-out;
-}
-
-.cow-head {
-  transform-origin: 100px 90px; /* Pivot where head meets top of neck/body */
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 /* Leg Animations */
@@ -116,39 +112,20 @@
   transition: transform 0.2s ease-out;
 }
 
-/* Walking State */
-.cow-walking .leg-fl, 
-.cow-walking .leg-rl {
-  animation: leg-swing 0.5s infinite alternate ease-in-out;
+/* Walking State (Wobble & Bob for single-path SVG) */
+.cow-walking .cow-svg {
+  animation: body-wobble 0.6s infinite ease-in-out;
 }
 
-.cow-walking .leg-fr, 
-.cow-walking .leg-rr {
-  animation: leg-swing 0.5s infinite alternate-reverse ease-in-out;
+@keyframes body-wobble {
+  0% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-6px) rotate(2deg); }
+  100% { transform: translateY(0) rotate(-2deg); }
 }
 
-@keyframes leg-swing {
-  0% { transform: rotate(-25deg); }
-  100% { transform: rotate(25deg); }
-}
-
-/* Udder Jiggle */
-.cow-walking .cow-udder {
-  animation: udder-jiggle 0.5s infinite alternate ease-in-out;
-}
-
-@keyframes udder-jiggle {
-  0% { transform: translateX(-2px) rotate(-5deg); }
-  100% { transform: translateX(2px) rotate(5deg); }
-}
-
-.cow-walking .cow-body {
-  animation: body-bob 0.5s infinite alternate ease-in-out;
-}
-
-@keyframes body-bob {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-4px); }
+/* Udder Area Jiggle */
+.cow-walking .cow-udder-area {
+  animation: udder-jiggle 0.6s infinite alternate ease-in-out;
 }
 
 /* Munching State */
