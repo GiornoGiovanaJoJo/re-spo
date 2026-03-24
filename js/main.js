@@ -277,8 +277,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const cowImg = cow.querySelector('.cow-img');
         const cowSpriteContainer = cow.querySelector('.cow-sprite-container');
         
-        // Use a relative container width if possible, else viewport
-        const getBounds = () => window.innerWidth;
+        // Use the actual container width
+        const getBounds = () => cowArea.offsetWidth;
         
         let currentX = getBounds() / 2;
         let targetX = currentX;
