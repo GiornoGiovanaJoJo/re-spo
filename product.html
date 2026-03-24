@@ -14,58 +14,14 @@
         rel="stylesheet">
     <!-- Tailwind via CDN for immediate preview (Local build instructions in walkthrough) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'respo-blue': '#2E8BCC',
-                        'respo-cyan': '#4AAEF2',
-                        'respo-blue-light': '#E9F5FF',
-                        'respo-blue-action': '#549DDF',
-                        'respo-green': '#B1C53F',
-                        'respo-lime': '#C4D600',
-                        'respo-dark': '#1A1A1A',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        heading: ['Inter', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
-    <style type="text/tailwindcss">
-        @layer base {
-            body { @apply font-sans text-respo-dark bg-white overflow-x-hidden; }
-            h1, h2, h3 { @apply font-heading font-medium; }
-        }
-        @layer components {
-            .btn-primary { @apply bg-respo-green text-white px-6 py-3 rounded-full hover:brightness-105 transition-all text-base font-medium inline-flex items-center justify-center; }
-            .btn-action { @apply bg-respo-blue-action text-white px-8 py-4 rounded-full hover:brightness-105 transition-all text-lg font-medium inline-flex items-center justify-center min-w-[200px]; }
-            .nav-link { @apply text-respo-dark hover:text-respo-blue transition-colors font-medium; }
-            .nav-link.active { @apply text-respo-blue; }
-            .section-tag { @apply font-heading text-lg text-respo-green mb-3 block; }
-            .section-title { @apply text-[48px] leading-[1.2] text-respo-green font-medium mb-8; }
-            .container-respo { @apply max-w-[1440px] mx-auto px-6 lg:px-[120px]; }
-            .hero-gradient {
-                background: linear-gradient(-64deg, rgba(177, 197, 63, 0.2) 4%, rgba(255, 255, 255, 0.2) 41%),
-                            linear-gradient(180deg, rgba(255, 255, 255, 0.13) 30%, rgba(169, 217, 255, 0.7) 100%);
-            }
-            .text-respo-centered-split {
-                @apply text-center mx-auto max-w-[1100px] text-respo-blue font-medium text-[32px] lg:text-[44px] leading-[1.25];
-            }
-            .hero-subtitle-pos {
-                @apply absolute top-[15%] right-[10%] lg:right-[15%] text-respo-dark/80 text-right;
-            }
-        }
-    </style>
+    <!-- Custom Premium Styles -->
+    <link rel="stylesheet" href="css/premium.css">
 </head>
 
 <body>
     <header class="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-sm border-b border-respo-blue/5">
         <div class="container-respo py-4 lg:py-6 flex items-center justify-between">
-            <a href="/" class="flex-shrink-0 lg:ml-[-10px]">
+            <a href="index.html" class="flex-shrink-0 lg:ml-[-10px]">
                 <img src="assets/logo.png" alt="RESPO Logo" class="h-10 lg:h-[54px] w-auto">
             </a>
 
@@ -82,12 +38,12 @@
                     <span class="text-respo-dark font-medium leading-tight text-sm">INFO@re-spo.com</span>
                     <span class="text-respo-blue font-bold leading-tight">+7 (495) 961 62 15</span>
                 </div>
-                <a href="#" id="btn-cart"
-                    class="bg-[#B2CD50] text-white px-6 py-3 rounded-full flex items-center space-x-3 hover:brightness-105 transition-all shadow-sm">
+                <button id="btn-cart"
+                    class="bg-[#B2CD50] text-white px-6 py-3 rounded-full flex items-center space-x-3 hover:brightness-105 transition-all shadow-xl shadow-[#B2CD50]/20">
                     <img src="assets/shopping-bag.svg" alt="Cart" class="w-5 h-5 invert">
                     <span class="text-[16px] font-medium">Корзина</span>
                     <span id="cart-count" class="hidden bg-white text-[#B2CD50] text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
-                </a>
+                </button>
                 <!-- Mobile Menu Button -->
                 <button id="mobile-menu-toggle"
                     class="lg:hidden p-2 text-respo-dark hover:bg-respo-blue-light rounded-lg transition-colors">
@@ -115,7 +71,7 @@
 
     <main>
         <!-- Product Details -->
-        <section class="pt-[160px] lg:pt-[200px] pb-16 lg:pb-24 bg-white">
+        <section class="pt-[160px] lg:pt-[200px] pb-16 lg:pb-24 bg-white reveal active">
             <div class="container-respo">
                 <span class="text-respo-cyan text-[24px] lg:text-[32px] font-medium block leading-none mb-4">//</span>
                 <h1 class="text-[40px] md:text-[56px] lg:text-[72px] text-respo-cyan font-medium leading-[1.1] mb-12 lg:mb-20">

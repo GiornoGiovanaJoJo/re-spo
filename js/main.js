@@ -279,6 +279,30 @@ document.addEventListener('DOMContentLoaded', () => {
     // Already handled by smooth scroll above
 
     // =====================================================
+    // Scroll Reveal (AOS-like) with Stagger Support
+    // =====================================================
+    const revealElements = document.querySelectorAll('.reveal, .stagger-reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                if (entry.target.classList.contains('stagger-reveal')) {
+                    const children = entry.target.children;
+                    Array.from(children).forEach((child, index) => {
+                        setTimeout(() => {
+                            child.style.opacity = '1';
+                            child.style.transform = 'translateY(0)';
+                        }, index * 100);
+                    });
+                }
+                entry.target.classList.add('active');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // =====================================================
     // Logo Click — scroll to top
     // =====================================================
     const logo = document.querySelector('header a[href="/"], header a[href="index.html"]');
