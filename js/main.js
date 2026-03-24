@@ -320,7 +320,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Pick new target
                 const margin = 100;
                 const bounds = getBounds();
-                targetX = margin + Math.random() * (bounds - margin * 2);
+                const centerWidth = bounds * 0.6;
+                const offset = (bounds - centerWidth) / 2;
+                targetX = offset + Math.random() * centerWidth;
                 cow.classList.remove('cow-walking');
                 // Wait a bit before moving again
                 setTimeout(() => {
