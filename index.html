@@ -808,20 +808,21 @@
                         <a href="mailto:info@re-spo.com"
                             class="text-[14px] text-respo-dark font-sans hover:text-respo-blue transition-colors underline decoration-respo-dark/30 underline-offset-4">info@re-spo.com</a>
 
-                        <!-- Interactive Cow Container -->
-                        <div id="interactive-cow-area" class="absolute bottom-0 left-0 w-full h-40 pointer-events-none mb-10 overflow-hidden">
-                            <div id="interactive-cow" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 pointer-events-auto cursor-help transition-all duration-700 ease-out z-10">
-                                <img src="assets/cow.png" alt="Cow" class="w-full h-auto transition-transform duration-300 cow-img">
-                                <div class="cow-speech hidden absolute -top-10 left-1/2 -translate-x-1/2 bg-white text-respo-dark text-[12px] font-medium px-3 py-1.5 rounded-xl shadow-lg border border-respo-blue/10 whitespace-nowrap after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-[6px] after:border-transparent after:border-t-white">Мням-мням... 🌿</div>
-                            </div>
-                            <!-- Grass patches -->
-                            <div class="grass-patch absolute bottom-0 left-[10%] w-4 h-2 bg-respo-green/20 rounded-full"></div>
-                            <div class="grass-patch absolute bottom-0 left-[30%] w-6 h-3 bg-respo-green/20 rounded-full"></div>
-                            <div class="grass-patch absolute bottom-0 left-[60%] w-5 h-2.5 bg-respo-green/20 rounded-full"></div>
-                            <div class="grass-patch absolute bottom-0 left-[85%] w-7 h-3.5 bg-respo-green/20 rounded-full"></div>
-                        </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Interactive Cow Container (Moved to footer level) -->
+            <div id="interactive-cow-area" class="absolute bottom-0 left-0 w-full h-40 pointer-events-none mb-4 overflow-hidden lg:mb-10">
+                <div id="interactive-cow" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 md:w-48 pointer-events-auto cursor-help transition-all duration-700 ease-out z-10">
+                    <img src="assets/cow.png" alt="Cow" class="w-full h-auto transition-transform duration-300 cow-img">
+                    <div class="cow-speech hidden absolute -top-10 left-1/2 -translate-x-1/2 bg-white text-respo-dark text-[12px] font-medium px-3 py-1.5 rounded-xl shadow-lg border border-respo-blue/10 whitespace-nowrap after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-[6px] after:border-transparent after:border-t-white">Мням-мням... 🌿</div>
+                </div>
+                <!-- Grass patches -->
+                <div class="grass-patch absolute bottom-0 left-[10%] w-4 h-2 bg-respo-green/20 rounded-full"></div>
+                <div class="grass-patch absolute bottom-0 left-[30%] w-6 h-3 bg-respo-green/20 rounded-full"></div>
+                <div class="grass-patch absolute bottom-0 left-[60%] w-5 h-2.5 bg-respo-green/20 rounded-full"></div>
+                <div class="grass-patch absolute bottom-0 left-[85%] w-7 h-3.5 bg-respo-green/20 rounded-full"></div>
             </div>
 
             <!-- Footer Bottom Bar -->
