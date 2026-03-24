@@ -82,7 +82,6 @@
                     <span class="text-respo-dark font-medium leading-tight text-sm">INFO@re-spo.com</span>
                     <span class="text-respo-blue font-bold leading-tight">+7 (495) 961 62 15</span>
                 </div>
-                <!-- a href="#" id="btn-login" class="bg-[#B2CD50] text-white px-8 py-3 rounded-full hover:brightness-105 transition-all text-[16px] font-medium">Войти</a -->
                 <a href="#" id="btn-cart"
                     class="bg-[#B2CD50] text-white px-6 py-3 rounded-full flex items-center space-x-3 hover:brightness-105 transition-all shadow-sm">
                     <img src="assets/shopping-bag.svg" alt="Cart" class="w-5 h-5 invert">
@@ -102,6 +101,10 @@
         <!-- Mobile Menu Overlay -->
         <div id="mobile-menu"
             class="hidden lg:hidden bg-white border-t border-respo-blue/10 p-6 shadow-2xl space-y-4 flex flex-col items-center">
+            <div class="flex flex-col items-center mb-4 pb-4 border-b border-respo-blue/5 w-full">
+                <span class="text-respo-dark font-medium leading-tight text-sm">INFO@re-spo.com</span>
+                <span class="text-respo-blue font-bold leading-tight text-lg">+7 (495) 961 62 15</span>
+            </div>
             <a href="#hero" class="nav-link font-medium py-2">Главная</a>
             <a href="#about" class="nav-link font-medium py-2">О компании</a>
             <a href="#services" class="nav-link font-medium py-2">Услуги</a>
@@ -113,18 +116,18 @@
     <main>
         <!-- Hero Section -->
         <section id="hero"
-            class="relative min-h-[720px] lg:min-h-[900px] pt-[110px] lg:pt-[130px] pb-20 lg:pb-32 flex items-stretch overflow-hidden">
+            class="relative min-h-[600px] lg:min-h-[800px] pt-[100px] lg:pt-[110px] pb-16 lg:pb-24 flex items-stretch overflow-hidden">
             <div class="absolute inset-0 z-[-1]">
                 <div class="hero-gradient absolute inset-0"></div>
                 <!-- People Image -->
                 <div class="absolute right-0 bottom-0 w-full md:w-4/5 lg:w-[68%] h-full pointer-events-none">
                     <img src="assets/people.png" alt="Experts"
-                        class="w-full h-full object-contain object-right-bottom mix-blend-multiply opacity-100">
+                        class="w-full h-full object-contain object-right-bottom mix-blend-multiply opacity-100 transform translate-y-[-5%] lg:translate-y-[-10%]">
                 </div>
             </div>
 
-            <div class="container-respo w-full relative z-10 flex flex-col justify-between">
-                <div class="flex flex-col lg:flex-row lg:justify-between items-start w-full relative">
+            <div class="container-respo w-full relative z-10 flex flex-col justify-center">
+                <div class="flex flex-col lg:flex-row lg:justify-between items-start w-full relative -mt-10 lg:-mt-20">
                     <div class="max-w-[950px] text-left">
                         <span class="text-[18px] lg:text-[24px] text-respo-dark font-medium block mb-2">Группа компаний «РЕ-СПО»</span>
                         <h1
@@ -145,7 +148,7 @@
                     </div>
                 </div>
 
-                <div class="mt-16 lg:mt-auto">
+                <div class="mt-12 lg:mt-16">
                     <div
                         class="flex flex-col sm:flex-row space-y-6 sm:space-y-0 sm:space-x-12 items-start sm:items-center animate-fade-in-up">
                         <a href="#about"
@@ -182,7 +185,7 @@
                         <p class="mb-4">Компания РЕ-СПО была основана в 2010 году, собрав экспертов молочной индустрии с многолетним опытом.</p>
                         <p class="mb-4">Наши клиенты — Лидеры рынка и ведущие производители молочных продуктов питания в России, Европе и Америке.</p>
                         <p class="mb-4">Для каждого из них мы находим различные способы повысить качество продукции, оптимизировать производственные процессы и обеспечить надежность завода, в том числе за счет импортозамещения - собственного производства оборудования наивысшего качества.</p>
-                        <p>Специалисты нашей команды постоянно обучаются и способны обеспечить безопасную, качественную и Эффективную работу молочного пищевого производства по всем направлениям.</p>
+                        <p>Специалисты нашей команды постоянно обучаются и способны обеспечить безопасную, качественную и эффективную работу молочного пищевого производства по всем направлениям.</p>
                     </div>
                 </div>
 
@@ -205,14 +208,14 @@
                 </div>
             </div>
         
-<!-- Principles Section -->
-        <section class="py-24 lg:py-32 bg-white" id="values">
+        <!-- Principles Section (Moved inside About area context) -->
+        <section class="py-12 bg-white" id="values">
             <div class="container-respo">
-                <div class="mb-20">
+                <div class="mb-16">
                     <span
                         class="text-respo-cyan text-[14px] lg:text-[16px] font-medium uppercase tracking-widest block mb-4">//
                         ОТВЕТСТВЕННАЯ РАБОТА — ДОВОЛЬНЫЕ КЛИЕНТЫ</span>
-                    <h2 class="text-[40px] lg:text-[56px] font-medium text-respo-dark leading-tight">Наши принципы</h2>
+                    <h2 class="text-[32px] lg:text-[40px] font-medium text-respo-dark leading-tight">Наши принципы</h2>
                 </div>
 
                 <!-- Principles Grid -->
@@ -222,34 +225,34 @@
                         <!-- Principle 1 -->
                         <div class="flex items-start gap-6">
                             <div
-                                class="flex-shrink-0 w-[100px] h-[100px] bg-[#EBF6FE] rounded-[24px] flex items-center justify-center">
-                                <img src="assets/principle_focus.png" alt="Focus" class="w-14 h-14 object-contain">
+                                class="flex-shrink-0 w-[80px] h-[80px] bg-[#EBF6FE] rounded-[24px] flex items-center justify-center">
+                                <img src="assets/principle_focus.png" alt="Focus" class="w-10 h-10 object-contain">
                             </div>
-                            <div class="pt-2">
-                                <h3 class="text-[15px] font-medium text-respo-dark mb-2 whitespace-nowrap">Внимание к деталям</h3>
-                                <p class="text-[13px] text-respo-dark/60 font-sans leading-relaxed line-clamp-3">Мы ориентируемся на постоянное улучшение пищевой безопасности, качества продукции и окружающей среды</p>
+                            <div class="pt-1">
+                                <h3 class="text-[15px] font-medium text-respo-dark mb-1 whitespace-nowrap">Внимание к деталям</h3>
+                                <p class="text-[13px] text-respo-dark/60 font-sans leading-relaxed">Мы ориентируемся на постоянное улучшение пищевой безопасности, качества продукции и окружающей среды</p>
                             </div>
                         </div>
                         <!-- Principle 2 -->
                         <div class="flex items-start gap-6">
                             <div
-                                class="flex-shrink-0 w-[100px] h-[100px] bg-[#EBF6FE] rounded-[24px] flex items-center justify-center">
-                                <img src="assets/principle_rules.png" alt="Rules" class="w-14 h-14 object-contain">
+                                class="flex-shrink-0 w-[80px] h-[80px] bg-[#EBF6FE] rounded-[24px] flex items-center justify-center">
+                                <img src="assets/principle_rules.png" alt="Rules" class="w-10 h-10 object-contain">
                             </div>
-                            <div class="pt-2">
-                                <h3 class="text-[15px] font-medium text-respo-dark mb-2 whitespace-nowrap">Строго по правилам</h3>
-                                <p class="text-[13px] text-respo-dark/60 font-sans leading-relaxed line-clamp-3">Мы действуем в соответствии с Уставом Компании, Корпоративной политикой Клиента и законодательством РФ</p>
+                            <div class="pt-1">
+                                <h3 class="text-[15px] font-medium text-respo-dark mb-1 whitespace-nowrap">Строго по правилам</h3>
+                                <p class="text-[13px] text-respo-dark/60 font-sans leading-relaxed">Мы действуем в соответствии с Уставом Компании, Корпоративной политикой Клиента и законодательством РФ</p>
                             </div>
                         </div>
                         <!-- Principle 3 -->
                         <div class="flex items-start gap-6">
                             <div
-                                class="flex-shrink-0 w-[100px] h-[100px] bg-[#EBF6FE] rounded-[24px] flex items-center justify-center">
-                                <img src="assets/principle_health.png" alt="Health" class="w-14 h-14 object-contain">
+                                class="flex-shrink-0 w-[80px] h-[80px] bg-[#EBF6FE] rounded-[24px] flex items-center justify-center">
+                                <img src="assets/principle_health.png" alt="Health" class="w-10 h-10 object-contain">
                             </div>
-                            <div class="pt-2">
-                                <h3 class="text-[15px] font-medium text-respo-dark mb-2 whitespace-nowrap">Забота о здоровье</h3>
-                                <p class="text-[13px] text-respo-dark/60 font-sans leading-relaxed line-clamp-3">Мы стремимся создавать благоприятные условия труда как своим сотрудникам, так и сотрудникам наших клиентов</p>
+                            <div class="pt-1">
+                                <h3 class="text-[15px] font-medium text-respo-dark mb-1 whitespace-nowrap">Забота о здоровье</h3>
+                                <p class="text-[13px] text-respo-dark/60 font-sans leading-relaxed">Мы стремимся создавать благоприятные условия труда как своим сотрудникам, так и сотрудникам наших клиентов</p>
                             </div>
                         </div>
                     </div>
@@ -259,23 +262,23 @@
                         <!-- Principle 4 -->
                         <div class="flex items-start gap-6 max-w-[480px]">
                             <div
-                                class="flex-shrink-0 w-[100px] h-[100px] bg-[#EBF6FE] rounded-[24px] flex items-center justify-center">
-                                <img src="assets/principle_quality.png" alt="Quality" class="w-14 h-14 object-contain">
+                                class="flex-shrink-0 w-[80px] h-[80px] bg-[#EBF6FE] rounded-[24px] flex items-center justify-center">
+                                <img src="assets/principle_quality.png" alt="Quality" class="w-10 h-10 object-contain">
                             </div>
-                            <div class="pt-2">
-                                <h3 class="text-[15px] font-medium text-respo-dark mb-2 whitespace-nowrap">Обеспечение высококачественной продукции</h3>
-                                <p class="text-[13px] text-respo-dark/60 font-sans leading-relaxed line-clamp-3">Мы используем международные стандарты качества. Наша главная цель — предотвращение угроз здоровью людей</p>
+                            <div class="pt-1">
+                                <h3 class="text-[15px] font-medium text-respo-dark mb-1">Высококачественная продукция</h3>
+                                <p class="text-[13px] text-respo-dark/60 font-sans leading-relaxed">Мы используем международные стандарты качества. Наша главная цель — предотвращение угроз здоровью людей</p>
                             </div>
                         </div>
                         <!-- Principle 5 -->
                         <div class="flex items-start gap-6 max-w-[480px]">
                             <div
-                                class="flex-shrink-0 w-[100px] h-[100px] bg-[#EBF6FE] rounded-[24px] flex items-center justify-center">
-                                <img src="assets/principle_profit.png" alt="Profit" class="w-14 h-14 object-contain">
+                                class="flex-shrink-0 w-[80px] h-[80px] bg-[#EBF6FE] rounded-[24px] flex items-center justify-center">
+                                <img src="assets/principle_profit.png" alt="Profit" class="w-10 h-10 object-contain">
                             </div>
-                            <div class="pt-2">
-                                <h3 class="text-[15px] font-medium text-respo-dark mb-2 whitespace-nowrap">Оптимизация для рентабельности</h3>
-                                <p class="text-[13px] text-respo-dark/60 font-sans leading-relaxed line-clamp-3">Мы стремимся к максимально эффективному использованию ресурсов. Наша задача — увеличить прибыль наших клиентов</p>
+                            <div class="pt-1">
+                                <h3 class="text-[15px] font-medium text-respo-dark mb-1">Оптимизация рентабельности</h3>
+                                <p class="text-[13px] text-respo-dark/60 font-sans leading-relaxed">Мы стремимся к максимально эффективному использованию ресурсов. Наша задача — увеличить прибыль наших клиентов</p>
                             </div>
                         </div>
                     </div>
@@ -289,8 +292,8 @@
             <div class="container-respo">
                 <div class="text-center mb-16">
                     <h2 class="text-[40px] lg:text-[64px] leading-[1.1] text-respo-blue font-medium mb-8">Основные направления нашей работы</h2>
-                    <a href="#"
-                        class="inline-flex items-center space-x-6 font-heading text-xl font-medium text-respo-dark hover:text-respo-blue transition-all">
+                    <a href="production.html"
+                        class="inline-flex items-center space-x-6 font-heading text-xl font-medium text-respo-dark hover:text-respo-blue transition-all group">
                         <span>Перейти в каталог</span>
                         <div
                             class="w-14 h-14 bg-respo-green rounded-full flex items-center justify-center transition-transform group-hover:scale-110">
@@ -336,7 +339,7 @@
                         </div>
                     </a>
                     <!-- Category 4 -->
-                    <a href="production.html" class="group relative aspect-[320/176] overflow-hidden rounded-[24px]">
+                    <a href="#optimization" class="group relative aspect-[320/176] overflow-hidden rounded-[24px]">
                         <img src="assets/Rectangle%20461-3.png" alt="Service"
                             class="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-105">
                         <div class="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors">
@@ -344,7 +347,7 @@
                         <div class="absolute inset-x-0 top-0 pt-8 px-6 flex items-start justify-center">
                             <h3
                                 class="text-respo-dark text-[13px] lg:text-[15px] font-normal leading-tight uppercase tracking-wide text-center">
-                                сервисное обслуживание завода и технологического оборудования</h3>
+                                сервисное обслуживание завода</h3>
                         </div>
                     </a>
                 </div>
@@ -417,7 +420,7 @@
                 </div>
 
                 <!-- Optimization Section -->
-        <section class="py-24 lg:py-32 bg-white">
+        <section class="py-24 lg:py-32 bg-white" id="optimization">
             <div class="container-respo">
                 <div class="text-center mb-20">
                     <h2 class="text-[36px] lg:text-[48px] font-medium leading-[1.1] mb-4 text-respo-cyan tracking-tight">
@@ -507,22 +510,79 @@
         
 
         
-        <!-- Ключевые компетенции (Placeholder) -->
-        <section class="py-16 bg-respo-blue-light" id="competencies">
-            <div class="container-respo text-center">
-                <h2 class="text-[32px] lg:text-[48px] text-respo-blue font-medium mb-8">Ключевые компетенции</h2>
-                <div class="p-12 border-2 border-dashed border-respo-cyan rounded-xl text-respo-dark/50">
-                    <p>Текст и фото из презентации будут вставлены здесь.</p>
+        <!-- Ключевые компетенции -->
+        <section class="py-24 lg:py-32 bg-respo-blue-light" id="competencies">
+            <div class="container-respo">
+                <div class="mb-16 text-center">
+                    <h2 class="text-[32px] lg:text-[48px] text-respo-blue font-medium mb-4">Ключевые компетенции</h2>
+                    <p class="text-respo-dark/60 max-w-[800px] mx-auto">Мы обладаем глубокой экспертизой в реализации сложных технологических решений для пищевой промышленности</p>
+                </div>
+                <!-- Grid for competencies from presentation -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Placeholder cards for competency content -->
+                    <div class="bg-white p-8 rounded-[24px] shadow-sm border border-respo-blue/5 hover:shadow-md transition-shadow">
+                        <div class="w-12 h-12 mb-6 bg-respo-blue-light rounded-xl flex items-center justify-center">
+                            <img src="assets/principle_focus.png" alt="Icon" class="w-6 h-6 opacity-60">
+                        </div>
+                        <h3 class="text-lg font-medium text-respo-dark mb-3">Технологический инжиниринг</h3>
+                        <p class="text-sm text-respo-dark/60 leading-relaxed">Разработка и внедрение инновационных технологических схем производства.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-[24px] shadow-sm border border-respo-blue/5 hover:shadow-md transition-shadow">
+                        <div class="w-12 h-12 mb-6 bg-respo-blue-light rounded-xl flex items-center justify-center">
+                            <img src="assets/principle_quality.png" alt="Icon" class="w-6 h-6 opacity-60">
+                        </div>
+                        <h3 class="text-lg font-medium text-respo-dark mb-3">Проектирование «под ключ»</h3>
+                        <p class="text-sm text-respo-dark/60 leading-relaxed">Полный цикл реализации проектов от идеи до запуска готовой линии.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-[24px] shadow-sm border border-respo-blue/5 hover:shadow-md transition-shadow">
+                        <div class="w-12 h-12 mb-6 bg-respo-blue-light rounded-xl flex items-center justify-center">
+                            <img src="assets/principle_rules.png" alt="Icon" class="w-6 h-6 opacity-60">
+                        </div>
+                        <h3 class="text-lg font-medium text-respo-dark mb-3">Автоматизация процессов</h3>
+                        <p class="text-sm text-respo-dark/60 leading-relaxed">Внедрение систем мониторинга и управления производством в реальном времени.</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Реализованные проекты (Placeholder) -->
-        <section class="py-16 bg-white" id="projects">
-            <div class="container-respo text-center">
-                <h2 class="text-[32px] lg:text-[48px] text-respo-blue font-medium mb-8">Реализованные проекты</h2>
-                <div class="p-12 border-2 border-dashed border-respo-green rounded-xl text-respo-dark/50">
-                    <p>Текст и фото из презентации будут вставлены здесь.</p>
+        <!-- Реализованные проекты -->
+        <section class="py-24 lg:py-32 bg-white" id="projects">
+            <div class="container-respo">
+                <div class="mb-16 text-center">
+                    <h2 class="text-[32px] lg:text-[48px] text-respo-blue font-medium mb-4">Реализованы проекты по следующим технологиям и направлениям</h2>
+                    <p class="text-respo-dark/60 max-w-[800px] mx-auto">Наш опыт охватывает широкий спектр отраслевых задач и технических решений</p>
+                </div>
+                <!-- Grid for projects from presentation -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Project placeholders with object-fit: cover and labels -->
+                    <div class="group relative aspect-square overflow-hidden rounded-[24px]">
+                        <div class="absolute inset-0 bg-gray-200"></div>
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
+                        <div class="absolute inset-x-0 bottom-0 p-6">
+                            <p class="text-white font-medium text-sm">Молочные линии</p>
+                        </div>
+                    </div>
+                    <div class="group relative aspect-square overflow-hidden rounded-[24px]">
+                        <div class="absolute inset-0 bg-gray-200"></div>
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
+                        <div class="absolute inset-x-0 bottom-0 p-6">
+                            <p class="text-white font-medium text-sm">Асептический розлив</p>
+                        </div>
+                    </div>
+                    <div class="group relative aspect-square overflow-hidden rounded-[24px]">
+                        <div class="absolute inset-0 bg-gray-200"></div>
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
+                        <div class="absolute inset-x-0 bottom-0 p-6">
+                            <p class="text-white font-medium text-sm">СИП-станции</p>
+                        </div>
+                    </div>
+                    <div class="group relative aspect-square overflow-hidden rounded-[24px]">
+                        <div class="absolute inset-0 bg-gray-200"></div>
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
+                        <div class="absolute inset-x-0 bottom-0 p-6">
+                            <p class="text-white font-medium text-sm">Модернизация цехов</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -533,7 +593,7 @@
                 <div class="mb-16">
                     <span class="text-respo-cyan text-[32px] lg:text-[48px] font-medium leading-none">//</span>
                     <h2 class="text-[40px] lg:text-[56px] text-respo-cyan font-medium leading-tight mb-8">Собственное производство оборудования</h2>
-                    <a href="#" class="group flex items-center space-x-4">
+                    <a href="production.html" class="group flex items-center space-x-4">
                         <span
                             class="text-xl font-medium text-respo-dark group-hover:text-respo-cyan transition-all">Перейти
                             в каталог</span>

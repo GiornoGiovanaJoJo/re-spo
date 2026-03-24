@@ -198,14 +198,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const categoryCards = document.querySelectorAll('#services .grid a.group');
     categoryCards.forEach(card => {
         card.addEventListener('click', (e) => {
-            e.preventDefault();
+            const href = card.getAttribute('href');
             const title = card.querySelector('h3')?.textContent?.trim() || '';
-            showToast(`Раздел «${title}» — подробности ниже`, 'info');
-            const auditSection = document.getElementById('audit');
-            if (auditSection) {
-                const headerHeight = header.offsetHeight;
-                const pos = auditSection.getBoundingClientRect().top + window.scrollY - headerHeight - 20;
-                window.scrollTo({ top: pos, behavior: 'smooth' });
+            
+            if (href.startsWith('#')) {
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    const headerHeight = header.offsetHeight;
+                    const pos = target.getBoundingClientRect().top + window.scrollY - headerHeight - 20;
+                    window.scrollTo({ top: pos, behavior: 'smooth' });
+                }
+                showToast(`Раздел «${title}» — подробности ниже`, 'info');
+            } else {
+                // Let natural navigation happen, maybe show a brief toast
+                showToast(`Переход в раздел «${title}»`, 'info', 1000);
             }
         });
     });
