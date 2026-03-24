@@ -37,15 +37,50 @@ function createProductCard(product) {
 
 function createProductListItem(product) {
     const div = document.createElement('div');
-    div.className = 'py-8 border-b border-respo-blue/10 flex items-center justify-between group cursor-pointer hover:bg-respo-blue-light/30 transition-colors px-4 -mx-4 rounded-xl';
-    div.onclick = () => window.location.href = product.link;
+    div.className = 'border-b border-respo-blue/10';
     
-    div.innerHTML = `
-        <h3 class="text-[20px] lg:text-[24px] text-respo-dark font-medium transition-colors group-hover:text-respo-cyan">${product.name}</h3>
-        <div class="flex-shrink-0 w-12 h-12 bg-respo-green rounded-full flex items-center justify-center transition-transform group-hover:scale-110 ml-4">
-            <img src="assets/arrow-right.svg" alt="Arrow" class="w-5 h-5">
-        </div>
-    `;
+    // Check if it's an equipment item (accordion style)
+    if (product.category === 'equipment') {
+        div.innerHTML = `
+            <div class="py-8 flex items-center justify-between group cursor-pointer hover:bg-respo-blue-light/30 transition-colors px-4 -mx-4 rounded-xl accordion-header">
+                <h3 class="text-[20px] lg:text-[24px] text-respo-dark font-medium transition-colors group-hover:text-respo-cyan">${product.name}</h3>
+                <div class="flex-shrink-0 w-12 h-12 bg-respo-green rounded-full flex items-center justify-center transition-all group-hover:scale-110 ml-4 arrow-container">
+                    <img src="assets/arrow-right.svg" alt="Arrow" class="w-5 h-5 transition-transform duration-300">
+                </div>
+            </div>
+            <div class="accordion-content hidden">
+                <div class="pb-12 pt-4">
+                    <div class="rounded-[32px] overflow-hidden bg-gray-50 border border-respo-blue/5 shadow-inner">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-auto object-cover">
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        const header = div.querySelector('.accordion-header');
+        const content = div.querySelector('.accordion-content');
+        const arrow = div.querySelector('.arrow-container img');
+        
+        header.addEventListener('click', () => {
+            content.classList.toggle('hidden');
+            arrow.classList.toggle('rotate-90');
+            header.classList.toggle('bg-respo-blue-light/20');
+        });
+    } else {
+        // Standard item (link style)
+        div.innerHTML = `
+            <div class="py-8 flex items-center justify-between group cursor-pointer hover:bg-respo-blue-light/30 transition-colors px-4 -mx-4 rounded-xl">
+                <h3 class="text-[20px] lg:text-[24px] text-respo-dark font-medium transition-colors group-hover:text-respo-cyan">${product.name}</h3>
+                <div class="flex-shrink-0 w-12 h-12 bg-respo-green rounded-full flex items-center justify-center transition-transform group-hover:scale-110 ml-4">
+                    <img src="assets/arrow-right.svg" alt="Arrow" class="w-5 h-5">
+                </div>
+            </div>
+        `;
+        div.addEventListener('click', () => {
+            window.location.href = product.link;
+        });
+    }
+    
     return div;
 }
 
