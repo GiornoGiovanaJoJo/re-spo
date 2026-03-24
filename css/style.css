@@ -106,7 +106,7 @@
 }
 
 .cow-head {
-  transform-origin: 90px 75px; /* Pivot near body attachment */
+  transform-origin: 100px 90px; /* Pivot where head meets top of neck/body */
   transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -128,8 +128,18 @@
 }
 
 @keyframes leg-swing {
-  0% { transform: rotate(-15deg); }
-  100% { transform: rotate(15deg); }
+  0% { transform: rotate(-25deg); }
+  100% { transform: rotate(25deg); }
+}
+
+/* Udder Jiggle */
+.cow-walking .cow-udder {
+  animation: udder-jiggle 0.5s infinite alternate ease-in-out;
+}
+
+@keyframes udder-jiggle {
+  0% { transform: translateX(-2px) rotate(-5deg); }
+  100% { transform: translateX(2px) rotate(5deg); }
 }
 
 .cow-walking .cow-body {

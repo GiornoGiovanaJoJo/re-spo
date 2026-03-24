@@ -69,11 +69,11 @@
             </a>
 
             <nav class="hidden lg:flex items-center space-x-6 ml-auto mr-6">
-                <a href="index.html#hero" class="nav-link text-[16px]">Главная</a>
-                <a href="index.html#about" class="nav-link text-[16px]">О компании</a>
-                <a href="index.html#services" class="nav-link text-[16px]">Услуги</a>
-                <a href="index.html#values" class="nav-link text-[16px]">Наши ценности</a>
-                <a href="production.html" class="nav-link text-[16px]">Каталог</a>
+                <a href="/#hero" class="nav-link text-[16px]">Главная</a>
+                <a href="/#about" class="nav-link text-[16px]">О компании</a>
+                <a href="/#services" class="nav-link text-[16px]">Услуги</a>
+                <a href="/#values" class="nav-link text-[16px]">Наши ценности</a>
+                <a href="/production" class="nav-link text-[16px]">Каталог</a>
             </nav>
 
             <div class="flex items-center space-x-3">
@@ -360,46 +360,60 @@
 
         <!-- Interactive Cow Container (Moved to footer level for proper width) -->
         <div id="interactive-cow-area" class="absolute bottom-0 left-0 w-full h-40 pointer-events-none mb-4 lg:mb-10 z-[9999]">
-            <div id="interactive-cow" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 md:w-48 pointer-events-auto cursor-help ease-out z-[9999]">
+            <div id="interactive-cow" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 md:w-56 pointer-events-auto cursor-help ease-out z-[9999]">
                 <div class="cow-container relative w-full aspect-[4/3]">
-                    <svg class="cow-svg" viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="cow-svg" viewBox="0 0 220 180" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <!-- Legs (Back) -->
-                        <rect class="leg leg-rl" x="145" y="105" width="12" height="30" rx="6" fill="#F8FAFC" stroke="#334155" stroke-width="2"/>
-                        <rect class="leg leg-rr" x="165" y="100" width="12" height="30" rx="6" fill="#F8FAFC" stroke="#334155" stroke-width="2"/>
+                        <path class="leg leg-rl" d="M150 110C150 130 145 145 145 150" stroke="#000" stroke-width="4" stroke-linecap="round"/>
+                        <path class="leg leg-rr" d="M170 105C170 125 175 140 175 145" stroke="#000" stroke-width="4" stroke-linecap="round"/>
                         
+                        <!-- Pink Udder (Signature) -->
+                        <path class="cow-udder" d="M120 110C120 125 150 125 150 110" fill="#FFC0CB" stroke="#000" stroke-width="2"/>
+                        <rect x="125" y="118" width="3" height="6" rx="1.5" fill="#FFC0CB" stroke="#000" stroke-width="1.5"/>
+                        <rect x="142" y="118" width="3" height="6" rx="1.5" fill="#FFC0CB" stroke="#000" stroke-width="1.5"/>
+
                         <!-- Tail -->
-                        <path class="cow-tail" d="M180 70C195 65 200 75 195 85" stroke="#334155" stroke-width="3" stroke-linecap="round"/>
+                        <path class="cow-tail" d="M185 70C205 60 215 80 205 100" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="205" cy="100" r="4" fill="#000"/> <!-- Tail tuft -->
                         
-                        <!-- Body -->
+                        <!-- Body (Doodle Style) -->
                         <g class="cow-body">
-                            <rect x="40" y="45" width="140" height="70" rx="35" fill="white" stroke="#334155" stroke-width="2"/>
-                            <!-- Spots -->
-                            <path d="M70 45C85 55 95 45 110 45" fill="#334155" opacity="0.1"/>
-                            <circle cx="150" cy="70" r="15" fill="#334155" opacity="0.1"/>
-                            <circle cx="60" cy="90" r="10" fill="#334155" opacity="0.1"/>
+                            <path d="M40 70C40 40 100 30 150 40C180 45 190 70 185 100C180 120 120 125 70 115C45 110 35 90 40 70Z" fill="white" stroke="#000" stroke-width="4"/>
+                            <!-- Irregular Spots -->
+                            <path d="M60 45C75 55 95 45 110 50C100 70 70 75 60 45Z" fill="#000" opacity="0.9"/>
+                            <path d="M140 80C160 85 170 105 150 110C130 105 130 85 140 80Z" fill="#000" opacity="0.9"/>
+                            <circle cx="65" cy="95" r="8" fill="#000" opacity="0.9"/>
                         </g>
 
                         <!-- Legs (Front) -->
-                        <rect class="leg leg-fl" x="65" y="105" width="12" height="30" rx="6" fill="#F8FAFC" stroke="#334155" stroke-width="2"/>
-                        <rect class="leg leg-fr" x="85" y="100" width="12" height="30" rx="6" fill="#F8FAFC" stroke="#334155" stroke-width="2"/>
+                        <path class="leg leg-fl" d="M65 110C65 130 60 145 60 150" stroke="#000" stroke-width="4" stroke-linecap="round"/>
+                        <path class="leg leg-fr" d="M85 105C85 125 90 140 90 145" stroke="#000" stroke-width="4" stroke-linecap="round"/>
 
-                        <!-- Head -->
+                        <!-- Head (clipart style) -->
                         <g class="cow-head">
-                            <rect x="15" y="40" width="80" height="55" rx="25" fill="white" stroke="#334155" stroke-width="2"/>
+                            <!-- Horns -->
+                            <path d="M35 30L25 15C25 15 40 20 45 30" fill="#000" stroke="#000" stroke-width="2"/>
+                            <path d="M85 30L95 15C95 15 80 20 75 30" fill="#000" stroke="#000" stroke-width="2"/>
+                            
+                            <!-- Main Head Shape -->
+                            <path d="M20 50C20 30 100 30 100 50V90C100 110 20 110 20 90V50Z" fill="white" stroke="#000" stroke-width="4"/>
+                            
                             <!-- Snout -->
-                            <rect x="15" y="65" width="80" height="30" rx="15" fill="#FFD1DC" stroke="#334155" stroke-width="1.5"/>
-                            <!-- Eyes -->
+                            <path d="M20 85C20 105 100 105 100 85C100 75 20 75 20 85Z" fill="#FFD1DC" stroke="#000" stroke-width="2"/>
+                            
+                            <!-- Eyes (Wonky clipart style) -->
                             <g class="eye-blink">
-                                <circle cx="45" cy="58" r="4" fill="#334155"/>
-                                <circle cx="75" cy="58" r="4" fill="#334155"/>
+                                <circle cx="45" cy="55" r="4" fill="#000"/>
+                                <circle cx="75" cy="58" r="5" fill="#000"/> <!-- Slightly larger/lower -->
                             </g>
-                            <!-- Nostrils -->
-                            <circle cx="40" cy="80" r="2" fill="#334155" opacity="0.3"/>
-                            <circle cx="70" cy="80" r="2" fill="#334155" opacity="0.3"/>
+                            
+                            <!-- Ears -->
+                            <path d="M20 45C10 40 5 60 15 65" fill="white" stroke="#000" stroke-width="2"/>
+                            <path d="M100 45C110 40 115 60 105 65" fill="white" stroke="#000" stroke-width="2"/>
                         </g>
                     </svg>
                     <!-- Speech Bubble -->
-                    <div class="cow-speech hidden absolute -top-16 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-2xl shadow-xl transition-opacity duration-300 pointer-events-none whitespace-nowrap border-2 border-respo-blue/10">
+                    <div class="cow-speech hidden absolute -top-20 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-2xl shadow-xl transition-opacity duration-300 pointer-events-none whitespace-nowrap border-2 border-respo-blue/10">
                         <span class="text-respo-dark font-medium flex items-center gap-2">
                              Мням-мням... 🌿
                         </span>

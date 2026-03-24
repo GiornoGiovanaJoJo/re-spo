@@ -34,11 +34,16 @@ app.use(helmet({
 app.use(compression());
 
 // --- Serve Static Files ---
-// Serve static assets from project root and assets dir explicitly
 app.use(express.static(path.join(__dirname), {
     maxAge: '7d',
     etag: true,
+    extensions: ['html'] // Allow clean URLs like /production -> production.html
 }));
+
+// --- Root Route ---
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 // --- Admin Panel Routes ---
 app.get('/admin', (req, res) => {
