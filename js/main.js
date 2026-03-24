@@ -277,6 +277,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const cowImg = cow.querySelector('.cow-img');
         const cowSpriteContainer = cow.querySelector('.cow-sprite-container');
         
+        console.log('Cow elements found:', { cow, cowArea, cowSpriteContainer });
+
         // Use the actual container width
         const getBounds = () => cowArea.offsetWidth;
         
