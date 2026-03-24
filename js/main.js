@@ -415,7 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cowImg.style.transform = `scaleX(${escapeDir})`;
 
             setTimeout(() => {
-                cow.style.transition = 'all 0.7s ease-out';
+                cow.style.transition = '';
                 isFleeing = false;
             }, 1000);
         }
