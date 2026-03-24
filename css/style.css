@@ -6,8 +6,13 @@
   body {
     @apply font-sans text-respo-dark bg-white overflow-x-hidden;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-heading font-medium;
   }
 }
@@ -16,11 +21,11 @@
   .btn {
     @apply inline-flex items-center justify-center transition-all duration-300;
   }
-  
+
   .btn-primary {
     @apply bg-respo-green text-white px-6 py-3 rounded-full hover:bg-opacity-90 transition-all;
   }
-  
+
   .btn-action {
     @apply bg-respo-blue-action text-white px-6 py-3 rounded-full hover:bg-opacity-90 min-w-[198px] transition-all;
   }
@@ -28,7 +33,7 @@
   .section-padding {
     @apply py-[80px] md:py-[100px] lg:py-[120px];
   }
-  
+
   .glass-card {
     background: rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(20px);
@@ -57,47 +62,21 @@
   }
 }
 
-/* Premium Animations */
-.reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.reveal.active {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.stagger-reveal > * {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.stagger-reveal.active > * {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Premium Cards */
-.card-premium {
-    @apply bg-white p-8 lg:p-10 rounded-[32px] border border-respo-blue/5 transition-all duration-500 hover:shadow-2xl hover:shadow-respo-blue/10 hover:-translate-y-2 relative overflow-hidden;
-}
-
-.card-premium::before {
-    content: '';
-    @apply absolute inset-0 opacity-0 transition-opacity duration-500 bg-gradient-to-br from-respo-blue/5 to-transparent pointer-events-none;
-}
-
-.card-premium:hover::before {
-    @apply opacity-100;
-}
-
-.section-title {
-    @apply text-[40px] lg:text-[64px] leading-[1.1] text-respo-blue font-medium mb-8 tracking-tighter;
-}
-
+/* Custom Gradients and Effects */
 .hero-gradient {
-    background: linear-gradient(135deg, #F8FBFF 0%, #F1F8E9 100%);
+  background:
+    linear-gradient(-64deg, rgba(177, 197, 63, 0.2) 4%, rgba(255, 255, 255, 0.2) 41%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.13) 30%, rgba(169, 217, 255, 0.7) 100%);
+}
+
+.category-card {
+  @apply bg-respo-blue-light border border-white/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg backdrop-blur-md;
+}
+
+.category-label {
+  @apply bg-white/10 backdrop-blur-sm px-3 py-1 rounded text-center;
+}
+
+.arrow-btn {
+  @apply w-12 h-12 bg-respo-green rounded-full flex items-center justify-center transition-transform hover:scale-110;
 }

@@ -9,19 +9,62 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <!-- Tailwind via CDN for immediate preview (Local build instructions in walkthrough) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Custom Premium Styles -->
-    <link rel="stylesheet" href="css/premium.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'respo-blue': '#2E8BCC',
+                        'respo-cyan': '#4AAEF2',
+                        'respo-blue-light': '#E9F5FF',
+                        'respo-blue-action': '#549DDF',
+                        'respo-green': '#B1C53F',
+                        'respo-lime': '#C4D600',
+                        'respo-dark': '#1A1A1A',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer base {
+            body { @apply font-sans text-respo-dark bg-white overflow-x-hidden; }
+            h1, h2, h3 { @apply font-heading font-medium; }
+        }
+        @layer components {
+            .btn-primary { @apply bg-respo-green text-white px-6 py-3 rounded-full hover:brightness-105 transition-all text-base font-medium inline-flex items-center justify-center; }
+            .btn-action { @apply bg-respo-blue-action text-white px-8 py-4 rounded-full hover:brightness-105 transition-all text-lg font-medium inline-flex items-center justify-center min-w-[200px]; }
+            .nav-link { @apply text-respo-dark hover:text-respo-blue transition-colors font-medium; }
+            .nav-link.active { @apply text-respo-blue; }
+            .section-tag { @apply font-heading text-lg text-respo-green mb-3 block; }
+            .section-title { @apply text-[48px] leading-[1.2] text-respo-green font-medium mb-8; }
+            .container-respo { @apply max-w-[1440px] mx-auto px-6 lg:px-[120px]; }
+            .hero-gradient {
+                background: linear-gradient(-64deg, rgba(177, 197, 63, 0.2) 4%, rgba(255, 255, 255, 0.2) 41%),
+                            linear-gradient(180deg, rgba(255, 255, 255, 0.13) 30%, rgba(169, 217, 255, 0.7) 100%);
+            }
+            .text-respo-centered-split {
+                @apply text-center mx-auto max-w-[1100px] text-respo-blue font-medium text-[32px] lg:text-[44px] leading-[1.25];
+            }
+            .hero-subtitle-pos {
+                @apply absolute top-[15%] right-[10%] lg:right-[15%] text-respo-dark/80 text-right;
+            }
+        }
+    </style>
 </head>
 
 <body>
     <header class="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-sm border-b border-respo-blue/5">
         <div class="container-respo py-4 lg:py-6 flex items-center justify-between">
-            <a href="index.html" class="flex-shrink-0 lg:ml-[-10px]">
+            <a href="/" class="flex-shrink-0 lg:ml-[-10px]">
                 <img src="assets/logo.png" alt="RESPO Logo" class="h-10 lg:h-[54px] w-auto">
             </a>
 
@@ -38,12 +81,13 @@
                     <span class="text-respo-dark font-medium leading-tight text-sm">INFO@re-spo.com</span>
                     <span class="text-respo-blue font-bold leading-tight">+7 (495) 961 62 15</span>
                 </div>
-                <button id="btn-cart"
-                    class="bg-[#B2CD50] text-white px-6 py-3 rounded-full flex items-center space-x-3 hover:brightness-105 transition-all shadow-xl shadow-[#B2CD50]/20">
+                <a href="#" id="btn-cart"
+                    class="bg-[#B2CD50] text-white px-6 py-3 rounded-full flex items-center space-x-3 hover:brightness-105 transition-all shadow-sm">
                     <img src="assets/shopping-bag.svg" alt="Cart" class="w-5 h-5 invert">
                     <span class="text-[16px] font-medium">Корзина</span>
-                    <span id="cart-count" class="hidden bg-white text-[#B2CD50] text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
-                </button>
+                    <span id="cart-count"
+                        class="hidden bg-white text-[#B2CD50] text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                </a>
                 <!-- Mobile Menu Button -->
                 <button id="mobile-menu-toggle"
                     class="lg:hidden p-2 text-respo-dark hover:bg-respo-blue-light rounded-lg transition-colors">
@@ -71,56 +115,71 @@
 
     <main>
         <!-- Product Details -->
-        <section class="pt-[160px] lg:pt-[200px] pb-16 lg:pb-24 bg-white reveal active">
+        <section class="pt-[160px] lg:pt-[200px] pb-16 lg:pb-24 bg-white">
             <div class="container-respo">
                 <span class="text-respo-cyan text-[24px] lg:text-[32px] font-medium block leading-none mb-4">//</span>
-                <h1 class="text-[40px] md:text-[56px] lg:text-[72px] text-respo-cyan font-medium leading-[1.1] mb-12 lg:mb-20">
+                <h1
+                    class="text-[40px] md:text-[56px] lg:text-[72px] text-respo-cyan font-medium leading-[1.1] mb-12 lg:mb-20">
                     Butterfly valves, SS304
                 </h1>
-                
+
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
                     <!-- Left: Image Gallery -->
-                    <div class="bg-[#F8F9FA] rounded-[32px] p-6 lg:p-10 flex flex-col items-center justify-center min-h-[500px] lg:min-h-[700px] relative">
+                    <div
+                        class="bg-[#F8F9FA] rounded-[32px] p-6 lg:p-10 flex flex-col items-center justify-center min-h-[500px] lg:min-h-[700px] relative">
                         <div class="w-full h-full bg-white rounded-[24px] shadow-sm absolute inset-6 lg:inset-10"></div>
                         <!-- Dots overlay -->
                         <div class="absolute bottom-10 left-0 right-0 flex justify-center space-x-3 z-10">
                             <div class="w-2.5 h-2.5 rounded-full bg-respo-blue opacity-100"></div>
-                            <div class="w-2.5 h-2.5 rounded-full bg-respo-blue opacity-30 cursor-pointer hover:opacity-100 transition-opacity"></div>
-                            <div class="w-2.5 h-2.5 rounded-full bg-respo-blue opacity-30 cursor-pointer hover:opacity-100 transition-opacity"></div>
-                            <div class="w-2.5 h-2.5 rounded-full bg-respo-blue opacity-30 cursor-pointer hover:opacity-100 transition-opacity"></div>
+                            <div
+                                class="w-2.5 h-2.5 rounded-full bg-respo-blue opacity-30 cursor-pointer hover:opacity-100 transition-opacity">
+                            </div>
+                            <div
+                                class="w-2.5 h-2.5 rounded-full bg-respo-blue opacity-30 cursor-pointer hover:opacity-100 transition-opacity">
+                            </div>
+                            <div
+                                class="w-2.5 h-2.5 rounded-full bg-respo-blue opacity-30 cursor-pointer hover:opacity-100 transition-opacity">
+                            </div>
                         </div>
                     </div>
-                    
+
                     <!-- Right: Product Info -->
                     <div class="flex flex-col justify-start pt-4 lg:pt-10">
                         <ul class="text-respo-cyan text-[16px] lg:text-[18px] font-sans font-medium space-y-6 mb-20">
                             <li class="flex items-center space-x-4">
-                                <div class="w-2 h-2 rounded-full bg-respo-cyan mt-1 flex-shrink-0"></div> 
-                                <a href="#" class="hover:text-respo-blue transition-colors">BFV IA type NC, SS304, size 25</a>
+                                <div class="w-2 h-2 rounded-full bg-respo-cyan mt-1 flex-shrink-0"></div>
+                                <a href="#" class="hover:text-respo-blue transition-colors">BFV IA type NC, SS304, size
+                                    25</a>
                             </li>
                             <li class="flex items-center space-x-4">
-                                <div class="w-2 h-2 rounded-full bg-respo-cyan mt-1 flex-shrink-0"></div> 
-                                <a href="#" class="hover:text-respo-blue transition-colors">BFV IA type NC, SS304, size 38</a>
+                                <div class="w-2 h-2 rounded-full bg-respo-cyan mt-1 flex-shrink-0"></div>
+                                <a href="#" class="hover:text-respo-blue transition-colors">BFV IA type NC, SS304, size
+                                    38</a>
                             </li>
                             <li class="flex items-center space-x-4">
-                                <div class="w-2 h-2 rounded-full bg-respo-cyan mt-1 flex-shrink-0"></div> 
-                                <a href="#" class="hover:text-respo-blue transition-colors">BFV IA type NC, SS304, size 51</a>
+                                <div class="w-2 h-2 rounded-full bg-respo-cyan mt-1 flex-shrink-0"></div>
+                                <a href="#" class="hover:text-respo-blue transition-colors">BFV IA type NC, SS304, size
+                                    51</a>
                             </li>
                             <li class="flex items-center space-x-4">
-                                <div class="w-2 h-2 rounded-full bg-respo-cyan mt-1 flex-shrink-0"></div> 
-                                <a href="#" class="hover:text-respo-blue transition-colors">BFV IA type NC, SS304, size 63.5</a>
+                                <div class="w-2 h-2 rounded-full bg-respo-cyan mt-1 flex-shrink-0"></div>
+                                <a href="#" class="hover:text-respo-blue transition-colors">BFV IA type NC, SS304, size
+                                    63.5</a>
                             </li>
                             <li class="flex items-center space-x-4">
-                                <div class="w-2 h-2 rounded-full bg-respo-cyan mt-1 flex-shrink-0"></div> 
-                                <a href="#" class="hover:text-respo-blue transition-colors">BFV IA type NC, SS304, size 76.1</a>
+                                <div class="w-2 h-2 rounded-full bg-respo-cyan mt-1 flex-shrink-0"></div>
+                                <a href="#" class="hover:text-respo-blue transition-colors">BFV IA type NC, SS304, size
+                                    76.1</a>
                             </li>
                             <li class="flex items-center space-x-4">
-                                <div class="w-2 h-2 rounded-full bg-respo-cyan mt-1 flex-shrink-0"></div> 
-                                <a href="#" class="hover:text-respo-blue transition-colors">BFV IA type NC, SS304, size 101.6</a>
+                                <div class="w-2 h-2 rounded-full bg-respo-cyan mt-1 flex-shrink-0"></div>
+                                <a href="#" class="hover:text-respo-blue transition-colors">BFV IA type NC, SS304, size
+                                    101.6</a>
                             </li>
                         </ul>
-                        
-                        <button class="bg-[#7DD5FF] text-white py-4 px-10 rounded-full flex items-center justify-center space-x-3 hover:brightness-105 transition-all text-[16px] font-medium w-fit min-w-[280px] shadow-lg shadow-[#7DD5FF]/20">
+
+                        <button
+                            class="bg-[#7DD5FF] text-white py-4 px-10 rounded-full flex items-center justify-center space-x-3 hover:brightness-105 transition-all text-[16px] font-medium w-fit min-w-[280px] shadow-lg shadow-[#7DD5FF]/20">
                             <span>Добавить в корзину</span>
                             <img src="assets/shopping-bag.svg" alt="Cart" class="w-5 h-5 invert brightness-0">
                         </button>
@@ -128,15 +187,20 @@
                 </div>
             </div>
         </section>
-<!-- Отзывы -->
-        <section class="py-20 pt-10 pb-32" style="background: linear-gradient(180deg, rgba(233,245,255,0.3) 0%, rgba(175,221,255,1) 100%);">
+        <!-- Отзывы -->
+        <section class="py-20 pt-10 pb-32"
+            style="background: linear-gradient(180deg, rgba(233,245,255,0.3) 0%, rgba(175,221,255,1) 100%);">
             <div class="container-respo">
                 <span class="text-respo-blue text-[24px] lg:text-[32px] font-medium block leading-none mb-4">//</span>
                 <div class="flex justify-between items-end mb-12">
-                    <h2 class="text-[36px] lg:text-[48px] text-respo-blue font-medium leading-[1.1]">Отзывы покупателей</h2>
-                    <a href="#" class="hidden md:flex items-center space-x-3 text-respo-dark font-medium hover:text-respo-blue transition-colors group">
+                    <h2 class="text-[36px] lg:text-[48px] text-respo-blue font-medium leading-[1.1]">Отзывы покупателей
+                    </h2>
+                    <a href="#"
+                        class="hidden md:flex items-center space-x-3 text-respo-dark font-medium hover:text-respo-blue transition-colors group">
                         <span class="text-[16px]">Смотреть больше</span>
-                        <img src="assets/arrow-right.svg" alt="Arrow" class="w-5 h-5 opacity-60 group-hover:opacity-100 invert" style="filter: brightness(0) saturate(100%);">
+                        <img src="assets/arrow-right.svg" alt="Arrow"
+                            class="w-5 h-5 opacity-60 group-hover:opacity-100 invert"
+                            style="filter: brightness(0) saturate(100%);">
                     </a>
                 </div>
 
@@ -144,35 +208,48 @@
                     <!-- Review 1 -->
                     <div class="bg-white rounded-[32px] p-8 lg:p-10 flex flex-col min-h-[300px]">
                         <p class="text-[15px] lg:text-[16px] text-respo-dark/80 font-sans leading-[1.6] mb-8">
-                            "Очень довольна сотрудничеством с этой компанией. Всё делали аккуратно, в срок и с вниманием к нашим пожеланиям. Было приятно, что команда всегда на связи. Спасибо!"
+                            "Очень довольна сотрудничеством с этой компанией. Всё делали аккуратно, в срок и с вниманием
+                            к нашим пожеланиям. Было приятно, что команда всегда на связи. Спасибо!"
                         </p>
                         <div class="mt-auto font-medium text-[18px] text-respo-dark">Анастасия С.</div>
                     </div>
                     <!-- Review 2 -->
                     <div class="bg-white rounded-[32px] p-8 lg:p-10 flex flex-col min-h-[300px]">
                         <p class="text-[15px] lg:text-[16px] text-respo-dark/80 font-sans leading-[1.6] mb-8">
-                            "Очень довольна сотрудничеством с этой компанией. Всё делали аккуратно, в срок и с вниманием к нашим пожеланиям. Было приятно, что команда всегда на связи и помогает даже после сдачи проекта. Спасибо!"
+                            "Очень довольна сотрудничеством с этой компанией. Всё делали аккуратно, в срок и с вниманием
+                            к нашим пожеланиям. Было приятно, что команда всегда на связи и помогает даже после сдачи
+                            проекта. Спасибо!"
                         </p>
                         <div class="mt-auto font-medium text-[18px] text-respo-dark">Полина</div>
                     </div>
                 </div>
-                
+
                 <!-- Pagination Dots -->
                 <div class="flex justify-center mt-12 space-x-3">
                     <div class="w-2.5 h-2.5 rounded-full bg-respo-blue opacity-100"></div>
-                    <div class="w-2.5 h-2.5 rounded-full bg-white opacity-60 hover:opacity-100 cursor-pointer transition-opacity"></div>
-                    <div class="w-2.5 h-2.5 rounded-full bg-white opacity-60 hover:opacity-100 cursor-pointer transition-opacity"></div>
-                    <div class="w-2.5 h-2.5 rounded-full bg-white opacity-60 hover:opacity-100 cursor-pointer transition-opacity"></div>
+                    <div
+                        class="w-2.5 h-2.5 rounded-full bg-white opacity-60 hover:opacity-100 cursor-pointer transition-opacity">
+                    </div>
+                    <div
+                        class="w-2.5 h-2.5 rounded-full bg-white opacity-60 hover:opacity-100 cursor-pointer transition-opacity">
+                    </div>
+                    <div
+                        class="w-2.5 h-2.5 rounded-full bg-white opacity-60 hover:opacity-100 cursor-pointer transition-opacity">
+                    </div>
                 </div>
             </div>
-        </section><section class="py-24 lg:py-32" id="contacts" style="background: linear-gradient(to top, rgba(74, 174, 242, 0.15), white);">
+        </section>
+        <section class="py-24 lg:py-32" id="contacts"
+            style="background: linear-gradient(to top, rgba(74, 174, 242, 0.15), white);">
             <div class="container-respo">
                 <div class="grid lg:grid-cols-2 gap-20 items-center">
                     <div>
                         <span
                             class="text-respo-cyan text-[14px] lg:text-[16px] font-medium uppercase tracking-widest block mb-4">//
                             СВЯЖИТЕСЬ С НАМИ</span>
-                        <h2 class="text-[36px] lg:text-[48px] font-medium text-respo-dark leading-tight whitespace-nowrap">Остались вопросы?</h2>
+                        <h2
+                            class="text-[36px] lg:text-[48px] font-medium text-respo-dark leading-tight whitespace-nowrap">
+                            Остались вопросы?</h2>
                     </div>
                     <div class="flex flex-col">
                         <form class="space-y-8">
@@ -223,7 +300,9 @@
                     <!-- Phone Section -->
                     <div class="flex flex-col">
                         <h4 class="text-respo-cyan font-sans text-base font-medium mb-6">Контактный телефон</h4>
-                        <p class="text-respo-lime text-[36px] lg:text-[40px] font-medium leading-none tabular-nums whitespace-nowrap">+7 (495) 961 62 15</p>
+                        <p
+                            class="text-respo-lime text-[36px] lg:text-[40px] font-medium leading-none tabular-nums whitespace-nowrap">
+                            +7 (495) 961 62 15</p>
                     </div>
 
                     <!-- Addresses Section -->
@@ -248,20 +327,27 @@
                     <div class="flex flex-col">
                         <h4 class="text-respo-cyan font-sans text-base font-medium mb-6">Навигация</h4>
                         <ul class="space-y-3 text-[14px] text-respo-dark font-sans font-medium">
-                            <li><a href="index.html#hero" class="hover:text-respo-blue transition-colors">Главная</a></li>
-                            <li><a href="index.html#about" class="hover:text-respo-blue transition-colors">О компании</a></li>
-                            <li><a href="index.html#services" class="hover:text-respo-blue transition-colors">Услуги</a></li>
-                            <li><a href="index.html#values" class="hover:text-respo-blue transition-colors">Наши ценности</a></li>
-                            <li><a href="production.html" class="hover:text-respo-blue transition-colors">Каталог</a></li>
-                            <li><a href="index.html#contacts" class="hover:text-respo-blue transition-colors">Связаться с нами</a></li>
+                            <li><a href="index.html#hero" class="hover:text-respo-blue transition-colors">Главная</a>
+                            </li>
+                            <li><a href="index.html#about" class="hover:text-respo-blue transition-colors">О
+                                    компании</a></li>
+                            <li><a href="index.html#services" class="hover:text-respo-blue transition-colors">Услуги</a>
+                            </li>
+                            <li><a href="index.html#values" class="hover:text-respo-blue transition-colors">Наши
+                                    ценности</a></li>
+                            <li><a href="production.html" class="hover:text-respo-blue transition-colors">Каталог</a>
+                            </li>
+                            <li><a href="index.html#contacts" class="hover:text-respo-blue transition-colors">Связаться
+                                    с нами</a></li>
                         </ul>
                     </div>
 
                     <!-- Email Section -->
                     <div class="flex flex-col min-h-[160px] relative">
                         <h4 class="text-respo-cyan font-sans text-base font-medium mb-6">Электронная почта</h4>
-                        <a href="mailto:info@re-spo.com" class="text-[14px] text-respo-dark font-sans hover:text-respo-blue transition-colors underline decoration-respo-dark/30 underline-offset-4">info@re-spo.com</a>
-                        
+                        <a href="mailto:info@re-spo.com"
+                            class="text-[14px] text-respo-dark font-sans hover:text-respo-blue transition-colors underline decoration-respo-dark/30 underline-offset-4">info@re-spo.com</a>
+
                         <!-- Cow Illustration (positioned at the bottom right of the main area or grid item) -->
                         <div class="absolute right-0 top-0 md:top-[-40px] w-64 md:w-[320px] pointer-events-none">
                             <img src="assets/cow.png" alt="Cow Clipart" class="w-full h-auto">
@@ -271,10 +357,13 @@
             </div>
 
             <!-- Footer Bottom Bar -->
-            <div class="pt-10 border-t border-respo-cyan/10 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div
+                class="pt-10 border-t border-respo-cyan/10 flex flex-col md:flex-row justify-between items-center gap-6">
                 <p class="text-[13px] text-respo-cyan font-medium">© РЕ-СПО Группа компаний 2025</p>
                 <div class="flex items-center">
-                    <a href="#" class="text-[13px] text-respo-cyan hover:text-respo-blue transition-colors font-medium">Политика конфиденциальности</a>
+                    <a href="#"
+                        class="text-[13px] text-respo-cyan hover:text-respo-blue transition-colors font-medium">Политика
+                        конфиденциальности</a>
                 </div>
             </div>
         </div>

@@ -198,21 +198,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const categoryCards = document.querySelectorAll('#services .grid a.group');
     categoryCards.forEach(card => {
         card.addEventListener('click', (e) => {
-            const href = card.getAttribute('href');
+            e.preventDefault();
             const title = card.querySelector('h3')?.textContent?.trim() || '';
-            
-            if (href.startsWith('#')) {
-                e.preventDefault();
-                const target = document.querySelector(href);
-                if (target) {
-                    const headerHeight = header.offsetHeight;
-                    const pos = target.getBoundingClientRect().top + window.scrollY - headerHeight - 20;
-                    window.scrollTo({ top: pos, behavior: 'smooth' });
-                }
-                showToast(`Раздел «${title}» — подробности ниже`, 'info');
-            } else {
-                // Let natural navigation happen, maybe show a brief toast
-                showToast(`Переход в раздел «${title}»`, 'info', 1000);
+            showToast(`Раздел «${title}» — подробности ниже`, 'info');
+            const auditSection = document.getElementById('audit');
+            if (auditSection) {
+                const headerHeight = header.offsetHeight;
+                const pos = auditSection.getBoundingClientRect().top + window.scrollY - headerHeight - 20;
+                window.scrollTo({ top: pos, behavior: 'smooth' });
             }
         });
     });
@@ -279,30 +272,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Already handled by smooth scroll above
 
     // =====================================================
-    // Scroll Reveal (AOS-like) with Stagger Support
-    // =====================================================
-    const revealElements = document.querySelectorAll('.reveal, .stagger-reveal');
-    const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                if (entry.target.classList.contains('stagger-reveal')) {
-                    const children = entry.target.children;
-                    Array.from(children).forEach((child, index) => {
-                        setTimeout(() => {
-                            child.style.opacity = '1';
-                            child.style.transform = 'translateY(0)';
-                        }, index * 100);
-                    });
-                }
-                entry.target.classList.add('active');
-                revealObserver.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.15 });
-
-    revealElements.forEach(el => revealObserver.observe(el));
-
-    // =====================================================
     // Logo Click — scroll to top
     // =====================================================
     const logo = document.querySelector('header a[href="/"], header a[href="index.html"]');
@@ -313,6 +282,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+            // else let it navigate naturally
+        });
+    }
+});
+const isHomePage = window.location.pathname === '/' || window.location.pathname.endsWith('index.html') || window.location.pathname === '';
+if (isHomePage && window.location.hash === '') {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
             // else let it navigate naturally
         });
     }
