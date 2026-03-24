@@ -275,6 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const cowSpeech = cow.querySelector('.cow-speech');
         const cowImg = cow.querySelector('.cow-img');
+        const cowSpriteContainer = cow.querySelector('.cow-sprite-container');
         
         // Use a relative container width if possible, else viewport
         const getBounds = () => window.innerWidth;
@@ -283,11 +284,20 @@ document.addEventListener('DOMContentLoaded', () => {
         let targetX = currentX;
         let isEating = false;
         let isFleeing = false;
-        let speed = 1.0;
+        let speed = 1.2;
         let direction = 1;
 
         // Initialize position
         cow.style.left = `${currentX}px`;
+
+        // Subtle breathing/idle effect
+        function animateIdle() {
+            if (!isEating && !cow.classList.contains('cow-walking')) {
+                cowSpriteContainer.style.transform = `scale(${1 + Math.sin(Date.now() / 1000) * 0.02})`;
+            }
+            requestAnimationFrame(animateIdle);
+        }
+        animateIdle();
 
         function update() {
             if (isEating || isFleeing) {
