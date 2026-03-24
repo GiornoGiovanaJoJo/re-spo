@@ -401,12 +401,53 @@
         </div>
 
         <!-- Interactive Cow Container (Moved to footer level for proper width) -->
-        <div id="interactive-cow-area" class="absolute bottom-0 left-0 w-full h-40 pointer-events-none mb-4 overflow-hidden lg:mb-10 z-[9999]">
+        <div id="interactive-cow-area" class="absolute bottom-0 left-0 w-full h-40 pointer-events-none mb-4 lg:mb-10 z-[9999]">
             <div id="interactive-cow" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 md:w-48 pointer-events-auto cursor-help ease-out z-[9999]">
-                <div class="cow-sprite-container w-32 md:w-48 aspect-square relative transition-transform duration-300">
-                    <div class="cow-img pointer-events-none w-full h-full"></div>
+                <div class="cow-container relative w-full aspect-[4/3]">
+                    <svg class="cow-svg" viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Legs (Back) -->
+                        <rect class="leg leg-rl" x="145" y="105" width="12" height="30" rx="6" fill="#F8FAFC" stroke="#334155" stroke-width="2"/>
+                        <rect class="leg leg-rr" x="165" y="100" width="12" height="30" rx="6" fill="#F8FAFC" stroke="#334155" stroke-width="2"/>
+                        
+                        <!-- Tail -->
+                        <path class="cow-tail" d="M180 70C195 65 200 75 195 85" stroke="#334155" stroke-width="3" stroke-linecap="round"/>
+                        
+                        <!-- Body -->
+                        <g class="cow-body">
+                            <rect x="40" y="45" width="140" height="70" rx="35" fill="white" stroke="#334155" stroke-width="2"/>
+                            <!-- Spots -->
+                            <path d="M70 45C85 55 95 45 110 45" fill="#334155" opacity="0.1"/>
+                            <circle cx="150" cy="70" r="15" fill="#334155" opacity="0.1"/>
+                            <circle cx="60" cy="90" r="10" fill="#334155" opacity="0.1"/>
+                        </g>
+
+                        <!-- Legs (Front) -->
+                        <rect class="leg leg-fl" x="65" y="105" width="12" height="30" rx="6" fill="#F8FAFC" stroke="#334155" stroke-width="2"/>
+                        <rect class="leg leg-fr" x="85" y="100" width="12" height="30" rx="6" fill="#F8FAFC" stroke="#334155" stroke-width="2"/>
+
+                        <!-- Head -->
+                        <g class="cow-head">
+                            <rect x="15" y="40" width="80" height="55" rx="25" fill="white" stroke="#334155" stroke-width="2"/>
+                            <!-- Snout -->
+                            <rect x="15" y="65" width="80" height="30" rx="15" fill="#FFD1DC" stroke="#334155" stroke-width="1.5"/>
+                            <!-- Eyes -->
+                            <g class="eye-blink">
+                                <circle cx="45" cy="58" r="4" fill="#334155"/>
+                                <circle cx="75" cy="58" r="4" fill="#334155"/>
+                            </g>
+                            <!-- Nostrils -->
+                            <circle cx="40" cy="80" r="2" fill="#334155" opacity="0.3"/>
+                            <circle cx="70" cy="80" r="2" fill="#334155" opacity="0.3"/>
+                        </g>
+                    </svg>
+                    <!-- Speech Bubble -->
+                    <div class="cow-speech hidden absolute -top-16 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-2xl shadow-xl transition-opacity duration-300 pointer-events-none whitespace-nowrap border-2 border-respo-blue/10">
+                        <span class="text-respo-dark font-medium flex items-center gap-2">
+                             Мням-мням... 🌿
+                        </span>
+                        <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45 border-r-2 border-b-2 border-respo-blue/10"></div>
+                    </div>
                 </div>
-                <div class="cow-speech hidden absolute -top-10 left-1/2 -translate-x-1/2 bg-white text-respo-dark text-[12px] font-medium px-3 py-1.5 rounded-xl shadow-lg border border-respo-blue/10 whitespace-nowrap after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-[6px] after:border-transparent after:border-t-white">Мням-мням... 🌿</div>
             </div>
             <!-- Grass patches -->
             <div class="grass-patch absolute bottom-0 left-[10%] w-4 h-2 bg-respo-green/20 rounded-full"></div>

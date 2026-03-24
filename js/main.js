@@ -274,8 +274,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!cow || !cowArea) return;
 
         const cowSpeech = cow.querySelector('.cow-speech');
-        const cowImg = cow.querySelector('.cow-img');
-        const cowSpriteContainer = cow.querySelector('.cow-sprite-container');
+        const cowImg = cow.querySelector('.cow-svg');
+        const cowSpriteContainer = cow.querySelector('.cow-container');
         
         console.log('Cow elements found:', { cow, cowArea, cowSpriteContainer });
 
