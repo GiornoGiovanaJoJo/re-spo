@@ -36,7 +36,9 @@ main_content = """
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
                     <!-- Left: Image Gallery -->
                     <div class="bg-[#F8F9FA] rounded-[32px] p-6 lg:p-10 flex flex-col items-center justify-center min-h-[500px] lg:min-h-[700px] relative">
-                        <div class="w-full h-full bg-white rounded-[24px] shadow-sm absolute inset-6 lg:inset-10"></div>
+                        <div class="w-full h-full bg-white rounded-[24px] shadow-sm absolute inset-6 lg:inset-10 flex items-center justify-center overflow-hidden">
+                            <img src="assets/product_placeholder.png" alt="Product" class="max-w-full max-h-full object-contain relative z-10 transition-transform duration-500 hover:scale-105">
+                        </div>
                         <!-- Dots overlay -->
                         <div class="absolute bottom-10 left-0 right-0 flex justify-center space-x-3 z-10">
                             <div class="w-2.5 h-2.5 rounded-full bg-respo-blue opacity-100"></div>
