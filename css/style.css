@@ -80,3 +80,70 @@
 .arrow-btn {
   @apply w-12 h-12 bg-respo-green rounded-full flex items-center justify-center transition-transform hover:scale-110;
 }
+
+/* =====================================================
+   Interactive Cow Interactions
+   ===================================================== */
+#interactive-cow-area {
+  z-index: 5;
+}
+
+#interactive-cow {
+  will-change: transform, left;
+  filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.12));
+}
+
+.cow-walking img {
+  animation: cow-walk-wiggle 0.4s infinite alternate ease-in-out;
+}
+
+@keyframes cow-walk-wiggle {
+  0% { transform: translateY(0) rotate(-2deg) scale(1); }
+  100% { transform: translateY(-8px) rotate(2deg) scale(1.02); }
+}
+
+.cow-munching img {
+  animation: cow-munch 0.2s 10 alternate ease-in-out;
+}
+
+@keyframes cow-munch {
+  0% { transform: scale(1) rotate(0); }
+  100% { transform: scale(1.05) rotate(1deg); }
+}
+
+.cow-img {
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.grass-patch {
+  opacity: 0.4;
+  filter: blur(1.5px);
+  transition: all 0.5s ease;
+}
+
+.grass-bit {
+  position: absolute;
+  width: 4px;
+  height: 8px;
+  background: #B2CD50;
+  border-radius: 2px;
+  pointer-events: none;
+  animation: grass-fly 0.8s forwards ease-out;
+}
+
+@keyframes grass-fly {
+  0% { transform: translate(0, 0) rotate(0); opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) rotate(var(--tr)); opacity: 0; }
+}
+
+.cow-speech {
+  pointer-events: none;
+  z-index: 20;
+  animation: speech-bounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes speech-bounce {
+  0% { opacity: 0; transform: translate(-50%, 20px) scale(0.5); }
+  70% { opacity: 1; transform: translate(-50%, -5px) scale(1.1); }
+  100% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}

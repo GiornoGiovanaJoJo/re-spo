@@ -266,6 +266,158 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =====================================================
+    // Interactive Cow Logic
+    // =====================================================
+    function initInteractiveCow() {
+        const cow = document.getElementById('interactive-cow');
+        const cowArea = document.getElementById('interactive-cow-area');
+        if (!cow || !cowArea) return;
+
+        const cowSpeech = cow.querySelector('.cow-speech');
+        const cowImg = cow.querySelector('.cow-img');
+        
+        // Use a relative container width if possible, else viewport
+        const getBounds = () => window.innerWidth;
+        
+        let currentX = getBounds() / 2;
+        let targetX = currentX;
+        let isEating = false;
+        let isFleeing = false;
+        let speed = 1.0;
+        let direction = 1;
+
+        // Initialize position
+        cow.style.left = `${currentX}px`;
+
+        function update() {
+            if (isEating || isFleeing) {
+                requestAnimationFrame(update);
+                return;
+            }
+
+            // Occasional grazing
+            if (Math.random() < 0.003) {
+                startEating();
+                requestAnimationFrame(update);
+                return;
+            }
+
+            // Movement logic
+            const dx = targetX - currentX;
+            if (Math.abs(dx) < 10) {
+                // Pick new target
+                const margin = 100;
+                const bounds = getBounds();
+                targetX = margin + Math.random() * (bounds - margin * 2);
+                cow.classList.remove('cow-walking');
+                // Wait a bit before moving again
+                setTimeout(() => {
+                    // This is handled by the next frames if not eating
+                }, 1000);
+            } else {
+                direction = dx > 0 ? 1 : -1;
+                currentX += direction * speed;
+                cow.style.left = `${currentX}px`;
+                cowImg.style.transform = `scaleX(${direction})`;
+                cow.classList.add('cow-walking');
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        function startEating() {
+            if (isEating) return;
+            isEating = true;
+            cow.classList.remove('cow-walking');
+            cow.classList.add('cow-munching');
+            cowSpeech.classList.remove('hidden');
+            
+            // Spawn some grass bits
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    if (!isEating) return;
+                    createGrassBit();
+                }, i * 300);
+            }
+
+            // Random munching duration
+            setTimeout(() => {
+                cowSpeech.classList.add('hidden');
+                cow.classList.remove('cow-munching');
+                isEating = false;
+            }, 4000 + Math.random() * 2000);
+        }
+
+        function createGrassBit() {
+            const bit = document.createElement('div');
+            bit.className = 'grass-bit';
+            const rect = cow.getBoundingClientRect();
+            const areaRect = cowArea.getBoundingClientRect();
+            
+            // Position relative to cowArea
+            const x = currentX + (direction === 1 ? 40 : -40); // Near mouth
+            const y = areaRect.height - 20;
+            
+            bit.style.left = `${x}px`;
+            bit.style.top = `${y}px`;
+            
+            // Random trajectory
+            const tx = (Math.random() - 0.5) * 60;
+            const ty = -30 - Math.random() * 40;
+            const tr = (Math.random() - 0.5) * 360;
+            
+            bit.style.setProperty('--tx', `${tx}px`);
+            bit.style.setProperty('--ty', `${ty}px`);
+            bit.style.setProperty('--tr', `${tr}deg`);
+            
+            cowArea.appendChild(bit);
+            setTimeout(() => bit.remove(), 800);
+        }
+
+        function flee(e) {
+            if (isFleeing) return;
+            
+            isFleeing = true;
+            isEating = false;
+            cowSpeech.classList.add('hidden');
+            cow.classList.add('cow-walking');
+            
+            // Determine escape direction (away from mouse)
+            const mouseX = e.clientX;
+            const escapeDir = currentX > mouseX ? 1 : -1;
+            
+            // Escape distance
+            const escapeDist = 250 + Math.random() * 250;
+            let newX = currentX + escapeDir * escapeDist;
+            
+            // Contain within bounds
+            const bounds = getBounds();
+            newX = Math.max(80, Math.min(bounds - 80, newX));
+            
+            // Apply fast movement
+            cow.style.transition = 'left 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            cow.style.left = `${newX}px`;
+            currentX = newX;
+            targetX = newX; // Stop wandering for a bit
+            
+            cowImg.style.transform = `scaleX(${escapeDir})`;
+
+            setTimeout(() => {
+                cow.style.transition = 'all 0.7s ease-out';
+                isFleeing = false;
+            }, 1000);
+        }
+
+        cow.addEventListener('mouseenter', flee);
+        // Also flee on click for mobile/fun
+        cow.addEventListener('click', flee);
+        
+        requestAnimationFrame(update);
+    }
+
+    initInteractiveCow();
+
+    // =====================================================
     // "Узнать больше" Button
     // =====================================================
     const learnMoreBtn = document.querySelector('a[href="#about"]');
@@ -282,15 +434,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
-            // else let it navigate naturally
-        });
-    }
-});
-const isHomePage = window.location.pathname === '/' || window.location.pathname.endsWith('index.html') || window.location.pathname === '';
-if (isHomePage && window.location.hash === '') {
-    e.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
             // else let it navigate naturally
         });
     }
