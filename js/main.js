@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Subtle breathing/idle effect
         function animateIdle() {
-            if (!isEating && !cow.classList.contains('cow-walking')) {
+            if (cowSpriteContainer && !isEating && !cow.classList.contains('cow-walking')) {
                 cowSpriteContainer.style.transform = `scale(${1 + Math.sin(Date.now() / 1000) * 0.02})`;
             }
             requestAnimationFrame(animateIdle);
