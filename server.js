@@ -52,6 +52,14 @@ function validateProductsPayload(payload) {
 
         const imageName = safeImageFilename(p.image.replace(/^assets\//, ''));
         if (!imageName) return false;
+        if (p.images !== undefined) {
+            if (!Array.isArray(p.images) || p.images.length === 0) return false;
+            for (const im of p.images) {
+                if (typeof im !== 'string' || !im.trim()) return false;
+                const extra = safeImageFilename(im.replace(/^assets\//, ''));
+                if (!extra) return false;
+            }
+        }
         if (payload.categories.length > 0 && !categoryIds.has(p.category)) return false;
     }
     return true;

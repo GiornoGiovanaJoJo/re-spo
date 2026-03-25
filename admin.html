@@ -430,7 +430,9 @@
                 .split('\n')
                 .map(s => s.trim())
                 .filter(Boolean);
+            const existing = id ? productData.products.find((x) => x.id === id) : null;
             const newProd = {
+                ...(existing || {}),
                 id: id || Date.now().toString(),
                 name: document.getElementById('prod-name').value.trim(),
                 category: document.getElementById('prod-category').value.trim(),

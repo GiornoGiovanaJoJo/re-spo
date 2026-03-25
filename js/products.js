@@ -49,8 +49,8 @@ function createProductCard(product) {
     
     if (isExchanger) {
         div.innerHTML = `
-            <div class="bg-white w-full aspect-square rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center p-5">
-                <img src="${imgSrc}" alt="${safeName}" class="w-[82%] h-[82%] object-contain">
+            <div class="bg-white w-full aspect-[16/10] sm:aspect-[2/1] rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center p-4">
+                <img src="${imgSrc}" alt="${safeName}" class="max-h-full max-w-[92%] w-auto h-auto object-contain">
             </div>
             <h3 class="text-[14px] text-respo-dark/80 font-medium mt-auto">${safeName}</h3>
         `;
@@ -60,8 +60,8 @@ function createProductCard(product) {
     div.innerHTML = `
         <h3 class="${isValve ? 'text-[14px]' : 'text-lg'} font-medium text-respo-dark mb-4 line-clamp-2 min-h-[3.5rem]">${safeName}</h3>
         ${safeDescription ? `<p class="text-[12px] text-respo-dark/60 mb-4 line-clamp-2 w-full">${safeDescription}</p>` : ''}
-        <div class="bg-white w-full aspect-square rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center p-5">
-            <img src="${imgSrc}" alt="${safeName}" class="w-[82%] h-[82%] object-contain group-hover:scale-105 transition-transform">
+        <div class="bg-white w-full aspect-[16/10] sm:aspect-[2/1] rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center p-4">
+            <img src="${imgSrc}" alt="${safeName}" class="max-h-full max-w-[92%] w-auto h-auto object-contain group-hover:scale-105 transition-transform">
         </div>
         <div class="mt-auto w-full">
             ${isValve
@@ -85,6 +85,7 @@ function createProductListItem(product) {
     
     // Check if it's an equipment item (accordion style)
     if (product.category === 'equipment') {
+        const equipImg = escapeHtml(product.image || 'assets/product_placeholder.png');
         div.innerHTML = `
             <div class="py-8 flex items-center justify-between group cursor-pointer hover:bg-respo-blue-light/30 transition-colors px-4 -mx-4 rounded-xl accordion-header">
                 <h3 class="text-[20px] lg:text-[24px] text-respo-dark font-medium transition-colors group-hover:text-respo-cyan">${escapeHtml(product.name)}</h3>
@@ -94,8 +95,10 @@ function createProductListItem(product) {
             </div>
             <div class="accordion-content hidden">
                 <div class="pb-12 pt-4">
-                    <div class="rounded-[32px] overflow-hidden bg-gray-50 border border-respo-blue/5 shadow-inner flex items-center justify-center p-6 lg:p-10">
-                        <img src="${product.image}" alt="${escapeHtml(product.name)}" class="w-[64%] max-w-xl h-auto object-contain">
+                    <div class="rounded-[32px] overflow-hidden bg-[#E9F5FF] border border-respo-blue/10 shadow-inner w-full">
+                        <div class="aspect-[16/10] sm:aspect-[2/1] w-full flex items-center justify-center p-6 lg:p-8">
+                            <img src="${equipImg}" alt="${escapeHtml(product.name)}" class="max-h-full max-w-[94%] w-auto h-auto object-contain">
+                        </div>
                     </div>
                 </div>
             </div>
