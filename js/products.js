@@ -49,8 +49,8 @@ function createProductCard(product) {
     
     if (isExchanger) {
         div.innerHTML = `
-            <div class="bg-white w-full aspect-square rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center">
-                <img src="${imgSrc}" alt="${safeName}" class="w-full h-full object-cover">
+            <div class="bg-white w-full aspect-square rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center p-5">
+                <img src="${imgSrc}" alt="${safeName}" class="w-[82%] h-[82%] object-contain">
             </div>
             <h3 class="text-[14px] text-respo-dark/80 font-medium mt-auto">${safeName}</h3>
         `;
@@ -60,8 +60,8 @@ function createProductCard(product) {
     div.innerHTML = `
         <h3 class="${isValve ? 'text-[14px]' : 'text-lg'} font-medium text-respo-dark mb-4 line-clamp-2 min-h-[3.5rem]">${safeName}</h3>
         ${safeDescription ? `<p class="text-[12px] text-respo-dark/60 mb-4 line-clamp-2 w-full">${safeDescription}</p>` : ''}
-        <div class="bg-white w-full aspect-square rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center">
-            <img src="${imgSrc}" alt="${safeName}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+        <div class="bg-white w-full aspect-square rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center p-5">
+            <img src="${imgSrc}" alt="${safeName}" class="w-[82%] h-[82%] object-contain group-hover:scale-105 transition-transform">
         </div>
         <div class="mt-auto w-full">
             ${isValve
@@ -94,8 +94,8 @@ function createProductListItem(product) {
             </div>
             <div class="accordion-content hidden">
                 <div class="pb-12 pt-4">
-                    <div class="rounded-[32px] overflow-hidden bg-gray-50 border border-respo-blue/5 shadow-inner">
-                        <img src="${product.image}" alt="${escapeHtml(product.name)}" class="w-full h-auto object-cover">
+                    <div class="rounded-[32px] overflow-hidden bg-gray-50 border border-respo-blue/5 shadow-inner flex items-center justify-center p-6 lg:p-10">
+                        <img src="${product.image}" alt="${escapeHtml(product.name)}" class="w-[78%] h-auto object-contain">
                     </div>
                 </div>
             </div>
