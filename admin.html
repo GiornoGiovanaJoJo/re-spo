@@ -14,7 +14,7 @@
                 <p class="text-gray-500 text-sm mt-1">Управление контентом и медиафайлами</p>
             </div>
             <div class="flex flex-wrap items-center gap-3">
-                <button onclick="clearCache()" class="bg-amber-50 text-amber-700 px-4 py-2 rounded-md font-medium text-sm hover:bg-amber-100 transition-colors border border-amber-200">
+                <button id="btn-clear-cache" class="bg-amber-50 text-amber-700 px-4 py-2 rounded-md font-medium text-sm hover:bg-amber-100 transition-colors border border-amber-200">
                     Очистить кэш сайта
                 </button>
                 <a href="index.html" class="bg-blue-600 text-white px-6 py-2 rounded-md font-medium text-sm hover:bg-blue-700 transition-colors shadow-sm">На сайт &rarr;</a>
@@ -22,15 +22,15 @@
         </div>
 
         <div class="flex space-x-1 mb-8 bg-gray-100 p-1 rounded-lg w-fit">
-            <button onclick="switchTab('media')" id="tab-media" class="px-6 py-2 rounded-md text-sm font-medium transition-all bg-white shadow-sm text-blue-600">Медиафайлы</button>
-            <button onclick="switchTab('products')" id="tab-products" class="px-6 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Товары (Каталог)</button>
+            <button id="tab-media" data-tab="media" class="px-6 py-2 rounded-md text-sm font-medium transition-all bg-white shadow-sm text-blue-600">Медиафайлы</button>
+            <button id="tab-products" data-tab="products" class="px-6 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Товары (Каталог)</button>
         </div>
         
         <!-- Media Tab -->
         <div id="content-media">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-xl font-bold text-gray-800">Менеджер изображений</h2>
-                <button onclick="deleteAllImages()" class="text-red-600 hover:text-red-700 text-sm font-medium">Удалить все фото</button>
+                <button id="btn-delete-all-images" class="text-red-600 hover:text-red-700 text-sm font-medium">Удалить все фото</button>
             </div>
             <p class="text-gray-600 mb-6 bg-blue-50 p-4 rounded-lg text-sm">Здесь отображаются изображения, которые используются на сайте. Если вы добавили новый товар, загрузите его фото сюда.</p>
             <div id="images-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -42,7 +42,7 @@
         <div id="content-products" class="hidden">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-xl font-bold text-gray-800">Управление товарами</h2>
-                <button onclick="openProductModal()" class="bg-green-600 text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-green-700 transition-colors shadow-sm">
+                <button id="btn-add-product" class="bg-green-600 text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-green-700 transition-colors shadow-sm">
                     + Добавить товар
                 </button>
             </div>
@@ -69,7 +69,7 @@
     <div id="product-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[100] p-4">
         <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-8">
             <h3 id="modal-title" class="text-2xl font-bold mb-6">Добавить товар</h3>
-            <form id="product-form" onsubmit="saveProduct(event)" class="space-y-4">
+            <form id="product-form" class="space-y-4">
                 <input type="hidden" id="edit-id">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Название товара</label>
@@ -90,7 +90,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">Или загрузите фото прямо здесь</label>
                     <div class="flex gap-2">
                         <input type="file" id="prod-image-file" accept="image/*" class="flex-1 border rounded-md px-3 py-2 text-sm">
-                        <button type="button" onclick="uploadProductImageFromModal()" class="bg-blue-50 text-blue-700 px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-100 transition-colors">
+                        <button type="button" id="btn-upload-product-image" class="bg-blue-50 text-blue-700 px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-100 transition-colors">
                             Загрузить
                         </button>
                     </div>
@@ -109,7 +109,7 @@
                     <input type="text" id="prod-link" value="product.html" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
                 </div>
                 <div class="flex justify-end gap-3 pt-4">
-                    <button type="button" onclick="closeProductModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">Отмена</button>
+                    <button type="button" id="btn-close-product-modal" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">Отмена</button>
                     <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors shadow-sm">Сохранить</button>
                 </div>
             </form>
@@ -283,10 +283,10 @@
                     <div class="flex items-center gap-2">
                         <label class="bg-blue-50 text-blue-700 px-3 py-1.5 rounded text-xs font-semibold cursor-pointer hover:bg-blue-100 transition-colors">
                             Выбрать
-                            <input type="file" id="file-${index}" accept="image/*" class="hidden" onchange="uploadImage(${index})">
+                            <input type="file" id="file-${index}" data-upload-index="${index}" accept="image/*" class="hidden image-upload-input">
                         </label>
                         ${img.exists ? `
-                            <button onclick="deleteImage('${escapeHtml(img.filename)}')" class="text-red-400 hover:text-red-600 p-1">
+                            <button data-delete-image="${encodeURIComponent(img.filename)}" class="text-red-400 hover:text-red-600 p-1">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                             </button>
                         ` : ''}
@@ -374,8 +374,8 @@
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button onclick="openProductModal('${p.id}')" class="text-indigo-600 hover:text-indigo-900 mr-4">Изменить</button>
-                        <button onclick="deleteProduct('${p.id}')" class="text-red-600 hover:text-red-900">Удалить</button>
+                        <button data-edit-product="${escapeHtml(p.id)}" class="text-indigo-600 hover:text-indigo-900 mr-4">Изменить</button>
+                        <button data-delete-product="${escapeHtml(p.id)}" class="text-red-600 hover:text-red-900">Удалить</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -491,6 +491,63 @@
             } catch (err) { alert('Ошибка сети'); }
         }
         
+        function initEventHandlers() {
+            const mediaTab = document.getElementById('tab-media');
+            const productsTab = document.getElementById('tab-products');
+            const clearCacheBtn = document.getElementById('btn-clear-cache');
+            const deleteAllBtn = document.getElementById('btn-delete-all-images');
+            const addProductBtn = document.getElementById('btn-add-product');
+            const productForm = document.getElementById('product-form');
+            const uploadProductImageBtn = document.getElementById('btn-upload-product-image');
+            const closeModalBtn = document.getElementById('btn-close-product-modal');
+            const imagesList = document.getElementById('images-list');
+            const productsTableBody = document.getElementById('products-table-body');
+
+            mediaTab?.addEventListener('click', () => switchTab('media'));
+            productsTab?.addEventListener('click', () => switchTab('products'));
+            clearCacheBtn?.addEventListener('click', clearCache);
+            deleteAllBtn?.addEventListener('click', deleteAllImages);
+            addProductBtn?.addEventListener('click', () => openProductModal());
+            productForm?.addEventListener('submit', saveProduct);
+            uploadProductImageBtn?.addEventListener('click', uploadProductImageFromModal);
+            closeModalBtn?.addEventListener('click', closeProductModal);
+
+            imagesList?.addEventListener('change', (event) => {
+                const target = event.target;
+                if (!(target instanceof HTMLInputElement)) return;
+                if (!target.classList.contains('image-upload-input')) return;
+                const rawIndex = target.dataset.uploadIndex;
+                const index = Number(rawIndex);
+                if (Number.isNaN(index)) return;
+                uploadImage(index);
+            });
+
+            imagesList?.addEventListener('click', (event) => {
+                if (!(event.target instanceof Element)) return;
+                const btn = event.target.closest('[data-delete-image]');
+                if (!btn) return;
+                const encoded = btn.getAttribute('data-delete-image');
+                if (!encoded) return;
+                deleteImage(decodeURIComponent(encoded));
+            });
+
+            productsTableBody?.addEventListener('click', (event) => {
+                if (!(event.target instanceof Element)) return;
+                const editBtn = event.target.closest('[data-edit-product]');
+                if (editBtn) {
+                    const id = editBtn.getAttribute('data-edit-product');
+                    if (id) openProductModal(id);
+                    return;
+                }
+                const deleteBtn = event.target.closest('[data-delete-product]');
+                if (deleteBtn) {
+                    const id = deleteBtn.getAttribute('data-delete-product');
+                    if (id) deleteProduct(id);
+                }
+            });
+        }
+
+        initEventHandlers();
         loadImages();
     </script>
 </body>
