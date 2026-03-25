@@ -95,7 +95,7 @@ function createProductListItem(product) {
             <div class="accordion-content hidden">
                 <div class="pb-12 pt-4">
                     <div class="rounded-[32px] overflow-hidden bg-gray-50 border border-respo-blue/5 shadow-inner flex items-center justify-center p-6 lg:p-10">
-                        <img src="${product.image}" alt="${escapeHtml(product.name)}" class="w-[78%] h-auto object-contain">
+                        <img src="${product.image}" alt="${escapeHtml(product.name)}" class="w-[64%] max-w-xl h-auto object-contain">
                     </div>
                 </div>
             </div>
