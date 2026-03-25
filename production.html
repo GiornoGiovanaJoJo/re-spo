@@ -18,8 +18,8 @@
             theme: {
                 extend: {
                     colors: {
-                        'respo-blue': '#2E8BCC',
-                        'respo-cyan': '#4AAEF2',
+                        'respo-blue': '#2584BE',
+                        'respo-cyan': '#70CFFF',
                         'respo-blue-light': '#E9F5FF',
                         'respo-blue-action': '#549DDF',
                         'respo-green': '#B1C53F',
@@ -59,11 +59,12 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-    <header class="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-sm border-b border-respo-blue/5">
-        <div class="container-respo py-4 lg:py-6 flex items-center justify-between">
+    <header class="fixed top-0 left-0 w-full z-50 bg-transparent">
+        <div class="container-respo py-6 flex items-center justify-between">
             <a href="/" class="flex-shrink-0 lg:ml-[-10px]">
                 <img src="assets/logo.png" alt="RESPO Logo" class="h-10 lg:h-[54px] w-auto">
             </a>
@@ -77,10 +78,10 @@
             </nav>
 
             <div class="flex items-center space-x-3">
-                <div class="hidden xl:flex flex-col items-end mr-6">
-                    <span class="text-respo-dark font-medium leading-tight text-sm">INFO@re-spo.com</span>
-                    <span class="text-respo-blue font-bold leading-tight">+7 (495) 961 62 15</span>
-                </div>
+                <a href="#" id="btn-login"
+                    class="hidden xl:inline-flex bg-[#B2CD50] text-white px-6 py-3 rounded-full hover:brightness-105 transition-all text-[16px] font-medium">
+                    Войти
+                </a>
                 <a href="#" id="btn-cart"
                     class="bg-[#B2CD50] text-white px-6 py-3 rounded-full flex items-center space-x-3 hover:brightness-105 transition-all shadow-sm">
                     <img src="assets/shopping-bag.svg" alt="Cart" class="w-5 h-5 invert">
@@ -115,25 +116,23 @@
 
     <main>
         <!-- Hero Section -->
-        <section class="pt-[160px] lg:pt-[200px] pb-16 lg:pb-24 relative overflow-hidden"
-            style="background: linear-gradient(135deg, rgba(233,245,255,1) 0%, rgba(228,243,215,1) 100%);">
+        <section class="pt-[120px] lg:pt-[140px] pb-10 relative overflow-hidden hero-gradient">
             <div class="container-respo relative z-10 text-left">
-                <h1
-                    class="text-[40px] md:text-[56px] lg:text-[72px] text-respo-blue font-medium leading-[1.1] max-w-[1200px] mb-12">
+                <h1 class="text-[40px] md:text-[56px] lg:text-[60px] text-respo-blue font-medium leading-[1.2] max-w-[1542px] mb-[104px] lg:indent-[48px]">
                     Собственное производство оборудования
                 </h1>
                 <a href="#contacts"
-                    class="inline-block bg-[#7DD5FF] text-white px-10 py-4 rounded-full text-[16px] lg:text-[18px] font-medium hover:brightness-105 transition-all shadow-lg shadow-[#7DD5FF]/20">
+                    class="inline-flex items-center justify-center bg-respo-cyan text-white h-12 px-[14px] rounded-full text-[16px] font-medium w-[219px] hover:brightness-105 transition-all">
                     Оставить заявку
                 </a>
             </div>
         </section>
 
         <!-- Оборудование -->
-        <section class="py-20 lg:py-28 bg-white">
+        <section class="pt-20 pb-[30px] bg-white">
             <div class="container-respo">
-                <span class="text-respo-blue text-[24px] lg:text-[32px] font-medium block leading-none mb-4">//</span>
-                <h2 class="text-[36px] lg:text-[48px] text-respo-blue font-medium leading-[1.1] mb-12">Оборудование</h2>
+                <span class="text-respo-blue text-[18px] font-medium block leading-none mb-4">//</span>
+                <h2 class="text-[36px] lg:text-[48px] text-respo-blue font-medium leading-[40px] mb-12">Оборудование</h2>
 
                 <div id="equipment-container">
                     <!-- Dynamic equipment list loaded here -->

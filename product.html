@@ -18,8 +18,8 @@
             theme: {
                 extend: {
                     colors: {
-                        'respo-blue': '#2E8BCC',
-                        'respo-cyan': '#4AAEF2',
+                        'respo-blue': '#2584BE',
+                        'respo-cyan': '#70CFFF',
                         'respo-blue-light': '#E9F5FF',
                         'respo-blue-action': '#549DDF',
                         'respo-green': '#B1C53F',
@@ -59,6 +59,7 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
@@ -77,10 +78,10 @@
             </nav>
 
             <div class="flex items-center space-x-3">
-                <div class="hidden xl:flex flex-col items-end mr-6">
-                    <span class="text-respo-dark font-medium leading-tight text-sm">INFO@re-spo.com</span>
-                    <span class="text-respo-blue font-bold leading-tight">+7 (495) 961 62 15</span>
-                </div>
+                <a href="#" id="btn-login"
+                    class="hidden xl:inline-flex bg-[#B2CD50] text-white px-6 py-3 rounded-full hover:brightness-105 transition-all text-[16px] font-medium">
+                    Войти
+                </a>
                 <a href="#" id="btn-cart"
                     class="bg-[#B2CD50] text-white px-6 py-3 rounded-full flex items-center space-x-3 hover:brightness-105 transition-all shadow-sm">
                     <img src="assets/shopping-bag.svg" alt="Cart" class="w-5 h-5 invert">
@@ -115,40 +116,40 @@
 
     <main>
         <!-- Product Details -->
-        <section class="pt-[160px] lg:pt-[200px] pb-16 lg:pb-24 bg-white">
+        <section class="pt-[120px] lg:pt-[140px] pb-16 bg-white">
             <div class="container-respo">
-                <span class="text-respo-cyan text-[24px] lg:text-[32px] font-medium block leading-none mb-4">//</span>
-                <h1 class="text-[40px] md:text-[56px] lg:text-[72px] text-respo-cyan font-medium leading-[1.1] mb-12 lg:mb-20">
+                <span class="text-respo-blue text-[18px] font-medium block leading-none mb-4">//</span>
+                <h1 class="text-[40px] md:text-[56px] lg:text-[48px] text-respo-blue font-medium leading-[40px] mb-12 lg:indent-[48px]">
                     Butterfly valves, SS304
                 </h1>
                 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+                <div class="flex flex-col lg:flex-row gap-10 items-start">
                     <!-- Left: Image Gallery -->
-                    <div class="bg-[#F8F9FA] rounded-[32px] p-6 lg:p-10 flex flex-col items-center justify-center min-h-[500px] lg:min-h-[700px] relative">
-                        <div class="w-full h-full bg-white rounded-[24px] shadow-sm absolute inset-6 lg:inset-10 flex items-center justify-center overflow-hidden">
-                            <img src="assets/product_placeholder.png" alt="Product" class="max-w-full max-h-full object-contain relative z-10 transition-transform duration-500 hover:scale-105">
-                        </div>
-                        <!-- Dots overlay -->
-                        <div class="absolute bottom-10 left-0 right-0 flex justify-center space-x-3 z-10">
-                            <div class="w-2.5 h-2.5 rounded-full bg-respo-blue opacity-100"></div>
-                            <div class="w-2.5 h-2.5 rounded-full bg-respo-blue opacity-30 cursor-pointer hover:opacity-100 transition-opacity"></div>
-                            <div class="w-2.5 h-2.5 rounded-full bg-respo-blue opacity-30 cursor-pointer hover:opacity-100 transition-opacity"></div>
-                            <div class="w-2.5 h-2.5 rounded-full bg-respo-blue opacity-30 cursor-pointer hover:opacity-100 transition-opacity"></div>
+                    <div class="bg-[#F5F5F5] rounded-[8px] p-[30px] w-full max-w-[566px]">
+                        <div class="bg-white rounded-[4px] h-[635px] w-full"></div>
+                        <div class="flex justify-center mt-[18px]">
+                            <div class="flex gap-2 items-center">
+                                <div class="w-[7px] h-[7px] rounded-full bg-respo-blue"></div>
+                                <div class="w-[7px] h-[7px] rounded-full bg-respo-blue/30"></div>
+                                <div class="w-[7px] h-[7px] rounded-full bg-respo-blue/30"></div>
+                                <div class="w-[7px] h-[7px] rounded-full bg-respo-blue/30"></div>
+                                <div class="w-[7px] h-[7px] rounded-full bg-respo-blue/30"></div>
+                            </div>
                         </div>
                     </div>
                     
                     <!-- Right: Product Info -->
-                    <div class="flex flex-col justify-start pt-4 lg:pt-10">
-                        <ul class="text-respo-cyan text-[16px] lg:text-[18px] font-sans font-medium space-y-4 mb-20">
-                            <li class="flex items-center space-x-3"><div class="w-1.5 h-1.5 rounded-full bg-respo-cyan"></div> <a href="#" class="hover:underline underline-offset-4">BFV IA type NC, SS304, size 25</a></li>
-                            <li class="flex items-center space-x-3"><div class="w-1.5 h-1.5 rounded-full bg-respo-cyan"></div> <a href="#" class="hover:underline underline-offset-4">BFV IA type NC, SS304, size 38</a></li>
-                            <li class="flex items-center space-x-3"><div class="w-1.5 h-1.5 rounded-full bg-respo-cyan"></div> <a href="#" class="hover:underline underline-offset-4">BFV IA type NC, SS304, size 51</a></li>
-                            <li class="flex items-center space-x-3"><div class="w-1.5 h-1.5 rounded-full bg-respo-cyan"></div> <a href="#" class="hover:underline underline-offset-4">BFV IA type NC, SS304, size 63.5</a></li>
-                            <li class="flex items-center space-x-3"><div class="w-1.5 h-1.5 rounded-full bg-respo-cyan"></div> <a href="#" class="hover:underline underline-offset-4">BFV IA type NC, SS304, size 76.1</a></li>
-                            <li class="flex items-center space-x-3"><div class="w-1.5 h-1.5 rounded-full bg-respo-cyan"></div> <a href="#" class="hover:underline underline-offset-4">BFV IA type NC, SS304, size 101.6</a></li>
+                    <div class="flex flex-col gap-[18px] items-start w-full max-w-[338px]">
+                        <ul class="text-respo-blue text-[16px] font-normal list-disc pl-6 space-y-1">
+                            <li>BFV IA type NC, SS304, size 25</li>
+                            <li>BFV IA type NC, SS304, size 38</li>
+                            <li>BFV IA type NC, SS304, size 51</li>
+                            <li>BFV IA type NC, SS304, size 63.5</li>
+                            <li>BFV IA type NC, SS304, size 76.1</li>
+                            <li>BFV IA type NC, SS304, size 101.6</li>
                         </ul>
                         
-                        <button class="bg-[#7DD5FF] text-white py-4 px-10 rounded-full flex items-center justify-center space-x-3 hover:brightness-105 transition-all text-[16px] font-medium w-fit min-w-[280px] shadow-lg shadow-[#7DD5FF]/20">
+                        <button class="bg-respo-cyan text-white h-12 px-[14px] rounded-full inline-flex items-center justify-center gap-2 text-[16px] font-semibold w-[298px] hover:brightness-105 transition-all">
                             <span>Добавить в корзину</span>
                             <img src="assets/shopping-bag.svg" alt="Cart" class="w-5 h-5 invert brightness-0">
                         </button>

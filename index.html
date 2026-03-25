@@ -18,8 +18,8 @@
             theme: {
                 extend: {
                     colors: {
-                        'respo-blue': '#2E8BCC',
-                        'respo-cyan': '#4AAEF2',
+                        'respo-blue': '#2584BE',
+                        'respo-cyan': '#70CFFF',
                         'respo-blue-light': '#E9F5FF',
                         'respo-blue-action': '#549DDF',
                         'respo-green': '#B1C53F',
@@ -59,11 +59,12 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-    <header class="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-sm border-b border-respo-blue/5">
-        <div class="container-respo py-4 lg:py-6 flex items-center justify-between">
+    <header class="fixed top-0 left-0 w-full z-50 bg-transparent">
+        <div class="container-respo py-6 flex items-center justify-between">
             <a href="/" class="flex-shrink-0 lg:ml-[-10px]">
                 <img src="assets/logo.png" alt="RESPO Logo" class="h-10 lg:h-[54px] w-auto">
             </a>
@@ -77,12 +78,12 @@
             </nav>
 
             <div class="flex items-center space-x-3">
-                <div class="hidden xl:flex flex-col items-end mr-6">
-                    <span class="text-respo-dark font-medium leading-tight text-sm">INFO@re-spo.com</span>
-                    <span class="text-respo-blue font-bold leading-tight">+7 (495) 961 62 15</span>
-                </div>
+                <a href="#" id="btn-login"
+                    class="hidden xl:inline-flex bg-respo-green text-white px-4 py-3 rounded-full hover:brightness-105 transition-all text-[16px] font-medium backdrop-blur-[16px]">
+                    Войти
+                </a>
                 <a href="#" id="btn-cart"
-                    class="bg-[#B2CD50] text-white px-6 py-3 rounded-full flex items-center space-x-3 hover:brightness-105 transition-all shadow-sm">
+                    class="bg-respo-green text-white px-4 py-3 rounded-full flex items-center space-x-3 hover:brightness-105 transition-all shadow-sm backdrop-blur-[16px]">
                     <img src="assets/shopping-bag.svg" alt="Cart" class="w-5 h-5 invert">
                     <span class="text-[16px] font-medium">Корзина</span>
                     <span id="cart-count"
@@ -116,7 +117,7 @@
     <main>
         <!-- Hero Section -->
         <section id="hero"
-            class="relative min-h-[500px] lg:min-h-[720px] pt-[100px] lg:pt-[110px] pb-8 lg:pb-12 flex items-stretch overflow-hidden">
+            class="relative min-h-[500px] lg:min-h-[720px] pt-[120px] lg:pt-[140px] pb-10 lg:pb-12 flex items-stretch overflow-hidden">
             <div class="absolute inset-0 z-[-1]">
                 <div class="hero-gradient absolute inset-0"></div>
                 <!-- People Image -->
@@ -126,13 +127,13 @@
                 </div>
             </div>
 
-            <div class="container-respo w-full relative z-10 flex flex-col justify-between py-12 lg:py-20">
-                <div class="flex flex-col lg:flex-row lg:justify-between items-start w-full relative -mt-10 lg:-mt-20">
+            <div class="container-respo w-full relative z-10 flex flex-col justify-between py-10 lg:py-14">
+                <div class="flex flex-col lg:flex-row lg:justify-between items-start w-full relative gap-10">
                     <div class="max-w-[950px] text-left">
                         <span class="text-[18px] lg:text-[24px] text-respo-dark font-medium block mb-2">Группа компаний
                             «РЕ-СПО»</span>
                         <h1
-                            class="text-[36px] md:text-[52px] lg:text-[72px] lg:leading-[1.1] text-respo-cyan font-heading font-medium tracking-tight">
+                            class="text-[36px] md:text-[52px] lg:text-[60px] lg:leading-[1.2] text-respo-blue font-heading font-medium tracking-tight lg:indent-[48px]">
                             Надежные эксперты —<br>
                             отличная работа завода
                         </h1>
@@ -141,8 +142,8 @@
 
                 <div class="flex flex-col items-start mt-auto">
                     <!-- Services list moved here, above buttons -->
-                    <div class="max-w-[400px] mb-10 lg:mb-12">
-                        <p class="text-[15px] lg:text-[16px] text-respo-dark/80 leading-[1.6] text-left font-light">
+                    <div class="max-w-[260px] lg:max-w-[320px] mb-10 lg:mb-12 lg:ml-auto lg:mr-0">
+                        <p class="text-[18px] text-respo-dark/80 leading-[1.5] text-left font-normal">
                             Изготовление пищевого оборудования,<br>
                             Технологический аудит,<br>
                             Модернизация оборудования «под ключ»,<br>
@@ -154,14 +155,14 @@
                     <div
                         class="flex flex-col sm:flex-row space-y-6 sm:space-y-0 sm:space-x-12 items-start sm:items-center animate-fade-in-up">
                         <a href="#about"
-                            class="bg-[#7DD5FF] text-white px-10 py-5 rounded-full hover:brightness-105 transition-all text-[18px] lg:text-[20px] font-medium shadow-lg shadow-[#7DD5FF]/20 hover:-translate-y-1">Узнать
+                            class="bg-respo-cyan text-white px-10 py-3.5 rounded-full hover:brightness-105 transition-all text-[16px] font-medium">Узнать
                             больше</a>
                         <a href="production.html" class="group flex items-center space-x-5">
                             <span
-                                class="text-[18px] lg:text-[20px] font-medium text-respo-dark group-hover:text-respo-blue transition-all">Перейти
+                                class="text-[18px] font-medium text-respo-dark group-hover:text-respo-blue transition-all">Перейти
                                 в каталог</span>
                             <div
-                                class="w-[56px] h-[56px] bg-[#B2CD50] rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm">
+                                class="w-12 h-12 bg-respo-green rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm">
                                 <img src="assets/arrow-right.svg" alt="Arrow" class="w-6 h-6">
                             </div>
                         </a>
@@ -172,18 +173,18 @@
 
 
         <!-- About Section -->
-        <section class="py-16 lg:py-24 bg-white" id="about">
+        <section class="py-20 lg:py-24 bg-white" id="about">
             <div class="container-respo text-respo-dark">
                 <div class="lg:flex lg:gap-32 mb-16 lg:mb-24 items-start">
                     <div class="lg:w-[40%] flex flex-col items-start space-y-4">
                         <span
-                            class="text-[32px] lg:text-[48px] text-respo-green font-medium leading-none tracking-tighter">//</span>
+                            class="text-[18px] text-respo-green font-medium leading-none tracking-tighter">//</span>
                         <h2
-                            class="text-[40px] lg:text-[56px] text-respo-green font-medium leading-[1.1] tracking-tight">
+                            class="text-[40px] lg:text-[48px] text-respo-green font-medium leading-[1.2] tracking-tight lg:indent-[48px]">
                             О компании</h2>
                     </div>
                     <div
-                        class="lg:w-[60%] text-[15px] lg:text-[16px] text-respo-dark/80 font-sans leading-[1.6] mt-8 lg:mt-0">
+                        class="lg:w-[60%] text-[18px] text-respo-dark font-sans leading-[1.5] mt-8 lg:mt-0 pr-12">
                         <p class="mb-4">Компания РЕ-СПО была основана в 2010 году, собрав экспертов молочной индустрии с
                             многолетним опытом.</p>
                         <p class="mb-4">Наши клиенты — Лидеры рынка и ведущие производители молочных продуктов питания в
@@ -198,7 +199,7 @@
 
                 <div class="mb-16 lg:mb-24 text-center">
                     <p
-                        class="text-[28px] lg:text-[36px] text-respo-blue font-medium leading-[1.3] mx-auto max-w-[1100px] tracking-tight">
+                        class="text-[28px] lg:text-[36px] text-respo-blue font-medium leading-[1.2] mx-auto max-w-[1240px] tracking-tight lg:indent-[48px]">
                         RE-SPO — сокращение от «Reliable Experts —<br class="hidden lg:block">
                         Successful Plant Operation», переводится как<br class="hidden lg:block">
                         «Надёжные Эксперты — Успешная Работа Завода»
@@ -314,11 +315,10 @@
         </section>
 
         <!-- Categories Section -->
-        <section class="py-24 lg:py-32 bg-white" id="services">
+        <section class="py-20 lg:py-24 bg-white" id="services">
             <div class="container-respo">
                 <div class="text-center mb-16">
-                    <h2 class="text-[32px] lg:text-[48px] leading-[1.1] text-respo-blue font-medium mb-8">Основные
-                        направления нашей работы</h2>
+                    <h2 class="text-[32px] lg:text-[48px] leading-[1.1] text-respo-blue font-medium mb-5 tracking-[-0.48px]">Основные направления нашей работы</h2>
                     <a href="production.html"
                         class="inline-flex items-center space-x-6 font-heading text-xl font-medium text-respo-dark hover:text-respo-blue transition-all group">
                         <span>Перейти в каталог</span>
@@ -329,53 +329,32 @@
                     </a>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- Category 1 -->
-                    <a href="production.html" class="group relative aspect-[320/176] overflow-hidden rounded-[24px]">
-                        <img src="assets/Rectangle%20461.png" alt="Audit"
-                            class="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-105">
-                        <div class="absolute inset-0 bg-[#EBF6FE]/40 group-hover:bg-[#EBF6FE]/60 transition-colors">
-                        </div>
-                        <div class="absolute inset-x-0 top-0 pt-8 px-6 flex items-start justify-center">
-                            <h3
-                                class="text-respo-dark text-[13px] lg:text-[15px] font-normal leading-tight uppercase tracking-wide text-center">
-                                аудит технологического оборудования</h3>
+                    <a href="#audit" class="group bg-[#E4F6FF] rounded-[12px] h-[176px] p-6 flex items-center justify-center">
+                        <div class="backdrop-blur-[2px] bg-white/0 rounded-[4px] px-3 py-2 w-full">
+                            <h3 class="text-[#0C0A08] text-[16px] leading-[24px] font-normal uppercase text-center">
+                                аудит технологического оборудования
+                            </h3>
                         </div>
                     </a>
-                    <!-- Category 2 -->
-                    <a href="production.html" class="group relative aspect-[320/176] overflow-hidden rounded-[24px]">
-                        <img src="assets/Rectangle%20461-1.png" alt="Design"
-                            class="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-105">
-                        <div class="absolute inset-0 bg-[#EBF6FE]/40 group-hover:bg-[#EBF6FE]/60 transition-colors">
-                        </div>
-                        <div class="absolute inset-x-0 top-0 pt-8 px-6 flex items-start justify-center">
-                            <h3
-                                class="text-respo-dark text-[13px] lg:text-[15px] font-normal leading-tight uppercase tracking-wide text-center">
-                                комплексное проектирование и реализация проектов технологических линий</h3>
+                    <a href="production.html" class="group bg-[#E4F6FF] rounded-[12px] h-[176px] p-6 flex items-center justify-center">
+                        <div class="backdrop-blur-[2px] bg-white/0 rounded-[4px] px-3 py-2 w-full">
+                            <h3 class="text-[#0C0A08] text-[16px] leading-[24px] font-normal uppercase text-center">
+                                комплексное проектирование и реализация проектов технологических линий
+                            </h3>
                         </div>
                     </a>
-                    <!-- Category 3 -->
-                    <a href="production.html" class="group relative aspect-[320/176] overflow-hidden rounded-[24px]">
-                        <img src="assets/Rectangle%20461-2.png" alt="Production"
-                            class="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-105">
-                        <div class="absolute inset-0 bg-[#EBF6FE]/40 group-hover:bg-[#EBF6FE]/60 transition-colors">
-                        </div>
-                        <div class="absolute inset-x-0 top-0 pt-8 px-6 flex items-start justify-center">
-                            <h3
-                                class="text-respo-dark text-[13px] lg:text-[15px] font-normal leading-tight uppercase tracking-wide text-center">
-                                импортозамещение: собственный завод по производству оборудования для пищевой
-                                промышленности</h3>
+                    <a href="production.html" class="group bg-[#E4F6FF] rounded-[12px] h-[176px] p-6 flex items-center justify-center">
+                        <div class="backdrop-blur-[2px] bg-white/0 rounded-[4px] px-3 py-2 w-full">
+                            <h3 class="text-[#0C0A08] text-[16px] leading-[24px] font-normal uppercase text-center">
+                                импортозамещение: собственный завод по производству оборудования для пищевой промышленности
+                            </h3>
                         </div>
                     </a>
-                    <!-- Category 4 -->
-                    <a href="#optimization" class="group relative aspect-[320/176] overflow-hidden rounded-[24px]">
-                        <img src="assets/Rectangle%20461-3.png" alt="Service"
-                            class="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-105">
-                        <div class="absolute inset-0 bg-[#EBF6FE]/40 group-hover:bg-[#EBF6FE]/60 transition-colors">
-                        </div>
-                        <div class="absolute inset-x-0 top-0 pt-8 px-6 flex items-start justify-center">
-                            <h3
-                                class="text-respo-dark text-[13px] lg:text-[15px] font-normal leading-tight uppercase tracking-wide text-center">
-                                сервисное обслуживание завода</h3>
+                    <a href="#optimization" class="group bg-[#E4F6FF] rounded-[12px] h-[176px] p-6 flex items-center justify-center">
+                        <div class="backdrop-blur-[2px] bg-white/0 rounded-[4px] px-3 py-2 w-full">
+                            <h3 class="text-[#0C0A08] text-[16px] leading-[24px] font-normal uppercase text-center">
+                                сервисное обслуживание завода
+                            </h3>
                         </div>
                     </a>
                 </div>

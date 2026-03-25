@@ -101,6 +101,22 @@
     <script>
         let requiredImages = [];
         let productData = { categories: [], products: [] };
+        const FALLBACK_IMG = 'https://via.placeholder.com/40?text=?';
+
+        function escapeHtml(input) {
+            return String(input ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function normalizeImagePath(value) {
+            const v = String(value || '').trim();
+            if (!v) return '';
+            return v.startsWith('assets/') ? v : `assets/${v}`;
+        }
 
         function switchTab(tab) {
             document.getElementById('content-media').classList.toggle('hidden', tab !== 'media');
@@ -143,7 +159,8 @@
                 const div = document.createElement('div');
                 div.className = 'flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg hover:shadow-md transition-shadow bg-gray-50';
                 
-                const imgSrc = img.exists ? `/assets/${img.filename}?t=${new Date().getTime()}` : '';
+                const safeFile = encodeURIComponent(img.filename);
+                const imgSrc = img.exists ? `/assets/${safeFile}?t=${new Date().getTime()}` : '';
                 const imgPlaceholder = img.exists 
                     ? `<img src="${imgSrc}" class="w-full h-full object-cover">` 
                     : `<span class="text-[10px] text-gray-400 font-medium text-center leading-tight">Нет<br>фото</span>`;
@@ -154,7 +171,7 @@
                             ${imgPlaceholder}
                         </div>
                         <div class="min-w-0">
-                            <p class="font-medium text-gray-800 text-sm truncate w-40" title="${img.filename}">${img.filename}</p>
+                            <p class="font-medium text-gray-800 text-sm truncate w-40" title="${escapeHtml(img.filename)}">${escapeHtml(img.filename)}</p>
                             <p class="text-[10px] font-semibold ${img.exists ? 'text-green-600' : 'text-red-500'}">
                                 ${img.exists ? '✅ Есть' : '❌ Нет'}
                             </p>
@@ -166,7 +183,7 @@
                             <input type="file" id="file-${index}" accept="image/*" class="hidden" onchange="uploadImage(${index})">
                         </label>
                         ${img.exists ? `
-                            <button onclick="deleteImage('${img.filename}')" class="text-red-400 hover:text-red-600 p-1">
+                            <button onclick="deleteImage('${escapeHtml(img.filename)}')" class="text-red-400 hover:text-red-600 p-1">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                             </button>
                         ` : ''}
@@ -229,20 +246,24 @@
             productData.products.forEach(p => {
                 const tr = document.createElement('tr');
                 const cat = productData.categories.find(c => c.id === p.category);
+                const safeName = escapeHtml(p.name);
+                const safeLink = escapeHtml(p.link);
+                const safeImage = escapeHtml(p.image || '');
+                const safeCategoryName = escapeHtml(cat ? cat.name : p.category);
                 
                 tr.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="w-10 h-10 bg-gray-100 rounded overflow-hidden border">
-                            <img src="${p.image}?t=${new Date().getTime()}" onerror="this.src='https://via.placeholder.com/40?text=?'" class="w-full h-full object-cover">
+                            <img src="${safeImage}?t=${new Date().getTime()}" onerror="this.src='${FALLBACK_IMG}'" class="w-full h-full object-cover">
                         </div>
                     </td>
                     <td class="px-6 py-4">
-                        <div class="text-sm font-medium text-gray-900">${p.name}</div>
-                        <div class="text-xs text-gray-500">${p.link}</div>
+                        <div class="text-sm font-medium text-gray-900">${safeName}</div>
+                        <div class="text-xs text-gray-500">${safeLink}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                            ${cat ? cat.name : p.category}
+                            ${safeCategoryName}
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -295,11 +316,16 @@
             const id = document.getElementById('edit-id').value;
             const newProd = {
                 id: id || Date.now().toString(),
-                name: document.getElementById('prod-name').value,
-                category: document.getElementById('prod-category').value,
-                image: 'assets/' + document.getElementById('prod-image').value,
-                link: document.getElementById('prod-link').value
+                name: document.getElementById('prod-name').value.trim(),
+                category: document.getElementById('prod-category').value.trim(),
+                image: normalizeImagePath(document.getElementById('prod-image').value),
+                link: document.getElementById('prod-link').value.trim()
             };
+
+            if (!newProd.name || !newProd.category || !newProd.image || !newProd.link) {
+                alert('Заполните все обязательные поля.');
+                return;
+            }
             
             if (id) {
                 const idx = productData.products.findIndex(x => x.id === id);

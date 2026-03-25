@@ -13,10 +13,10 @@ jobs:
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: "60f67cfaba8e.vps.myjino.ru"
-          username: "root"
-          password: "Nikitoso02"
-          port: 49340
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          password: ${{ secrets.DEPLOY_PASSWORD }}
+          port: ${{ secrets.DEPLOY_PORT }}
           script: |
             # Set up base directory
             mkdir -p /var/www
@@ -40,8 +40,8 @@ jobs:
             fi
             
             cd re-spo
-            git fetch --all
-            git reset --hard origin/main
+            git checkout main
+            git pull --ff-only origin main
             
             # Ensure assets directory exists for uploads
             mkdir -p assets

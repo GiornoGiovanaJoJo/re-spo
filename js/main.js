@@ -7,6 +7,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ----- State -----
     let cartItems = [];
+    const CART_STORAGE_KEY = 'respo_cart_v1';
+    try {
+        const stored = localStorage.getItem(CART_STORAGE_KEY);
+        if (stored) {
+            const parsed = JSON.parse(stored);
+            if (Array.isArray(parsed)) cartItems = parsed;
+        }
+    } catch (e) {
+        console.warn('Failed to restore cart from storage', e);
+    }
 
     // =====================================================
     // Toast Notification System
@@ -140,26 +150,30 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             cartCountEl.classList.add('hidden');
         }
+        try {
+            localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+        } catch (e) {
+            console.warn('Failed to persist cart', e);
+        }
     }
 
     // =====================================================
     // "Добавить в корзину" Buttons
     // =====================================================
-    const addToCartButtons = document.querySelectorAll('#catalog button');
-    addToCartButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const card = btn.closest('.bg-\\[\\#F6F6F6\\]') || btn.parentElement;
-            const productName = card ? card.querySelector('h3')?.textContent?.trim() : 'Товар';
-            cartItems.push(productName);
-            updateCartBadge();
-            showToast(`«${productName}» добавлен в корзину`, 'success');
-
-            // Button micro-animation
-            btn.style.transform = 'scale(0.95)';
-            setTimeout(() => { btn.style.transform = 'scale(1)'; }, 150);
-        });
-    });
+    function attachAddToCartHandlers() {
+        // Product page button
+        const productPageBtn = document.querySelector('main button');
+        if (productPageBtn && !productPageBtn.dataset.cartBound) {
+            productPageBtn.dataset.cartBound = '1';
+            productPageBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const name = document.querySelector('main h1')?.textContent?.trim() || 'Товар';
+                cartItems.push(name);
+                updateCartBadge();
+                showToast(`«${name}» добавлен в корзину`, 'success');
+            });
+        }
+    }
 
     // =====================================================
     // Header "Войти" Button
@@ -199,14 +213,26 @@ document.addEventListener('DOMContentLoaded', () => {
     categoryCards.forEach(card => {
         card.addEventListener('click', (e) => {
             e.preventDefault();
-            const title = card.querySelector('h3')?.textContent?.trim() || '';
-            showToast(`Раздел «${title}» — подробности ниже`, 'info');
-            const auditSection = document.getElementById('audit');
-            if (auditSection) {
-                const headerHeight = header.offsetHeight;
-                const pos = auditSection.getBoundingClientRect().top + window.scrollY - headerHeight - 20;
+            const title = (card.querySelector('h3')?.textContent || '').toLowerCase();
+            const goToSection = (id) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                const headerHeight = header ? header.offsetHeight : 0;
+                const pos = el.getBoundingClientRect().top + window.scrollY - headerHeight - 20;
                 window.scrollTo({ top: pos, behavior: 'smooth' });
+            };
+
+            if (title.includes('аудит')) {
+                goToSection('audit');
+                showToast('Переход к технологическому аудиту', 'info');
+                return;
             }
+            if (title.includes('сервисное')) {
+                goToSection('optimization');
+                showToast('Переход к сервисному обслуживанию', 'info');
+                return;
+            }
+            window.location.href = 'production.html';
         });
     });
 
@@ -430,6 +456,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     initInteractiveCow();
+    attachAddToCartHandlers();
+    updateCartBadge();
 
     // =====================================================
     // "Узнать больше" Button
