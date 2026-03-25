@@ -13,6 +13,24 @@ async function fetchProducts() {
     }
 }
 
+function escapeHtml(input) {
+    return String(input ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function getProductHref(product) {
+    const raw = String(product.link || 'product.html').trim();
+    if (/^product\.html(?:\?|$)/i.test(raw) && !/[?&]id=/.test(raw)) {
+        const sep = raw.includes('?') ? '&' : '?';
+        return `${raw}${sep}id=${encodeURIComponent(product.id)}`;
+    }
+    return raw;
+}
+
 function createProductCard(product) {
     const div = document.createElement('div');
     const isValve = product.category === 'valves';
@@ -21,29 +39,41 @@ function createProductCard(product) {
         ? 'bg-[#F8F9FA] p-6 rounded-[20px] flex flex-col items-start h-full'
         : 'bg-[#F8F9FA] p-6 lg:p-8 rounded-[20px] flex flex-col items-start group hover:shadow-xl transition-all h-full';
     
+    const safeName = escapeHtml(product.name);
+    const href = getProductHref(product);
+    const safeHref = escapeHtml(href);
+    const safeDescription = escapeHtml(product.description || '');
+
     // Use t parameter to bust cache if needed, or just standard path
     const imgSrc = product.image || 'assets/product_placeholder.png';
     
     if (isExchanger) {
         div.innerHTML = `
             <div class="bg-white w-full aspect-square rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center">
-                <img src="${imgSrc}" alt="${product.name}" class="w-full h-full object-cover">
+                <img src="${imgSrc}" alt="${safeName}" class="w-full h-full object-cover">
             </div>
-            <h3 class="text-[14px] text-respo-dark/80 font-medium mt-auto">${product.name}</h3>
+            <h3 class="text-[14px] text-respo-dark/80 font-medium mt-auto">${safeName}</h3>
         `;
         return div;
     }
 
     div.innerHTML = `
-        <h3 class="${isValve ? 'text-[14px]' : 'text-lg'} font-medium text-respo-dark mb-6 line-clamp-2 min-h-[3.5rem]">${product.name}</h3>
+        <h3 class="${isValve ? 'text-[14px]' : 'text-lg'} font-medium text-respo-dark mb-4 line-clamp-2 min-h-[3.5rem]">${safeName}</h3>
+        ${safeDescription ? `<p class="text-[12px] text-respo-dark/60 mb-4 line-clamp-2 w-full">${safeDescription}</p>` : ''}
         <div class="bg-white w-full aspect-square rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center">
-            <img src="${imgSrc}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+            <img src="${imgSrc}" alt="${safeName}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
         </div>
         <div class="mt-auto w-full">
-            <a href="${product.link}" class="bg-respo-cyan text-white py-2.5 px-5 rounded-full flex items-center justify-center space-x-2 hover:brightness-110 transition-all w-full text-[12px]">
-                <span class="font-medium">${isValve ? 'добавить в корзину' : 'Подробнее'}</span>
-                <img src="assets/arrow-right.svg" alt="Icon" class="w-4 h-4 brightness-0 invert">
-            </a>
+            ${isValve
+                ? `<button data-add-to-cart="1" data-product-name="${safeName}" class="bg-respo-cyan text-white py-2.5 px-5 rounded-full flex items-center justify-center space-x-2 hover:brightness-110 transition-all w-full text-[12px]">
+                    <span class="font-medium">добавить в корзину</span>
+                    <img src="assets/arrow-right.svg" alt="Icon" class="w-4 h-4 brightness-0 invert">
+                </button>`
+                : `<a href="${safeHref}" class="bg-respo-cyan text-white py-2.5 px-5 rounded-full flex items-center justify-center space-x-2 hover:brightness-110 transition-all w-full text-[12px]">
+                    <span class="font-medium">Подробнее</span>
+                    <img src="assets/arrow-right.svg" alt="Icon" class="w-4 h-4 brightness-0 invert">
+                </a>`
+            }
         </div>
     `;
     return div;
@@ -57,7 +87,7 @@ function createProductListItem(product) {
     if (product.category === 'equipment') {
         div.innerHTML = `
             <div class="py-8 flex items-center justify-between group cursor-pointer hover:bg-respo-blue-light/30 transition-colors px-4 -mx-4 rounded-xl accordion-header">
-                <h3 class="text-[20px] lg:text-[24px] text-respo-dark font-medium transition-colors group-hover:text-respo-cyan">${product.name}</h3>
+                <h3 class="text-[20px] lg:text-[24px] text-respo-dark font-medium transition-colors group-hover:text-respo-cyan">${escapeHtml(product.name)}</h3>
                 <div class="flex-shrink-0 w-12 h-12 bg-respo-green rounded-full flex items-center justify-center transition-all group-hover:scale-110 ml-4 arrow-container">
                     <img src="assets/arrow-right.svg" alt="Arrow" class="w-5 h-5 transition-transform duration-300">
                 </div>
@@ -65,7 +95,7 @@ function createProductListItem(product) {
             <div class="accordion-content hidden">
                 <div class="pb-12 pt-4">
                     <div class="rounded-[32px] overflow-hidden bg-gray-50 border border-respo-blue/5 shadow-inner">
-                        <img src="${product.image}" alt="${product.name}" class="w-full h-auto object-cover">
+                        <img src="${product.image}" alt="${escapeHtml(product.name)}" class="w-full h-auto object-cover">
                     </div>
                 </div>
             </div>
@@ -84,14 +114,14 @@ function createProductListItem(product) {
         // Standard item (link style)
         div.innerHTML = `
             <div class="py-8 flex items-center justify-between group cursor-pointer hover:bg-respo-blue-light/30 transition-colors px-4 -mx-4 rounded-xl">
-                <h3 class="text-[20px] lg:text-[24px] text-respo-dark font-medium transition-colors group-hover:text-respo-cyan">${product.name}</h3>
+                <h3 class="text-[20px] lg:text-[24px] text-respo-dark font-medium transition-colors group-hover:text-respo-cyan">${escapeHtml(product.name)}</h3>
                 <div class="flex-shrink-0 w-12 h-12 bg-respo-green rounded-full flex items-center justify-center transition-transform group-hover:scale-110 ml-4">
                     <img src="assets/arrow-right.svg" alt="Arrow" class="w-5 h-5">
                 </div>
             </div>
         `;
         div.addEventListener('click', () => {
-            window.location.href = product.link;
+            window.location.href = getProductHref(product);
         });
     }
     

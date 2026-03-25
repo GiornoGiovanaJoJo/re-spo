@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Butterfly valves, SS304 - RESPO</title>
+    <title>Товар - RESPO</title>
     <meta name="description" content="Технологический аудит, оптимизация и обслуживание молочных заводов.">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -119,14 +119,16 @@
         <section class="pt-[120px] lg:pt-[140px] pb-16 bg-white">
             <div class="container-respo">
                 <span class="text-respo-blue text-[18px] font-medium block leading-none mb-4">//</span>
-                <h1 class="text-[40px] md:text-[56px] lg:text-[48px] text-respo-blue font-medium leading-[40px] mb-12 lg:indent-[48px]">
+                <h1 id="product-title" class="text-[40px] md:text-[56px] lg:text-[48px] text-respo-blue font-medium leading-[40px] mb-12 lg:indent-[48px]">
                     Butterfly valves, SS304
                 </h1>
                 
                 <div class="flex flex-col lg:flex-row gap-10 lg:gap-[40px] items-start">
                     <!-- Left: Image Gallery -->
                     <div class="bg-[#F5F5F5] rounded-[8px] p-[30px] w-full max-w-[566px]">
-                        <div class="bg-white rounded-[4px] h-[635px] w-full"></div>
+                        <div class="bg-white rounded-[4px] h-[635px] w-full overflow-hidden flex items-center justify-center">
+                            <img id="product-main-image" src="assets/product_placeholder.png" alt="Product" class="w-full h-full object-contain">
+                        </div>
                         <div class="flex justify-center mt-[18px]">
                             <div class="flex gap-2 items-center">
                                 <div class="w-[7px] h-[7px] rounded-full bg-respo-blue"></div>
@@ -140,7 +142,7 @@
                     
                     <!-- Right: Product Info -->
                     <div class="flex flex-col gap-[18px] items-start w-full max-w-[338px] pt-2">
-                        <ul class="text-respo-blue text-[16px] font-normal list-disc pl-6 space-y-0.5 leading-[24px]">
+                        <ul id="product-spec-list" class="text-respo-blue text-[16px] font-normal list-disc pl-6 space-y-0.5 leading-[24px]">
                             <li>BFV IA type NC, SS304, size 25</li>
                             <li>BFV IA type NC, SS304, size 38</li>
                             <li>BFV IA type NC, SS304, size 51</li>
@@ -149,7 +151,7 @@
                             <li>BFV IA type NC, SS304, size 101.6</li>
                         </ul>
                         
-                        <button class="bg-respo-cyan text-white h-12 px-[14px] rounded-full inline-flex items-center justify-center gap-2 text-[16px] font-semibold w-[298px] hover:brightness-105 transition-all mt-2">
+                        <button data-add-to-cart="1" class="bg-respo-cyan text-white h-12 px-[14px] rounded-full inline-flex items-center justify-center gap-2 text-[16px] font-semibold w-[298px] hover:brightness-105 transition-all mt-2">
                             <span>Добавить в корзину</span>
                             <img src="assets/shopping-bag.svg" alt="Cart" class="w-5 h-5 invert brightness-0">
                         </button>
@@ -157,7 +159,7 @@
                 </div>
             </div>
         </section>
-<!-- Отзывы -->
+        <!-- Отзывы -->
         <section class="pt-10 pb-24"
             style="background: linear-gradient(180deg, rgba(233,245,255,0.3) 0%, rgba(175,221,255,1) 100%);">
             <div class="container-respo">
@@ -175,7 +177,6 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Review 1 -->
                     <div class="bg-white rounded-[10px] p-6 lg:p-6 flex flex-col min-h-[267px]">
                         <p class="text-[16px] text-respo-dark/80 font-sans leading-[24px] mb-8">
                             "Очень довольна сотрудничеством с этой компанией. Всё делали аккуратно, в срок и с вниманием
@@ -183,7 +184,6 @@
                         </p>
                         <div class="mt-auto font-medium text-[18px] text-respo-dark">Анастасия С.</div>
                     </div>
-                    <!-- Review 2 -->
                     <div class="bg-white rounded-[10px] p-6 lg:p-6 flex flex-col min-h-[267px]">
                         <p class="text-[16px] text-respo-dark/80 font-sans leading-[24px] mb-8">
                             "Очень довольна сотрудничеством с этой компанией. Всё делали аккуратно, в срок и с вниманием
@@ -194,18 +194,130 @@
                     </div>
                 </div>
 
-                <!-- Pagination Dots -->
                 <div class="flex justify-center mt-12 space-x-3">
                     <div class="w-2.5 h-2.5 rounded-full bg-respo-blue opacity-100"></div>
-                    <div
-                        class="w-2.5 h-2.5 rounded-full bg-white opacity-60 hover:opacity-100 cursor-pointer transition-opacity">
+                    <div class="w-2.5 h-2.5 rounded-full bg-white opacity-60"></div>
+                    <div class="w-2.5 h-2.5 rounded-full bg-white opacity-60"></div>
+                    <div class="w-2.5 h-2.5 rounded-full bg-white opacity-60"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-24 lg:py-28" id="contacts"
+            style="background: linear-gradient(to top, rgba(74, 174, 242, 0.15), white);">
+            <div class="container-respo">
+                <div class="grid lg:grid-cols-2 gap-20 items-center">
+                    <div>
+                        <span class="text-respo-cyan text-[14px] lg:text-[16px] font-medium uppercase tracking-widest block mb-4">//
+                            СВЯЖИТЕСЬ С НАМИ</span>
+                        <h2 class="text-[36px] lg:text-[48px] font-medium text-respo-dark leading-[1.2] lg:indent-[48px]">
+                            Остались вопросы?</h2>
                     </div>
-                    <div
-                        class="w-2.5 h-2.5 rounded-full bg-white opacity-60 hover:opacity-100 cursor-pointer transition-opacity">
-                    </div>
-                    <div
-                        class="w-2.5 h-2.5 rounded-full bg-white opacity-60 hover:opacity-100 cursor-pointer transition-opacity">
+                    <div class="flex flex-col">
+                        <form class="space-y-8">
+                            <div class="space-y-2">
+                                <label class="text-[14px] text-respo-dark/50 block">Ваше имя</label>
+                                <input type="text" placeholder="Введите свое имя"
+                                    class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-cyan focus:border-respo-cyan outline-none transition-all">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[14px] text-respo-dark/50 block">Номер телефона</label>
+                                <input type="tel" placeholder="Введите свой номер телефона"
+                                    class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-cyan focus:border-respo-cyan outline-none transition-all">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[14px] text-respo-dark/50 block">Электронная почта</label>
+                                <input type="email" placeholder="your@mail.ru"
+                                    class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-cyan focus:border-respo-cyan outline-none transition-all">
+                            </div>
+                            <div class="pt-8">
+                                <button type="submit"
+                                    class="w-full bg-respo-green text-white py-5 rounded-full text-[18px] font-medium hover:brightness-105 transition-all shadow-lg shadow-respo-green/20">
+                                    Отправить
+                                </button>
+                            </div>
+                            <p class="text-[12px] text-respo-dark/40 text-center">
+                                Заполняя форму, вы даете <a href="javascript:void(0)" class="underline">согласие на обработку
+                                    персональных данных</a>
+                            </p>
+                        </form>
                     </div>
                 </div>
             </div>
         </section>
+    </main>
+
+    <footer class="pt-20 pb-10 relative" style="background: linear-gradient(to top, rgba(74, 174, 242, 0.15), white);">
+        <div class="container-respo">
+            <div class="mb-24">
+                <img src="assets/logo.png" alt="RESPO Logo" class="h-[72px] w-auto">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-20 mb-32 relative">
+                <div class="space-y-32">
+                    <div class="flex flex-col">
+                        <h4 class="text-respo-cyan font-sans text-base font-medium mb-6">Контактный телефон</h4>
+                        <p class="text-respo-lime text-[36px] lg:text-[40px] font-medium leading-none tabular-nums whitespace-nowrap">
+                            +7 (495) 961 62 15</p>
+                    </div>
+                    <div class="flex flex-col">
+                        <h4 class="text-respo-cyan font-sans text-base font-medium mb-8">Адреса</h4>
+                        <div class="text-[14px] text-respo-dark font-sans leading-[1.8] space-y-6">
+                            <p>OOO «РЕ-СПО»: 142001, Московская область, г. Домодедово,<br>мкр. Северный, Каширское шоссе, д. 7, офис 43</p>
+                            <p>OOO «РЕ-СПО Проект»: 142846, Московская область,<br>Ступинский район, с. Татариново, ул. Барыбинская, 26</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-32 relative">
+                    <div class="flex flex-col">
+                        <h4 class="text-respo-cyan font-sans text-base font-medium mb-6">Навигация</h4>
+                        <ul class="space-y-3 text-[14px] text-respo-dark font-sans font-medium">
+                            <li><a href="index.html#hero" class="hover:text-respo-blue transition-colors">Главная</a></li>
+                            <li><a href="index.html#about" class="hover:text-respo-blue transition-colors">О компании</a></li>
+                            <li><a href="index.html#services" class="hover:text-respo-blue transition-colors">Услуги</a></li>
+                            <li><a href="index.html#values" class="hover:text-respo-blue transition-colors">Наши ценности</a></li>
+                            <li><a href="production.html" class="hover:text-respo-blue transition-colors">Каталог</a></li>
+                            <li><a href="index.html#contacts" class="hover:text-respo-blue transition-colors">Связаться с нами</a></li>
+                        </ul>
+                    </div>
+                    <div class="flex flex-col min-h-[160px] relative">
+                        <h4 class="text-respo-cyan font-sans text-base font-medium mb-6">Электронная почта</h4>
+                        <a href="mailto:info@re-spo.com"
+                            class="text-[14px] text-respo-dark font-sans hover:text-respo-blue transition-colors underline decoration-respo-dark/30 underline-offset-4">info@re-spo.com</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="interactive-cow-area" class="absolute bottom-0 left-0 w-full h-40 pointer-events-none mb-4 lg:mb-10 z-[9999]">
+            <div id="interactive-cow" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 md:w-60 pointer-events-auto cursor-help ease-out z-[9999]">
+                <div class="cow-container relative w-full aspect-[282/238]">
+                    <svg class="cow-svg" viewBox="0 0 282 238" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g class="cow-waddle-group" transform="translate(0,238) scale(0.1,-0.1)">
+                            <path class="cow-main-path" fill="#FFFFFF" stroke="#000000" stroke-width="20" d="M732 2108 c-11 -13 -35 -54 -53 -91 -27 -58 -31 -76 -26 -117 3 -27 15 -67 27 -90 20 -39 20 -60 -1 -60 -5 0 -33 18 -62 39 -104 79 -191 99 -273 65 -107 -44 -100 -93 24 -158 48 -25 64 -28 153 -28 54 0 99 -1 99 -2 0 -2 -9 -38 -20 -80 -11 -43 -26 -146 -35 -229 -8 -84 -22 -199 -30 -256 -24 -181 5 -261 96 -261 18 0 72 -18 120 -41 85 -39 89 -40 118 -24 17 8 41 29 53 45 12 17 25 30 29 30 3 0 9 -39 11 -87 4 -63 16 -123 42 -208 37 -119 40 -143 33 -290 -2 -37 0 -40 27 -43 18 -2 30 -11 33 -23 6 -22 59 -26 111 -8 27 9 31 16 34 57 3 26 21 92 41 148 26 72 39 126 43 187 4 48 11 87 15 87 5 0 24 -8 44 -17 37 -18 42 -33 25 -78 -10 -26 -6 -32 44 -68 18 -13 18 -15 3 -38 -24 -33 -21 -54 10 -79 27 -21 28 -21 43 -2 8 11 20 27 25 37 9 15 15 16 54 4 52 -15 58 -27 38 -77 -8 -21 -18 -59 -22 -85 -6 -40 -5 -46 8 -41 8 3 18 1 22 -5 8 -13 74 -14 94 -2 12 8 13 16 3 49 -7 22 -12 41 -12 43 0 3 17 3 38 1 57 -4 68 7 55 63 -11 47 -11 47 28 86 22 22 39 34 39 28 0 -6 -11 -50 -25 -98 -48 -160 -57 -193 -53 -195 2 -1 34 0 71 2 l68 4 -6 39 c-13 76 36 196 115 284 48 53 64 95 40 110 -15 9 -12 45 4 51 24 9 84 106 98 157 7 26 15 47 19 47 4 0 10 -26 13 -57 4 -32 12 -84 18 -116 10 -51 9 -59 -7 -71 -15 -11 -16 -18 -7 -47 6 -19 14 -52 17 -74 4 -22 10 -33 12 -25 14 45 14 45 23 31 6 -11 12 -6 24 18 20 38 12 97 -14 111 -21 11 -33 64 -50 206 -5 51 -16 109 -24 130 -7 22 -26 93 -41 159 -34 150 -45 170 -100 197 l-43 21 -34 -34 c-32 -34 -37 -36 -165 -54 -206 -28 -334 -11 -583 78 l-95 33 3 35 c4 43 42 178 53 185 4 2 29 -7 55 -21 80 -43 202 -31 277 27 18 13 16 17 -27 65 -62 69 -127 97 -204 87 -31 -3 -70 -13 -85 -21 -23 -12 -33 -12 -56 -2 -25 11 -29 19 -35 72 -3 33 -6 81 -6 106 0 54 -17 121 -30 121 -17 0 -37 -53 -55 -140 -9 -47 -21 -92 -25 -101 -7 -13 -29 -15 -122 -15 l-113 1 -22 55 c-26 63 -28 127 -9 218 7 34 10 62 7 62 -4 0 -17 -10 -29 -22z"/>
+                            <path class="cow-eye-pixel" fill="#000000" d="M767 1554 c-10 -10 -9 -42 2 -48 18 -11 42 6 39 28 -3 21 -28 33 -41 20z"/>
+                            <path class="cow-udder-area" fill="#FFC0CB" stroke="#000" stroke-width="10" d="M955 1444 c-25 -26 -14 -57 28 -79 l38 -20 20 24 c25 30 24 37 -6 66 -28 29 -57 32 -80 9z"/>
+                        </g>
+                    </svg>
+                    <div class="cow-speech hidden absolute -top-24 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-2xl shadow-xl transition-opacity duration-300 pointer-events-none whitespace-nowrap border-2 border-respo-blue/10">
+                        <span class="text-respo-dark font-medium flex items-center gap-2">Мням-мням... 🌿</span>
+                        <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45 border-r-2 border-b-2 border-respo-blue/10"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="grass-patch absolute bottom-0 left-[10%] w-4 h-2 bg-respo-green/20 rounded-full"></div>
+            <div class="grass-patch absolute bottom-0 left-[30%] w-6 h-3 bg-respo-green/20 rounded-full"></div>
+            <div class="grass-patch absolute bottom-0 left-[60%] w-5 h-2.5 bg-respo-green/20 rounded-full"></div>
+            <div class="grass-patch absolute bottom-0 left-[85%] w-7 h-3.5 bg-respo-green/20 rounded-full"></div>
+        </div>
+        <div class="pt-10 border-t border-respo-cyan/10 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p class="text-[13px] text-respo-cyan font-medium">© РЕ-СПО Группа компаний 2025</p>
+            <div class="flex items-center">
+                <a href="javascript:void(0)" class="text-[13px] text-respo-cyan hover:text-respo-blue transition-colors font-medium">Политика конфиденциальности</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/product-page.js"></script>
+    <script src="js/main.js?v=2"></script>
+</body>
+
+</html>

@@ -173,6 +173,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 showToast(`«${name}» добавлен в корзину`, 'success');
             });
         }
+
+        // Dynamic catalog buttons
+        document.querySelectorAll('[data-add-to-cart="1"]').forEach((btn) => {
+            if (btn.dataset.cartBound) return;
+            btn.dataset.cartBound = '1';
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const name = btn.dataset.productName || 'Товар';
+                cartItems.push(name);
+                updateCartBadge();
+                showToast(`«${name}» добавлен в корзину`, 'success');
+            });
+        });
     }
 
     // =====================================================

@@ -87,6 +87,24 @@
                     <p class="text-[10px] text-gray-400 mt-1">Загрузите файл во вкладке "Медиафайлы" и вставьте его имя здесь.</p>
                 </div>
                 <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Или загрузите фото прямо здесь</label>
+                    <div class="flex gap-2">
+                        <input type="file" id="prod-image-file" accept="image/*" class="flex-1 border rounded-md px-3 py-2 text-sm">
+                        <button type="button" onclick="uploadProductImageFromModal()" class="bg-blue-50 text-blue-700 px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-100 transition-colors">
+                            Загрузить
+                        </button>
+                    </div>
+                    <p id="prod-image-upload-status" class="text-[11px] text-gray-500 mt-1"></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Краткое описание (для карточки)</label>
+                    <textarea id="prod-description" rows="2" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Короткое описание товара"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Характеристики (по одной в строке)</label>
+                    <textarea id="prod-specs" rows="5" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Параметр 1&#10;Параметр 2&#10;Параметр 3"></textarea>
+                </div>
+                <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Ссылка на страницу</label>
                     <input type="text" id="prod-link" value="product.html" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
                 </div>
@@ -116,6 +134,52 @@
             const v = String(value || '').trim();
             if (!v) return '';
             return v.startsWith('assets/') ? v : `assets/${v}`;
+        }
+
+        function sanitizeFilename(value) {
+            return String(value || '')
+                .normalize('NFKD')
+                .replace(/[^\w.\-]+/g, '_')
+                .replace(/_+/g, '_')
+                .replace(/^_+|_+$/g, '');
+        }
+
+        async function uploadProductImageFromModal() {
+            const fileInput = document.getElementById('prod-image-file');
+            const status = document.getElementById('prod-image-upload-status');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                status.textContent = 'Выберите файл перед загрузкой.';
+                status.className = 'text-[11px] text-red-500 mt-1';
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const cleanedOriginal = sanitizeFilename(file.name);
+            const targetFilename = `${Date.now()}_${cleanedOriginal || 'product_image.png'}`;
+
+            const formData = new FormData();
+            formData.append('image', file);
+            formData.append('targetFilename', targetFilename);
+
+            status.textContent = 'Загружаем...';
+            status.className = 'text-[11px] text-gray-500 mt-1';
+
+            try {
+                const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                if (!res.ok) {
+                    const error = await res.json().catch(() => ({ error: 'Upload failed' }));
+                    throw new Error(error.error || 'Upload failed');
+                }
+                const data = await res.json();
+                const finalName = data.filename || targetFilename;
+                document.getElementById('prod-image').value = finalName;
+                status.textContent = `Файл загружен: ${finalName}`;
+                status.className = 'text-[11px] text-green-600 mt-1';
+                fileInput.value = '';
+            } catch (err) {
+                status.textContent = `Ошибка загрузки: ${err.message}`;
+                status.className = 'text-[11px] text-red-500 mt-1';
+            }
         }
 
         function switchTab(tab) {
@@ -287,6 +351,7 @@
             
             form.reset();
             document.getElementById('edit-id').value = id || '';
+            document.getElementById('prod-image-upload-status').textContent = '';
             
             if (id) {
                 const p = productData.products.find(x => x.id === id);
@@ -296,9 +361,13 @@
                     document.getElementById('prod-category').value = p.category;
                     document.getElementById('prod-image').value = p.image.replace('assets/', '');
                     document.getElementById('prod-link').value = p.link;
+                    document.getElementById('prod-description').value = p.description || '';
+                    document.getElementById('prod-specs').value = Array.isArray(p.specs) ? p.specs.join('\n') : '';
                 }
             } else {
                 title.innerText = 'Добавить товар';
+                document.getElementById('prod-description').value = '';
+                document.getElementById('prod-specs').value = '';
             }
             
             modal.classList.remove('hidden');
@@ -314,17 +383,26 @@
         async function saveProduct(e) {
             e.preventDefault();
             const id = document.getElementById('edit-id').value;
+            const specs = document.getElementById('prod-specs').value
+                .split('\n')
+                .map(s => s.trim())
+                .filter(Boolean);
             const newProd = {
                 id: id || Date.now().toString(),
                 name: document.getElementById('prod-name').value.trim(),
                 category: document.getElementById('prod-category').value.trim(),
                 image: normalizeImagePath(document.getElementById('prod-image').value),
-                link: document.getElementById('prod-link').value.trim()
+                link: document.getElementById('prod-link').value.trim() || 'product.html',
+                description: document.getElementById('prod-description').value.trim(),
+                specs
             };
 
             if (!newProd.name || !newProd.category || !newProd.image || !newProd.link) {
                 alert('Заполните все обязательные поля.');
                 return;
+            }
+            if (newProd.link.startsWith('product.html') && !newProd.link.includes('id=')) {
+                newProd.link = `product.html?id=${encodeURIComponent(newProd.id)}`;
             }
             
             if (id) {
