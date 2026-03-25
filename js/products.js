@@ -15,19 +15,33 @@ async function fetchProducts() {
 
 function createProductCard(product) {
     const div = document.createElement('div');
-    div.className = 'bg-[#F6F6F6] p-6 rounded-[20px] flex flex-col items-start group hover:shadow-xl transition-all h-full';
+    const isValve = product.category === 'valves';
+    const isExchanger = product.category === 'heat_exchangers';
+    div.className = isExchanger
+        ? 'bg-[#F8F9FA] p-6 rounded-[20px] flex flex-col items-start h-full'
+        : 'bg-[#F8F9FA] p-6 lg:p-8 rounded-[20px] flex flex-col items-start group hover:shadow-xl transition-all h-full';
     
     // Use t parameter to bust cache if needed, or just standard path
     const imgSrc = product.image || 'assets/product_placeholder.png';
     
+    if (isExchanger) {
+        div.innerHTML = `
+            <div class="bg-white w-full aspect-square rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center">
+                <img src="${imgSrc}" alt="${product.name}" class="w-full h-full object-cover">
+            </div>
+            <h3 class="text-[14px] text-respo-dark/80 font-medium mt-auto">${product.name}</h3>
+        `;
+        return div;
+    }
+
     div.innerHTML = `
-        <h3 class="text-lg font-medium text-respo-dark mb-6 line-clamp-2 min-h-[3.5rem]">${product.name}</h3>
+        <h3 class="${isValve ? 'text-[14px]' : 'text-lg'} font-medium text-respo-dark mb-6 line-clamp-2 min-h-[3.5rem]">${product.name}</h3>
         <div class="bg-white w-full aspect-square rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center">
             <img src="${imgSrc}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
         </div>
         <div class="mt-auto w-full">
-            <a href="${product.link}" class="bg-respo-cyan text-white py-3 px-5 rounded-full flex items-center justify-center space-x-2 hover:brightness-110 transition-all w-full">
-                <span class="font-medium text-[14px]">Подробнее</span>
+            <a href="${product.link}" class="bg-respo-cyan text-white py-2.5 px-5 rounded-full flex items-center justify-center space-x-2 hover:brightness-110 transition-all w-full text-[12px]">
+                <span class="font-medium">${isValve ? 'добавить в корзину' : 'Подробнее'}</span>
                 <img src="assets/arrow-right.svg" alt="Icon" class="w-4 h-4 brightness-0 invert">
             </a>
         </div>
@@ -129,7 +143,13 @@ async function initCategoryRender(categoryId, containerId, displayType = 'grid')
         container.appendChild(listDiv);
     } else {
         const gridDiv = document.createElement('div');
-        gridDiv.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8';
+        if (categoryId === 'valves') {
+            gridDiv.className = 'grid grid-cols-1 md:grid-cols-2 gap-8 mb-12';
+        } else if (categoryId === 'heat_exchangers') {
+            gridDiv.className = 'grid grid-cols-1 md:grid-cols-3 gap-8 mb-12';
+        } else {
+            gridDiv.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8';
+        }
         categoryProducts.forEach(p => {
             const card = createProductCard(p);
             gridDiv.appendChild(card);

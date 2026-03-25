@@ -176,17 +176,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =====================================================
-    // Header "Войти" Button
-    // =====================================================
-    const loginBtn = document.getElementById('btn-login');
-    if (loginBtn) {
-        loginBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            showToast('Личный кабинет скоро будет доступен', 'info');
-        });
-    }
-
-    // =====================================================
     // Header "Корзина" Button
     // =====================================================
     const cartBtn = document.getElementById('btn-cart');
