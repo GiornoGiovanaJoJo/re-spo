@@ -101,10 +101,21 @@ function adminAuth(req, res, next) {
 const cspDirectives = {
     defaultSrc: ["'self'"],
     scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdn.tailwindcss.com'],
-    styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+    styleSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        'https://fonts.googleapis.com',
+        'https://fonts.cdnfonts.com',
+        'https://db.onlinewebfonts.com'
+    ],
     imgSrc: ["'self'", 'data:', 'https:'],
     connectSrc: ["'self'"],
-    fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+    fontSrc: [
+        "'self'",
+        'https://fonts.gstatic.com',
+        'https://fonts.cdnfonts.com',
+        'https://db.onlinewebfonts.com'
+    ],
     objectSrc: ["'none'"],
     baseUri: ["'self'"],
     frameAncestors: ["'none'"]
@@ -117,6 +128,25 @@ app.use(helmet({
 
 app.use(compression());
 app.use(express.json({ limit: '256kb' }));
+
+app.get('/assets/product_placeholder.png', (req, res, next) => {
+    const filepath = path.join(assetsDir, 'product_placeholder.png');
+    if (fs.existsSync(filepath)) return next();
+
+    const svg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+  <rect width="1200" height="1200" fill="#F3F4F6"/>
+  <rect x="120" y="120" width="960" height="960" fill="none" stroke="#D1D5DB" stroke-width="8"/>
+  <g fill="#9CA3AF">
+    <circle cx="460" cy="460" r="56"/>
+    <path d="M240 900l240-260 180 200 120-140 180 200H240z"/>
+  </g>
+</svg>`.trim();
+
+    res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    res.status(200).send(svg);
+});
 
 app.use('/assets', express.static(assetsDir, {
     maxAge: '7d',
