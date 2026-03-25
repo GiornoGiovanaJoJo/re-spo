@@ -120,6 +120,7 @@
         let requiredImages = [];
         let productData = { categories: [], products: [] };
         const FALLBACK_IMG = 'https://via.placeholder.com/40?text=?';
+        const ADMIN_AUTH_STORAGE_KEY = 'respo_admin_basic_auth';
 
         function escapeHtml(input) {
             return String(input ?? '')
@@ -134,6 +135,44 @@
             const v = String(value || '').trim();
             if (!v) return '';
             return v.startsWith('assets/') ? v : `assets/${v}`;
+        }
+
+        function getStoredAdminAuth() {
+            return localStorage.getItem(ADMIN_AUTH_STORAGE_KEY) || '';
+        }
+
+        function setStoredAdminAuth(value) {
+            if (value) localStorage.setItem(ADMIN_AUTH_STORAGE_KEY, value);
+            else localStorage.removeItem(ADMIN_AUTH_STORAGE_KEY);
+        }
+
+        async function authorizedFetch(url, options = {}, allowRetry = true) {
+            const headers = new Headers(options.headers || {});
+            const storedAuth = getStoredAdminAuth();
+            if (storedAuth && !headers.has('Authorization')) {
+                headers.set('Authorization', storedAuth);
+            }
+
+            const response = await fetch(url, { ...options, headers });
+            if (response.status !== 401 || !allowRetry) return response;
+
+            const username = window.prompt('Введите логин администратора');
+            if (!username) return response;
+            const password = window.prompt('Введите пароль администратора');
+            if (password === null) return response;
+
+            const basic = `Basic ${btoa(`${username}:${password}`)}`;
+            setStoredAdminAuth(basic);
+
+            const retryHeaders = new Headers(options.headers || {});
+            retryHeaders.set('Authorization', basic);
+            const retryResponse = await fetch(url, { ...options, headers: retryHeaders });
+
+            if (retryResponse.status === 401) {
+                setStoredAdminAuth('');
+                alert('Неверные учетные данные администратора.');
+            }
+            return retryResponse;
         }
 
         function sanitizeFilename(value) {
@@ -165,7 +204,7 @@
             status.className = 'text-[11px] text-gray-500 mt-1';
 
             try {
-                const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                const res = await authorizedFetch('/api/upload', { method: 'POST', body: formData });
                 if (!res.ok) {
                     const error = await res.json().catch(() => ({ error: 'Upload failed' }));
                     throw new Error(error.error || 'Upload failed');
@@ -201,7 +240,7 @@
         // --- Media Logic ---
         async function loadImages() {
             try {
-                const res = await fetch('/api/required-images');
+                const res = await authorizedFetch('/api/required-images');
                 if (!res.ok) throw new Error('Failed to fetch');
                 requiredImages = await res.json();
                 renderImages();
@@ -267,7 +306,7 @@
             formData.append('targetFilename', imgData.filename);
             
             try {
-                const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                const res = await authorizedFetch('/api/upload', { method: 'POST', body: formData });
                 if (res.ok) loadImages();
                 else alert('Ошибка загрузки');
             } catch (e) {
@@ -278,7 +317,7 @@
         async function deleteImage(filename) {
             if (!confirm(`Удалить ${filename}?`)) return;
             try {
-                const res = await fetch(`/api/images/${encodeURIComponent(filename)}`, { method: 'DELETE' });
+                const res = await authorizedFetch(`/api/images/${encodeURIComponent(filename)}`, { method: 'DELETE' });
                 if (res.ok) loadImages();
             } catch (err) { alert('Ошибка сети'); }
         }
@@ -286,7 +325,7 @@
         async function deleteAllImages() {
             if (!confirm('Удалить ВСЕ фотографии?')) return;
             try {
-                const res = await fetch('/api/images', { method: 'DELETE' });
+                const res = await authorizedFetch('/api/images', { method: 'DELETE' });
                 if (res.ok) loadImages();
             } catch (err) { alert('Ошибка сети'); }
         }
@@ -294,12 +333,16 @@
         // --- Products Logic ---
         async function loadProducts() {
             try {
-                const res = await fetch('/api/products');
+                const res = await authorizedFetch('/api/products');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 productData = await res.json();
+                if (!Array.isArray(productData.categories)) productData.categories = [];
+                if (!Array.isArray(productData.products)) productData.products = [];
                 renderProducts();
                 populateCategorySelect();
             } catch (err) {
                 console.error(err);
+                alert('Не удалось загрузить товары. Проверьте доступ администратора.');
             }
         }
 
@@ -413,7 +456,7 @@
             }
             
             try {
-                const res = await fetch('/api/products', {
+                const res = await authorizedFetch('/api/products', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(productData)
@@ -429,7 +472,7 @@
             if (!confirm('Удалить этот товар?')) return;
             productData.products = productData.products.filter(x => x.id !== id);
             try {
-                const res = await fetch('/api/products', {
+                const res = await authorizedFetch('/api/products', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(productData)
@@ -440,7 +483,7 @@
 
         async function clearCache() {
             try {
-                const res = await fetch('/api/clear-cache', { method: 'POST' });
+                const res = await authorizedFetch('/api/clear-cache', { method: 'POST' });
                 if (res.ok) {
                     alert('Кэш очищен. Страница будет перезагружена.');
                     window.location.reload(true);
