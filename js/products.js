@@ -123,13 +123,16 @@ function createProductCard(product) {
 function createProductListItem(product) {
     const div = document.createElement('div');
     div.className = 'border-b border-RE-SPO-blue/10';
+    const href = getProductHref(product);
+    const safeHref = escapeHtml(href);
+    const safeName = escapeHtml(product.name);
     
     // Check if it's an equipment item (accordion style)
     if (product.category === 'equipment') {
         const equipImg = escapeHtml(product.image || 'assets/product_placeholder.png');
         div.innerHTML = `
             <div class="py-8 flex items-center justify-between group cursor-pointer hover:bg-RE-SPO-blue-light/30 transition-colors px-4 -mx-4 rounded-xl accordion-header">
-                <h3 class="text-[20px] lg:text-[24px] text-RE-SPO-dark font-medium transition-colors group-hover:text-RE-SPO-cyan">${escapeHtml(product.name)}</h3>
+                <h3 class="text-[20px] lg:text-[24px] text-RE-SPO-dark font-medium transition-colors group-hover:text-RE-SPO-cyan">${safeName}</h3>
                 <div class="flex-shrink-0 w-12 h-12 bg-RE-SPO-green rounded-full flex items-center justify-center transition-all group-hover:scale-110 ml-4 arrow-container">
                     <img src="assets/arrow-right.svg" alt="Arrow" class="w-5 h-5 transition-transform duration-300">
                 </div>
@@ -138,8 +141,14 @@ function createProductListItem(product) {
                 <div class="pb-10 pt-3">
                     <div class="rounded-[8px] overflow-hidden bg-[#F5F5F5] w-full max-w-[1322px] mx-auto">
                         <div class="w-full aspect-[4/3] sm:aspect-[12/5] max-h-[531px] flex items-center justify-center">
-                            <img src="${equipImg}" alt="${escapeHtml(product.name)}" class="w-full h-full object-cover">
+                            <img src="${equipImg}" alt="${safeName}" class="w-full h-full object-cover">
                         </div>
+                    </div>
+                    <div class="mt-6 flex justify-start">
+                        <a href="${safeHref}" class="bg-RE-SPO-cyan text-white py-2.5 px-6 rounded-full inline-flex items-center justify-center space-x-2 hover:brightness-110 transition-all text-[13px]">
+                            <span class="font-medium">Подробнее</span>
+                            <img src="assets/arrow-right.svg" alt="Arrow" class="w-4 h-4 brightness-0 invert">
+                        </a>
                     </div>
                 </div>
             </div>
@@ -157,19 +166,109 @@ function createProductListItem(product) {
     } else {
         // Standard item (link style)
         div.innerHTML = `
-            <div class="py-8 flex items-center justify-between group cursor-pointer hover:bg-RE-SPO-blue-light/30 transition-colors px-4 -mx-4 rounded-xl">
-                <h3 class="text-[20px] lg:text-[24px] text-RE-SPO-dark font-medium transition-colors group-hover:text-RE-SPO-cyan">${escapeHtml(product.name)}</h3>
-                <div class="flex-shrink-0 w-12 h-12 bg-RE-SPO-green rounded-full flex items-center justify-center transition-transform group-hover:scale-110 ml-4">
-                    <img src="assets/arrow-right.svg" alt="Arrow" class="w-5 h-5">
+            <div class="py-8 px-4 -mx-4 rounded-xl hover:bg-RE-SPO-blue-light/30 transition-colors">
+                <div class="flex items-center justify-between gap-4">
+                    <h3 class="text-[20px] lg:text-[24px] text-RE-SPO-dark font-medium">${safeName}</h3>
+                    <div class="flex-shrink-0 w-12 h-12 bg-RE-SPO-green rounded-full flex items-center justify-center">
+                        <img src="assets/arrow-right.svg" alt="Arrow" class="w-5 h-5">
+                    </div>
+                </div>
+                <div class="mt-5">
+                    <a href="${safeHref}" class="bg-RE-SPO-cyan text-white py-2.5 px-6 rounded-full inline-flex items-center justify-center space-x-2 hover:brightness-110 transition-all text-[13px]">
+                        <span class="font-medium">Подробнее</span>
+                        <img src="assets/arrow-right.svg" alt="Arrow" class="w-4 h-4 brightness-0 invert">
+                    </a>
                 </div>
             </div>
         `;
-        div.addEventListener('click', () => {
-            window.location.href = getProductHref(product);
-        });
     }
     
     return div;
+}
+
+function getSlidesPerView(context, categoryId) {
+    const width = window.innerWidth || 1280;
+    if (width <= 390) return 1.08;
+    if (width <= 720) return 1.16;
+    if (width <= 1024) return 2.12;
+
+    if (context === 'home') return 3.1;
+    if (categoryId === 'equipment') return 2.4;
+    if (categoryId === 'heat_exchangers') return 3.1;
+    return 2.8;
+}
+
+function createHorizontalProductsCarousel(products, options = {}) {
+    const { context = 'catalog', categoryId = 'catalog' } = options;
+
+    const root = document.createElement('div');
+    root.className = 'relative';
+
+    const track = document.createElement('div');
+    track.className = 'flex gap-4 lg:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2';
+    track.style.scrollbarWidth = 'thin';
+    track.style.webkitOverflowScrolling = 'touch';
+    track.setAttribute('aria-label', 'Горизонтальная лента товаров');
+
+    const btnPrev = document.createElement('button');
+    btnPrev.type = 'button';
+    btnPrev.className = 'hidden lg:flex absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white border border-RE-SPO-blue/20 items-center justify-center shadow-sm text-RE-SPO-blue hover:bg-RE-SPO-blue-light transition-colors disabled:opacity-40 disabled:cursor-not-allowed';
+    btnPrev.setAttribute('aria-label', 'Прокрутить товары влево');
+    btnPrev.innerHTML = '&#8592;';
+
+    const btnNext = document.createElement('button');
+    btnNext.type = 'button';
+    btnNext.className = 'hidden lg:flex absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white border border-RE-SPO-blue/20 items-center justify-center shadow-sm text-RE-SPO-blue hover:bg-RE-SPO-blue-light transition-colors disabled:opacity-40 disabled:cursor-not-allowed';
+    btnNext.setAttribute('aria-label', 'Прокрутить товары вправо');
+    btnNext.innerHTML = '&#8594;';
+
+    products.forEach((product) => {
+        const slide = document.createElement('div');
+        slide.className = 'snap-start';
+        slide.style.minWidth = '0';
+
+        const card = createProductCard(product);
+        card.classList.add('h-full');
+        card.style.maxWidth = 'none';
+        card.style.width = '100%';
+
+        slide.appendChild(card);
+        track.appendChild(slide);
+    });
+
+    const updateSlideWidths = () => {
+        const perView = getSlidesPerView(context, categoryId);
+        const basis = `${100 / perView}%`;
+        Array.from(track.children).forEach((slide) => {
+            slide.style.flex = `0 0 ${basis}`;
+        });
+        updateButtons();
+    };
+
+    const updateButtons = () => {
+        const canScroll = track.scrollWidth > track.clientWidth + 6;
+        const atStart = track.scrollLeft <= 4;
+        const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+        btnPrev.disabled = !canScroll || atStart;
+        btnNext.disabled = !canScroll || atEnd;
+    };
+
+    const scrollByPage = (direction) => {
+        const delta = Math.max(track.clientWidth * 0.86, 260) * direction;
+        track.scrollBy({ left: delta, behavior: 'smooth' });
+    };
+
+    btnPrev.addEventListener('click', () => scrollByPage(-1));
+    btnNext.addEventListener('click', () => scrollByPage(1));
+    track.addEventListener('scroll', updateButtons, { passive: true });
+    window.addEventListener('resize', updateSlideWidths);
+
+    root.appendChild(btnPrev);
+    root.appendChild(track);
+    root.appendChild(btnNext);
+    updateSlideWidths();
+
+    return root;
 }
 
 /**
@@ -186,11 +285,15 @@ async function initCatalogPreview(containerId, limit = 4) {
     
     // Take first N products as featured
     const featured = data.products.slice(0, limit);
-    
-    featured.forEach(p => {
-        const card = createProductCard(p);
-        container.appendChild(card);
-    });
+
+    if (featured.length === 0) {
+        container.innerHTML = '<p class="text-RE-SPO-dark/60">Товары пока не добавлены.</p>';
+        container.setAttribute('aria-busy', 'false');
+        return;
+    }
+
+    container.className = '';
+    container.appendChild(createHorizontalProductsCarousel(featured, { context: 'home', categoryId: 'home' }));
     container.setAttribute('aria-busy', 'false');
 }
 
@@ -221,6 +324,8 @@ async function initCategoryRender(categoryId, containerId, displayType = 'grid')
             listDiv.appendChild(createProductListItem(p));
         });
         container.appendChild(listDiv);
+    } else if (displayType === 'carousel') {
+        container.appendChild(createHorizontalProductsCarousel(categoryProducts, { context: 'catalog', categoryId }));
     } else {
         const gridDiv = document.createElement('div');
         if (categoryId === 'valves') {
