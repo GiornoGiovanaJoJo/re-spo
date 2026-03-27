@@ -108,7 +108,7 @@ function adminAuth(req, res, next) {
 
 const cspDirectives = {
     defaultSrc: ["'self'"],
-    scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdn.tailwindcss.com'],
+    scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdn.tailwindcss.com', 'https://mc.yandex.ru'],
     styleSrc: [
         "'self'",
         "'unsafe-inline'",
@@ -117,7 +117,7 @@ const cspDirectives = {
         'https://db.onlinewebfonts.com'
     ],
     imgSrc: ["'self'", 'data:', 'https:'],
-    connectSrc: ["'self'"],
+    connectSrc: ["'self'", 'https://mc.yandex.ru'],
     fontSrc: [
         "'self'",
         'https://fonts.gstatic.com',
