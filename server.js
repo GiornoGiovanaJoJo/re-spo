@@ -204,11 +204,13 @@ const upload = multer({
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/production', (req, res) => res.sendFile(path.join(__dirname, 'production.html')));
 app.get('/product', (req, res) => res.sendFile(path.join(__dirname, 'product.html')));
+app.get('/privacy-policy', (req, res) => res.sendFile(path.join(__dirname, 'privacy-policy.html')));
 app.get('/admin', adminAuth, (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 
 app.get('/index.html', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/production.html', (req, res) => res.sendFile(path.join(__dirname, 'production.html')));
 app.get('/product.html', (req, res) => res.sendFile(path.join(__dirname, 'product.html')));
+app.get('/privacy-policy.html', (req, res) => res.sendFile(path.join(__dirname, 'privacy-policy.html')));
 app.get('/favicon.ico', (req, res) => {
     const faviconPath = path.join(assetsDir, 'logo.png');
     if (fs.existsSync(faviconPath)) {
