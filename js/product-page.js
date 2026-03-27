@@ -270,9 +270,9 @@
         if (!id) return;
 
         try {
-            const RE-SPOnse = await fetch('/api/products');
-            if (!RE-SPOnse.ok) throw new Error('Failed to load products');
-            const data = await RE-SPOnse.json();
+            const response = await fetch('/api/products');
+            if (!response.ok) throw new Error('Failed to load products');
+            const data = await response.json();
             const product = (data.products || []).find((p) => String(p.id) === String(id));
             if (!product) return;
 

@@ -29,31 +29,6 @@
         rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/creato-display" rel="stylesheet">
     <link href="https://db.onlinewebfonts.com/c/7cd33d2df7fd0d91e9d90395806eb8ff?family=Averta+CY+W10+Light" rel="stylesheet" type="text/css">
-    <!-- Tailwind via CDN for immediate preview (Local build instructions in walkthrough) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'respo-blue': '#2584BE',
-                        'respo-cyan': '#70CFFF',
-                        'respo-blue-light': '#E9F5FF',
-                        'respo-blue-action': '#549DDF',
-                        'respo-green': '#B1C53F',
-                        'respo-lime': '#C4D600',
-                        'respo-dark': '#1A1A1A',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        heading: ['Creato Display', 'Inter', 'sans-serif'],
-                        creato: ['Creato Display', 'Inter', 'sans-serif'],
-                        averta: ['Averta CY W10 Light', 'Inter', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
     <script type="application/ld+json">
         {
             "@context": "https://schema.org",
@@ -88,32 +63,7 @@
             ]
         }
     </script>
-    <style type="text/tailwindcss">
-        @layer base {
-            body { @apply font-sans text-respo-dark bg-white overflow-x-hidden; }
-            h1, h2, h3 { @apply font-heading font-medium; }
-        }
-        @layer components {
-            .btn-primary { @apply bg-respo-green text-white px-6 py-3 rounded-full hover:brightness-105 transition-all text-base font-medium inline-flex items-center justify-center; }
-            .btn-action { @apply bg-respo-blue-action text-white px-8 py-4 rounded-full hover:brightness-105 transition-all text-lg font-medium inline-flex items-center justify-center min-w-[200px]; }
-            .nav-link { @apply text-respo-dark hover:text-respo-blue transition-colors font-medium; }
-            .nav-link.active { @apply text-respo-blue; }
-            .section-tag { @apply font-heading text-lg text-respo-green mb-3 block; }
-            .section-title { @apply text-[48px] leading-[1.2] text-respo-green font-medium mb-8; }
-            .container-respo { @apply w-full max-w-[1240px] mx-auto px-6 lg:px-0; }
-            .hero-gradient {
-                background: linear-gradient(-64deg, rgba(177, 197, 63, 0.2) 4%, rgba(255, 255, 255, 0.2) 41%),
-                            linear-gradient(180deg, rgba(255, 255, 255, 0.13) 30%, rgba(169, 217, 255, 0.7) 100%);
-            }
-            .text-respo-centered-split {
-                @apply text-center mx-auto max-w-[1100px] text-respo-blue font-medium text-[32px] lg:text-[44px] leading-[1.25];
-            }
-            .hero-subtitle-pos {
-                @apply absolute top-[15%] right-[10%] lg:right-[15%] text-respo-dark/80 text-right;
-            }
-        }
-    </style>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/tailwind.css">
 </head>
 
 <body>
