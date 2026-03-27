@@ -46,7 +46,7 @@
   }
 
   .container-respo {
-    @apply max-w-[1440px] mx-auto px-6 lg:px-[120px];
+    @apply w-full max-w-[1240px] mx-auto px-6 lg:px-0;
   }
 
   .section-tag {
@@ -59,6 +59,11 @@
 
   .section-title-blue {
     @apply text-4xl lg:text-[48px] leading-[1.2] text-respo-blue font-medium;
+  }
+
+  .text-longform {
+    text-align: justify;
+    text-justify: inter-word;
   }
 }
 
