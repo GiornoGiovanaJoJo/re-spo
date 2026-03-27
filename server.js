@@ -17,6 +17,7 @@ const assetsDir = path.join(__dirname, 'assets');
 const productsFile = path.join(__dirname, 'products.json');
 const certificatesFile = path.join(__dirname, 'certificates.json');
 const IMAGE_EXT_RE = /\.(png|svg|jpe?g|gif|webp|tiff?)$/i;
+const DEFAULT_SITE_URL = 'https://re-spo.com';
 
 if (!fs.existsSync(assetsDir)) {
     fs.mkdirSync(assetsDir, { recursive: true });
@@ -90,6 +91,32 @@ function validateCertificatesPayload(payload) {
         }
     }
     return true;
+}
+
+function getPublicSiteUrl(req) {
+    const envSiteUrl = String(process.env.SITE_URL || '').trim();
+    const origin = envSiteUrl || `${req.protocol}://${req.get('host')}` || DEFAULT_SITE_URL;
+    return origin.replace(/\/+$/, '');
+}
+
+function buildProductsSitemapXml(siteUrl, payload) {
+    const products = Array.isArray(payload?.products) ? payload.products : [];
+    const entries = products
+        .filter((p) => p && typeof p.id === 'string' && p.id.trim())
+        .map((p) => {
+            const id = encodeURIComponent(String(p.id).trim());
+            return `  <url>
+    <loc>${siteUrl}/product?id=${id}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>`;
+        })
+        .join('\n');
+
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${entries}
+</urlset>`;
 }
 
 function adminAuth(req, res, next) {
@@ -242,6 +269,22 @@ app.get('/admin', adminAuth, (req, res) => {
 });
 app.get('/robots.txt', (req, res) => res.sendFile(path.join(__dirname, 'robots.txt')));
 app.get('/sitemap.xml', (req, res) => res.sendFile(path.join(__dirname, 'sitemap.xml')));
+app.get('/sitemap-static.xml', (req, res) => res.sendFile(path.join(__dirname, 'sitemap-static.xml')));
+app.get('/sitemap-products.xml', (req, res) => {
+    try {
+        const siteUrl = getPublicSiteUrl(req);
+        const raw = fs.existsSync(productsFile) ? fs.readFileSync(productsFile, 'utf8') : '{"products":[]}';
+        const parsed = JSON.parse(raw);
+        if (!validateProductsPayload(parsed)) {
+            return res.status(500).send('Invalid products payload for sitemap');
+        }
+        const xml = buildProductsSitemapXml(siteUrl, parsed);
+        res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+        res.send(xml);
+    } catch (e) {
+        res.status(500).send('Failed to generate products sitemap');
+    }
+});
 
 app.get('/index.html', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/production.html', (req, res) => res.sendFile(path.join(__dirname, 'production.html')));

@@ -52,6 +52,32 @@
             }
         }
     </script>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Главная",
+                    "item": "https://re-spo.com/"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Каталог",
+                    "item": "https://re-spo.com/production"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 3,
+                    "name": "Товар",
+                    "item": "https://re-spo.com/product"
+                }
+            ]
+        }
+    </script>
     <style type="text/tailwindcss">
         @layer base {
             body { @apply font-sans text-respo-dark bg-white overflow-x-hidden; }
