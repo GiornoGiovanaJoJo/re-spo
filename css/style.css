@@ -294,7 +294,6 @@
   }
 
   /* 5) Reduce aggressive ALL CAPS in mobile cards */
-  #services h3.uppercase,
   #audit h3.uppercase {
     text-transform: none !important;
     letter-spacing: normal !important;
