@@ -47,9 +47,13 @@ function createProductCard(product) {
     // Use t parameter to bust cache if needed, or just standard path
     const imgSrc = product.image || 'assets/product_placeholder.png';
     
+    const mediaAspectClass = (isValve || isExchanger)
+        ? 'aspect-[4/5]'
+        : 'aspect-[16/10] sm:aspect-[2/1]';
+
     if (isExchanger) {
         div.innerHTML = `
-            <div class="bg-white w-full aspect-[16/10] sm:aspect-[2/1] rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center p-4">
+            <div class="bg-white w-full ${mediaAspectClass} rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center p-4">
                 <img src="${imgSrc}" alt="${safeName}" class="max-h-full max-w-[92%] w-auto h-auto object-contain">
             </div>
             <h3 class="text-[14px] text-respo-dark/80 font-medium mt-auto">${safeName}</h3>
@@ -60,7 +64,7 @@ function createProductCard(product) {
     div.innerHTML = `
         <h3 class="${isValve ? 'text-[14px]' : 'text-lg'} font-medium text-respo-dark mb-4 line-clamp-2 min-h-[3.5rem]">${safeName}</h3>
         ${safeDescription ? `<p class="text-[12px] text-respo-dark/60 mb-4 line-clamp-2 w-full">${safeDescription}</p>` : ''}
-        <div class="bg-white w-full aspect-[16/10] sm:aspect-[2/1] rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full ${mediaAspectClass} rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center p-4">
             <img src="${imgSrc}" alt="${safeName}" class="max-h-full max-w-[92%] w-auto h-auto object-contain group-hover:scale-105 transition-transform">
         </div>
         <div class="mt-auto w-full">
@@ -185,7 +189,7 @@ async function initCategoryRender(categoryId, containerId, displayType = 'grid')
         if (categoryId === 'valves') {
             gridDiv.className = 'grid grid-cols-1 md:grid-cols-2 gap-8 mb-12';
         } else if (categoryId === 'heat_exchangers') {
-            gridDiv.className = 'grid grid-cols-1 md:grid-cols-3 gap-8 mb-12';
+            gridDiv.className = 'grid grid-cols-1 md:grid-cols-2 gap-8 mb-12';
         } else {
             gridDiv.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8';
         }
