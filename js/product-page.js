@@ -41,6 +41,32 @@
     }
 
     /**
+     * @param {HTMLElement | null} tableBodyEl
+     * @param {HTMLElement | null} tableWrapEl
+     * @param {Array<{label: string, value: string}>} parameters
+     */
+    function renderParametersTable(tableBodyEl, tableWrapEl, parameters) {
+        if (!tableBodyEl || !tableWrapEl) return;
+        const rows = Array.isArray(parameters)
+            ? parameters.filter((row) => row && String(row.label || '').trim() && String(row.value || '').trim())
+            : [];
+
+        if (!rows.length) {
+            tableBodyEl.innerHTML = '';
+            tableWrapEl.classList.add('hidden');
+            return;
+        }
+
+        tableBodyEl.innerHTML = rows.map((row) => `
+            <tr>
+                <td class="border border-respo-dark/80 py-2 px-4 text-center text-[16px] md:text-[22px]">${escapeHtml(row.label)}</td>
+                <td class="border border-respo-dark/80 py-2 px-4 text-center text-[16px] md:text-[22px]">${escapeHtml(row.value)}</td>
+            </tr>
+        `).join('');
+        tableWrapEl.classList.remove('hidden');
+    }
+
+    /**
      * @param {HTMLImageElement | null} imageEl
      * @param {HTMLElement | null} dotsEl
      * @param {string[]} sources
@@ -232,6 +258,8 @@
             const stageEl = document.getElementById('product-image-stage');
             const dotsEl = document.getElementById('product-gallery-dots');
             const specsEl = document.getElementById('product-spec-list');
+            const paramsWrapEl = document.getElementById('product-params-wrap');
+            const paramsBodyEl = document.getElementById('product-params-table-body');
             const zoomInBtn = document.getElementById('zoom-in-btn');
             const zoomOutBtn = document.getElementById('zoom-out-btn');
             const zoomResetBtn = document.getElementById('zoom-reset-btn');
@@ -245,6 +273,7 @@
             setupImageZoom(stageEl, imageEl, zoomInBtn, zoomOutBtn, zoomResetBtn);
 
             renderSpecs(specsEl, product.specs);
+            renderParametersTable(paramsBodyEl, paramsWrapEl, product.parameters);
             if (addToCartBtn) {
                 addToCartBtn.dataset.productName = name;
             }

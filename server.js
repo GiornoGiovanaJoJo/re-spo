@@ -16,7 +16,7 @@ const isAdminOpen = process.env.ADMIN_OPEN !== 'false';
 const assetsDir = path.join(__dirname, 'assets');
 const productsFile = path.join(__dirname, 'products.json');
 const certificatesFile = path.join(__dirname, 'certificates.json');
-const IMAGE_EXT_RE = /\.(png|svg|jpe?g|gif|webp)$/i;
+const IMAGE_EXT_RE = /\.(png|svg|jpe?g|gif|webp|tiff?)$/i;
 
 if (!fs.existsSync(assetsDir)) {
     fs.mkdirSync(assetsDir, { recursive: true });
@@ -59,6 +59,14 @@ function validateProductsPayload(payload) {
                 if (typeof im !== 'string' || !im.trim()) return false;
                 const extra = safeImageFilename(im.replace(/^assets\//, ''));
                 if (!extra) return false;
+            }
+        }
+        if (p.parameters !== undefined) {
+            if (!Array.isArray(p.parameters)) return false;
+            for (const row of p.parameters) {
+                if (!row || typeof row !== 'object') return false;
+                if (typeof row.label !== 'string' || !row.label.trim()) return false;
+                if (typeof row.value !== 'string' || !row.value.trim()) return false;
             }
         }
         if (payload.categories.length > 0 && !categoryIds.has(p.category)) return false;
@@ -186,7 +194,7 @@ app.use('/assets', express.static(assetsDir, {
     maxAge: '7d',
     etag: true,
     setHeaders: (res, filePath) => {
-        if (/\.(png|svg|jpe?g|gif|webp)$/i.test(filePath)) {
+        if (/\.(png|svg|jpe?g|gif|webp|tiff?)$/i.test(filePath)) {
             res.setHeader('Cache-Control', 'public, max-age=604800, immutable');
         }
     }
@@ -214,7 +222,7 @@ const upload = multer({
     }),
     limits: { fileSize: 8 * 1024 * 1024, files: 1 },
     fileFilter: (req, file, cb) => {
-        const byMime = /^image\/(png|jpeg|jpg|gif|svg\+xml|webp)$/i.test(file.mimetype);
+        const byMime = /^image\/(png|jpeg|jpg|gif|svg\+xml|webp|tiff)$/i.test(file.mimetype);
         const byExt = IMAGE_EXT_RE.test(file.originalname);
         cb(null, byMime && byExt);
     }
@@ -303,7 +311,7 @@ app.get('/api/required-images', adminAuth, (req, res) => {
             .filter(fp => fs.existsSync(fp));
 
         const required = new Set();
-        const regex = /src=["']assets\/([^"']+\.(png|svg|jpe?g|gif|webp))["']/ig;
+        const regex = /src=["']assets\/([^"']+\.(png|svg|jpe?g|gif|webp|tiff?))["']/ig;
 
         for (const page of pages) {
             const html = fs.readFileSync(page, 'utf8');

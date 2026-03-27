@@ -129,7 +129,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Или загрузите фото прямо здесь</label>
                     <div class="flex gap-2">
-                        <input type="file" id="prod-image-file" accept="image/*" class="flex-1 border rounded-md px-3 py-2 text-sm">
+                        <input type="file" id="prod-image-file" accept="image/*,.tif,.tiff" class="flex-1 border rounded-md px-3 py-2 text-sm">
                         <button type="button" id="btn-upload-product-image" class="bg-blue-50 text-blue-700 px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-100 transition-colors">
                             Загрузить
                         </button>
@@ -143,6 +143,11 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Характеристики (по одной в строке)</label>
                     <textarea id="prod-specs" rows="5" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Параметр 1&#10;Параметр 2&#10;Параметр 3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Таблица параметров (для теплообменников)</label>
+                    <textarea id="prod-params" rows="5" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="длина|974мм&#10;ширина|300мм&#10;высота|150мм"></textarea>
+                    <p class="text-[10px] text-gray-400 mt-1">Формат: одна строка = "Показатель|Значение". Если заполнено, на странице товара показывается таблица параметров.</p>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Ссылка на страницу</label>
@@ -173,7 +178,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Или загрузите изображение сертификата</label>
                     <div class="flex gap-2">
-                        <input type="file" id="cert-image-file" accept="image/*" class="flex-1 border rounded-md px-3 py-2 text-sm">
+                        <input type="file" id="cert-image-file" accept="image/*,.tif,.tiff" class="flex-1 border rounded-md px-3 py-2 text-sm">
                         <button type="button" id="btn-upload-certificate-image" class="bg-blue-50 text-blue-700 px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-100 transition-colors">
                             Загрузить
                         </button>
@@ -258,6 +263,35 @@
                 .replace(/[^\w.\-]+/g, '_')
                 .replace(/_+/g, '_')
                 .replace(/^_+|_+$/g, '');
+        }
+
+        function parseParamsRows(raw) {
+            return String(raw || '')
+                .split('\n')
+                .map((line) => line.trim())
+                .filter(Boolean)
+                .map((line) => {
+                    const idx = line.indexOf('|');
+                    if (idx === -1) return null;
+                    const label = line.slice(0, idx).trim();
+                    const value = line.slice(idx + 1).trim();
+                    if (!label || !value) return null;
+                    return { label, value };
+                })
+                .filter(Boolean);
+        }
+
+        function serializeParamsRows(params) {
+            if (!Array.isArray(params)) return '';
+            return params
+                .map((row) => {
+                    const label = String(row?.label || '').trim();
+                    const value = String(row?.value || '').trim();
+                    if (!label || !value) return '';
+                    return `${label}|${value}`;
+                })
+                .filter(Boolean)
+                .join('\n');
         }
 
         async function uploadProductImageFromModal() {
@@ -527,11 +561,13 @@
                     document.getElementById('prod-link').value = p.link;
                     document.getElementById('prod-description').value = p.description || '';
                     document.getElementById('prod-specs').value = Array.isArray(p.specs) ? p.specs.join('\n') : '';
+                    document.getElementById('prod-params').value = serializeParamsRows(p.parameters);
                 }
             } else {
                 title.innerText = 'Добавить товар';
                 document.getElementById('prod-description').value = '';
                 document.getElementById('prod-specs').value = '';
+                document.getElementById('prod-params').value = '';
             }
             
             modal.classList.remove('hidden');
@@ -551,6 +587,8 @@
                 .split('\n')
                 .map(s => s.trim())
                 .filter(Boolean);
+            const rawParams = document.getElementById('prod-params').value;
+            const parameters = parseParamsRows(rawParams);
             const existing = id ? productData.products.find((x) => x.id === id) : null;
             const newProd = {
                 ...(existing || {}),
@@ -560,11 +598,16 @@
                 image: normalizeImagePath(document.getElementById('prod-image').value),
                 link: document.getElementById('prod-link').value.trim() || 'product.html',
                 description: document.getElementById('prod-description').value.trim(),
-                specs
+                specs,
+                parameters
             };
 
             if (!newProd.name || !newProd.category || !newProd.image || !newProd.link) {
                 alert('Заполните все обязательные поля.');
+                return;
+            }
+            if (String(rawParams).trim() && parameters.length === 0) {
+                alert('Параметры заполнены в неверном формате. Используйте: Показатель|Значение');
                 return;
             }
             if (newProd.link.startsWith('product.html') && !newProd.link.includes('id=')) {
