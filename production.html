@@ -250,41 +250,8 @@
                 <h2 class="text-[36px] lg:text-[48px] text-respo-blue font-medium leading-[40px] mb-12">Сертификаты на
                     оборудование</h2>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Cert 1 -->
-                    <div>
-                        <div class="w-full aspect-[3/4] bg-[#F7F7F7] mb-6 shadow-sm"></div>
-                        <h4 class="text-[18px] font-medium text-respo-dark mb-4 pr-4">Насос центробежный серии CLA</h4>
-                        <p class="text-[12px] text-respo-blue font-sans leading-[1.6]">
-                            Насос центробежный серии CLA<br>
-                            Декларация о соответствии принята на основании Протокола испытаний<br>
-                            №ГС-04/10-0606 от 04.10.2023 года, выданного Испытательной лабораторией ООО «ГЕРИТ СЕЙФИТИ
-                            РУС».
-                        </p>
-                    </div>
-                    <!-- Cert 2 -->
-                    <div>
-                        <div class="w-full aspect-[3/4] bg-[#F7F7F7] mb-6 shadow-sm"></div>
-                        <h4 class="text-[18px] font-medium text-respo-dark mb-4 pr-4">Блок управления клапанами серии
-                            Control head</h4>
-                        <p class="text-[12px] text-respo-blue font-sans leading-[1.6]">
-                            Декларация о соответствии принята на основании Протокола испытаний<br>
-                            №ГС-04/10-0607 от 04.10.2023 года, выданного Испытательной лабораторией ООО «ГЕРИТ СЕЙФИТИ
-                            РУС».
-                        </p>
-                    </div>
-                    <!-- Cert 3 -->
-                    <div>
-                        <div class="w-full aspect-[3/4] bg-[#F7F7F7] mb-6 shadow-sm"></div>
-                        <h4 class="text-[18px] font-medium text-respo-dark mb-4 pr-4">Седельный клапан (Серия PNV-IB),
-                            клапан противосмесительный Mixproof (Серия MPV-IA), регулирующий клапан (Серия FMV-IB),
-                            дисковой затвор (Серия BFV-IA)</h4>
-                        <p class="text-[12px] text-respo-blue font-sans leading-[1.6]">
-                            Декларация о соответствии принята на основании Протоколов испытаний<br>
-                            №ГС-04/10-0608, ГС-04/10-0609, ГС-04/10-0610 от 04.10.2023 года, выданных Испытательной
-                            лабораторией ООО «ГЕРИТ СЕЙФИТИ РУС».
-                        </p>
-                    </div>
+                <div id="certificates-container">
+                    <p class="text-respo-dark/60 py-6">Загрузка сертификатов...</p>
                 </div>
             </div>
         </section>
@@ -455,6 +422,7 @@
             initCategoryRender('equipment', 'equipment-container', 'list');
             initCategoryRender('valves', 'valves-container', 'grid');
             initCategoryRender('heat_exchangers', 'exchangers-container', 'grid');
+            initCertificatesRender('certificates-container');
         });
     </script>
     <script src="js/main.js?v=2"></script>

@@ -15,6 +15,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const isAdminOpen = process.env.ADMIN_OPEN !== 'false';
 const assetsDir = path.join(__dirname, 'assets');
 const productsFile = path.join(__dirname, 'products.json');
+const certificatesFile = path.join(__dirname, 'certificates.json');
 const IMAGE_EXT_RE = /\.(png|svg|jpe?g|gif|webp)$/i;
 
 if (!fs.existsSync(assetsDir)) {
@@ -61,6 +62,24 @@ function validateProductsPayload(payload) {
             }
         }
         if (payload.categories.length > 0 && !categoryIds.has(p.category)) return false;
+    }
+    return true;
+}
+
+function validateCertificatesPayload(payload) {
+    if (!payload || typeof payload !== 'object') return false;
+    if (!Array.isArray(payload.certificates)) return false;
+
+    for (const cert of payload.certificates) {
+        if (!cert || typeof cert !== 'object') return false;
+        if (typeof cert.id !== 'string' || !cert.id.trim()) return false;
+        if (typeof cert.title !== 'string' || !cert.title.trim()) return false;
+        if (typeof cert.description !== 'string' || !cert.description.trim()) return false;
+        if (cert.image !== undefined && cert.image !== null && cert.image !== '') {
+            if (typeof cert.image !== 'string') return false;
+            const imageName = safeImageFilename(cert.image.replace(/^assets\//, ''));
+            if (!imageName) return false;
+        }
     }
     return true;
 }
@@ -242,6 +261,35 @@ app.post('/api/products', adminAuth, (req, res) => {
         }
         const data = JSON.stringify(req.body, null, 2);
         fs.writeFileSync(productsFile, data, 'utf8');
+        res.json({ success: true });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+app.get('/api/certificates', (req, res) => {
+    try {
+        if (!fs.existsSync(certificatesFile)) {
+            return res.json({ certificates: [] });
+        }
+        const data = fs.readFileSync(certificatesFile, 'utf8');
+        const parsed = JSON.parse(data);
+        if (!validateCertificatesPayload(parsed)) {
+            return res.status(500).json({ error: 'certificates.json has invalid structure' });
+        }
+        res.json(parsed);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+app.post('/api/certificates', adminAuth, (req, res) => {
+    try {
+        if (!validateCertificatesPayload(req.body)) {
+            return res.status(400).json({ error: 'Invalid certificates payload schema' });
+        }
+        const data = JSON.stringify(req.body, null, 2);
+        fs.writeFileSync(certificatesFile, data, 'utf8');
         res.json({ success: true });
     } catch (e) {
         res.status(500).json({ error: e.message });

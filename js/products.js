@@ -13,6 +13,17 @@ async function fetchProducts() {
     }
 }
 
+async function fetchCertificates() {
+    try {
+        const res = await fetch('/api/certificates');
+        if (!res.ok) throw new Error('Failed to fetch certificates');
+        return await res.json();
+    } catch (err) {
+        console.error('Error loading certificates:', err);
+        return { certificates: [] };
+    }
+}
+
 function escapeHtml(input) {
     return String(input ?? '')
         .replace(/&/g, '&amp;')
@@ -213,5 +224,50 @@ async function initCategoryRender(categoryId, containerId, displayType = 'grid')
         });
         container.appendChild(gridDiv);
     }
+    container.setAttribute('aria-busy', 'false');
+}
+
+/**
+ * Render certificates on Production page
+ */
+async function initCertificatesRender(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    container.setAttribute('aria-busy', 'true');
+    container.innerHTML = '<p class="text-respo-dark/60 py-6">Загрузка сертификатов...</p>';
+    const data = await fetchCertificates();
+    const certificates = Array.isArray(data.certificates) ? data.certificates : [];
+
+    if (certificates.length === 0) {
+        container.innerHTML = '<p class="text-gray-400 py-10">Сертификаты пока не добавлены.</p>';
+        container.setAttribute('aria-busy', 'false');
+        return;
+    }
+
+    const gridDiv = document.createElement('div');
+    gridDiv.className = 'grid grid-cols-1 md:grid-cols-3 gap-8';
+
+    certificates.forEach((cert) => {
+        const title = escapeHtml(cert.title || '');
+        const description = escapeHtml(cert.description || '').replace(/\n/g, '<br>');
+        const imagePath = String(cert.image || '').trim();
+        const imageSrc = imagePath || '';
+
+        const card = document.createElement('div');
+        card.innerHTML = `
+            <div class="w-full aspect-[3/4] bg-[#F7F7F7] mb-6 shadow-sm overflow-hidden flex items-center justify-center">
+                ${imageSrc
+                    ? `<img src="${escapeHtml(imageSrc)}" alt="${title}" class="w-full h-full object-contain">`
+                    : '<span class="text-gray-400 text-xs">Нет изображения</span>'}
+            </div>
+            <h4 class="text-[18px] font-medium text-respo-dark mb-4 pr-4">${title}</h4>
+            <p class="text-[12px] text-respo-blue font-sans leading-[1.6]">${description}</p>
+        `;
+        gridDiv.appendChild(card);
+    });
+
+    container.innerHTML = '';
+    container.appendChild(gridDiv);
     container.setAttribute('aria-busy', 'false');
 }
