@@ -224,7 +224,7 @@ function createHorizontalProductsCarousel(products, options = {}) {
 
     products.forEach((product) => {
         const slide = document.createElement('div');
-        slide.className = 'snap-start';
+        slide.className = 'snap-center shrink-0';
         slide.style.minWidth = '0';
 
         const card = createProductCard(product);
@@ -245,6 +245,11 @@ function createHorizontalProductsCarousel(products, options = {}) {
             slide.style.flex = `0 0 ${basis}`;
         });
         updateButtons();
+        const overflows = track.scrollWidth > track.clientWidth + 6;
+        track.classList.toggle('justify-center', !overflows);
+        if (!overflows) {
+            track.scrollLeft = 0;
+        }
     };
 
     const updateButtons = () => {

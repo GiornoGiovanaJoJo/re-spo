@@ -432,6 +432,31 @@
     <script src="js/products.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            function scrollOpenedCatalogIntoView(toggleButton, panel) {
+                const header = document.querySelector('header');
+                const headerH = header ? header.offsetHeight : 0;
+                const alignBlockToVisibleCenter = () => {
+                    if (panel.classList.contains('hidden')) return;
+                    const b = toggleButton.getBoundingClientRect();
+                    const p = panel.getBoundingClientRect();
+                    const top = Math.min(b.top, p.top);
+                    const bottom = Math.max(b.bottom, p.bottom);
+                    const blockCenter = top + (bottom - top) / 2;
+                    const visibleMid = headerH + (window.innerHeight - headerH) / 2;
+                    const delta = blockCenter - visibleMid;
+                    if (Math.abs(delta) > 10) {
+                        window.scrollBy({ top: delta, behavior: 'smooth' });
+                    }
+                };
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        alignBlockToVisibleCenter();
+                        setTimeout(alignBlockToVisibleCenter, 80);
+                        setTimeout(alignBlockToVisibleCenter, 280);
+                    });
+                });
+            }
+
             document.querySelectorAll('.catalog-toggle').forEach((button) => {
                 const panelId = button.getAttribute('data-accordion-target');
                 const panel = panelId ? document.getElementById(panelId) : null;
@@ -453,6 +478,9 @@
                 button.addEventListener('click', () => {
                     const isExpanded = button.getAttribute('aria-expanded') === 'true';
                     setExpandedState(!isExpanded);
+                    if (!isExpanded) {
+                        scrollOpenedCatalogIntoView(button, panel);
+                    }
                 });
             });
 
