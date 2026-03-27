@@ -237,6 +237,8 @@ function createHorizontalProductsCarousel(products, options = {}) {
     });
 
     const updateSlideWidths = () => {
+        if (!track.isConnected) return;
+        if (track.clientWidth === 0) return;
         const perView = getSlidesPerView(context, categoryId);
         const basis = `${100 / perView}%`;
         Array.from(track.children).forEach((slide) => {
@@ -263,10 +265,18 @@ function createHorizontalProductsCarousel(products, options = {}) {
     track.addEventListener('scroll', updateButtons, { passive: true });
     window.addEventListener('resize', updateSlideWidths);
 
+    // Important for hidden accordion panels: recalc when container becomes visible.
+    if (typeof ResizeObserver !== 'undefined') {
+        const observer = new ResizeObserver(() => updateSlideWidths());
+        observer.observe(root);
+    }
+
     root.appendChild(btnPrev);
     root.appendChild(track);
     root.appendChild(btnNext);
     updateSlideWidths();
+    setTimeout(updateSlideWidths, 0);
+    setTimeout(updateSlideWidths, 120);
 
     return root;
 }
