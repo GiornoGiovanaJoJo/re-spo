@@ -8,8 +8,30 @@
     <link rel="canonical" href="https://re-spo.com/admin">
     <link rel="icon" href="/favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .admin-shell { background: linear-gradient(180deg, #f7faff 0%, #eef4ff 100%); }
+        .glass-panel { background: rgba(255,255,255,.88); backdrop-filter: blur(8px); }
+        .soft-scroll::-webkit-scrollbar { height: 8px; width: 8px; }
+        .soft-scroll::-webkit-scrollbar-thumb { background: #bfdbfe; border-radius: 999px; }
+        .soft-scroll::-webkit-scrollbar-track { background: #eff6ff; border-radius: 999px; }
+        @media (max-width: 768px) {
+            .responsive-table thead { display: none; }
+            .responsive-table tr { display: block; border-bottom: 1px solid #e5e7eb; padding: 10px 0; }
+            .responsive-table td { display: flex; align-items: center; justify-content: space-between; gap: 12px; white-space: normal !important; padding: 8px 14px !important; }
+            .responsive-table td::before {
+                content: attr(data-label);
+                color: #64748b;
+                font-size: 11px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: .04em;
+                min-width: 84px;
+            }
+            .responsive-table td.actions-cell::before { display: none; }
+        }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen py-10">
+<body class="admin-shell min-h-screen py-4 md:py-8">
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){
@@ -23,49 +45,74 @@
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/108262955" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
-    <div class="max-w-6xl mx-auto bg-white p-8 rounded-xl shadow-lg">
-        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b pb-6">
+    <div class="max-w-6xl mx-auto glass-panel border border-white/80 p-4 md:p-8 rounded-2xl shadow-xl">
+        <div class="sticky top-2 z-20 glass-panel rounded-xl px-3 md:px-4 py-3 border border-blue-100 flex flex-col md:flex-row md:items-center justify-between mb-5 gap-3 md:gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-gray-800">Панель управления RE-SPO</h1>
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Панель управления RE-SPO</h1>
                 <p class="text-gray-500 text-sm mt-1">Управление контентом и медиафайлами</p>
             </div>
-            <div class="flex flex-wrap items-center gap-3">
-                <button id="btn-clear-cache" class="bg-amber-50 text-amber-700 px-4 py-2 rounded-md font-medium text-sm hover:bg-amber-100 transition-colors border border-amber-200">
+            <div class="flex flex-wrap items-center gap-2 md:gap-3">
+                <button id="btn-clear-cache" class="bg-amber-50 text-amber-700 px-3.5 md:px-4 py-2 rounded-md font-medium text-sm hover:bg-amber-100 transition-colors border border-amber-200">
                     Очистить кэш сайта
                 </button>
-                <a href="index.html" class="bg-blue-600 text-white px-6 py-2 rounded-md font-medium text-sm hover:bg-blue-700 transition-colors shadow-sm">На сайт &rarr;</a>
+                <a href="index.html" class="bg-blue-600 text-white px-4 md:px-6 py-2 rounded-md font-medium text-sm hover:bg-blue-700 transition-colors shadow-sm">На сайт &rarr;</a>
             </div>
         </div>
 
-        <div class="flex space-x-1 mb-8 bg-gray-100 p-1 rounded-lg w-fit">
-            <button id="tab-media" data-tab="media" class="px-6 py-2 rounded-md text-sm font-medium transition-all bg-white shadow-sm text-blue-600">Медиафайлы</button>
-            <button id="tab-products" data-tab="products" class="px-6 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Товары (Каталог)</button>
-            <button id="tab-certificates" data-tab="certificates" class="px-6 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Сертификаты</button>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-5">
+            <div class="rounded-lg border border-blue-100 bg-white/90 p-3">
+                <p class="text-[11px] uppercase tracking-wide text-slate-500">Медиафайлы</p>
+                <p id="stats-images" class="text-xl font-bold text-slate-800 mt-1">0</p>
+            </div>
+            <div class="rounded-lg border border-blue-100 bg-white/90 p-3">
+                <p class="text-[11px] uppercase tracking-wide text-slate-500">Товары</p>
+                <p id="stats-products" class="text-xl font-bold text-slate-800 mt-1">0</p>
+            </div>
+            <div class="rounded-lg border border-blue-100 bg-white/90 p-3">
+                <p class="text-[11px] uppercase tracking-wide text-slate-500">Сертификаты</p>
+                <p id="stats-certificates" class="text-xl font-bold text-slate-800 mt-1">0</p>
+            </div>
+            <div class="rounded-lg border border-blue-100 bg-white/90 p-3">
+                <p class="text-[11px] uppercase tracking-wide text-slate-500">Последнее действие</p>
+                <p id="stats-last-action" class="text-sm font-semibold text-slate-700 mt-1">—</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-6 bg-gray-100 p-1 rounded-lg">
+            <button id="tab-media" data-tab="media" class="px-4 py-2 rounded-md text-sm font-medium transition-all bg-white shadow-sm text-blue-600">Медиафайлы</button>
+            <button id="tab-products" data-tab="products" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Товары (Каталог)</button>
+            <button id="tab-certificates" data-tab="certificates" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Сертификаты</button>
         </div>
         
         <!-- Media Tab -->
         <div id="content-media">
-            <div class="flex items-center justify-between mb-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
                 <h2 class="text-xl font-bold text-gray-800">Менеджер изображений</h2>
-                <button id="btn-delete-all-images" class="text-red-600 hover:text-red-700 text-sm font-medium">Удалить все фото</button>
+                <div class="flex items-center gap-2">
+                    <input id="media-search" type="search" placeholder="Поиск по имени файла..." class="w-full md:w-72 border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                    <button id="btn-delete-all-images" class="text-red-600 hover:text-red-700 text-sm font-medium whitespace-nowrap">Удалить все фото</button>
+                </div>
             </div>
             <p class="text-gray-600 mb-6 bg-blue-50 p-4 rounded-lg text-sm">Здесь отображаются изображения, которые используются на сайте. Если вы добавили новый товар, загрузите его фото сюда.</p>
-            <div id="images-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div id="images-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 soft-scroll">
                 <!-- Loaded via JS -->
             </div>
         </div>
 
         <!-- Products Tab -->
         <div id="content-products" class="hidden">
-            <div class="flex items-center justify-between mb-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
                 <h2 class="text-xl font-bold text-gray-800">Управление товарами</h2>
-                <button id="btn-add-product" class="bg-green-600 text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-green-700 transition-colors shadow-sm">
-                    + Добавить товар
-                </button>
+                <div class="flex items-center gap-2">
+                    <input id="products-search" type="search" placeholder="Поиск товара..." class="w-full md:w-64 border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                    <button id="btn-add-product" class="bg-green-600 text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-green-700 transition-colors shadow-sm whitespace-nowrap">
+                        + Добавить товар
+                    </button>
+                </div>
             </div>
             
-            <div class="overflow-x-auto border rounded-lg">
-                <table class="min-w-full divide-y divide-gray-200">
+            <div class="overflow-x-auto soft-scroll border rounded-lg bg-white">
+                <table class="min-w-full divide-y divide-gray-200 responsive-table">
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Фото</th>
@@ -83,15 +130,18 @@
 
         <!-- Certificates Tab -->
         <div id="content-certificates" class="hidden">
-            <div class="flex items-center justify-between mb-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
                 <h2 class="text-xl font-bold text-gray-800">Управление сертификатами</h2>
-                <button id="btn-add-certificate" class="bg-green-600 text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-green-700 transition-colors shadow-sm">
-                    + Добавить сертификат
-                </button>
+                <div class="flex items-center gap-2">
+                    <input id="certificates-search" type="search" placeholder="Поиск сертификата..." class="w-full md:w-64 border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                    <button id="btn-add-certificate" class="bg-green-600 text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-green-700 transition-colors shadow-sm whitespace-nowrap">
+                        + Добавить сертификат
+                    </button>
+                </div>
             </div>
 
-            <div class="overflow-x-auto border rounded-lg">
-                <table class="min-w-full divide-y divide-gray-200">
+            <div class="overflow-x-auto soft-scroll border rounded-lg bg-white">
+                <table class="min-w-full divide-y divide-gray-200 responsive-table">
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Превью</th>
@@ -109,8 +159,8 @@
     </div>
 
     <!-- Product Modal -->
-    <div id="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[100] p-4">
-        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-8">
+    <div id="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[100] p-3 md:p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-xl w-full p-5 md:p-8 max-h-[90vh] overflow-y-auto soft-scroll">
             <h3 id="modal-title" class="text-2xl font-bold mb-6">Добавить товар</h3>
             <form id="product-form" class="space-y-4">
                 <input type="hidden" id="edit-id">
@@ -156,7 +206,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">Ссылка на страницу</label>
                     <input type="text" id="prod-link" value="product.html" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
                 </div>
-                <div class="flex justify-end gap-3 pt-4">
+                <div class="flex justify-end gap-3 pt-4 sticky bottom-0 bg-white/95 pb-1">
                     <button type="button" id="btn-close-product-modal" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">Отмена</button>
                     <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors shadow-sm">Сохранить</button>
                 </div>
@@ -165,8 +215,8 @@
     </div>
 
     <!-- Certificate Modal -->
-    <div id="certificate-modal" role="dialog" aria-modal="true" aria-labelledby="certificate-modal-title" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[100] p-4">
-        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-8">
+    <div id="certificate-modal" role="dialog" aria-modal="true" aria-labelledby="certificate-modal-title" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[100] p-3 md:p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-xl w-full p-5 md:p-8 max-h-[90vh] overflow-y-auto soft-scroll">
             <h3 id="certificate-modal-title" class="text-2xl font-bold mb-6">Добавить сертификат</h3>
             <form id="certificate-form" class="space-y-4">
                 <input type="hidden" id="edit-certificate-id">
@@ -192,7 +242,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">Описание</label>
                     <textarea id="cert-description" rows="5" required class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Текст сертификата. Можно переносить строки."></textarea>
                 </div>
-                <div class="flex justify-end gap-3 pt-4">
+                <div class="flex justify-end gap-3 pt-4 sticky bottom-0 bg-white/95 pb-1">
                     <button type="button" id="btn-close-certificate-modal" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">Отмена</button>
                     <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors shadow-sm">Сохранить</button>
                 </div>
@@ -206,6 +256,33 @@
         let certificateData = { certificates: [] };
         const FALLBACK_IMG = 'https://via.placeholder.com/40?text=?';
         const ADMIN_AUTH_STORAGE_KEY = 'respo_admin_basic_auth';
+        let currentTab = 'media';
+
+        function markLastAction(text) {
+            const el = document.getElementById('stats-last-action');
+            if (el) el.textContent = text;
+        }
+
+        function showToast(message, type = 'info') {
+            const host = document.getElementById('admin-toast-host') || (() => {
+                const node = document.createElement('div');
+                node.id = 'admin-toast-host';
+                node.className = 'fixed right-3 md:right-5 bottom-3 md:bottom-5 z-[120] space-y-2';
+                document.body.appendChild(node);
+                return node;
+            })();
+            const palette = {
+                info: 'bg-blue-600',
+                success: 'bg-emerald-600',
+                warning: 'bg-amber-600',
+                error: 'bg-rose-600'
+            };
+            const toast = document.createElement('div');
+            toast.className = `${palette[type] || palette.info} text-white text-sm font-medium px-4 py-2 rounded-lg shadow-lg`;
+            toast.textContent = message;
+            host.appendChild(toast);
+            setTimeout(() => toast.remove(), 2800);
+        }
 
         function escapeHtml(input) {
             return String(input ?? '')
@@ -374,6 +451,7 @@
         }
 
         function switchTab(tab) {
+            currentTab = tab;
             document.getElementById('content-media').classList.toggle('hidden', tab !== 'media');
             document.getElementById('content-products').classList.toggle('hidden', tab !== 'products');
             document.getElementById('content-certificates').classList.toggle('hidden', tab !== 'certificates');
@@ -402,6 +480,8 @@
                 if (!res.ok) throw new Error('Failed to fetch');
                 requiredImages = await res.json();
                 renderImages();
+                const stat = document.getElementById('stats-images');
+                if (stat) stat.textContent = String(requiredImages.length);
             } catch (err) {
                 document.getElementById('images-list').innerHTML = `<p class="text-red-500">Ошибка загрузки: ${err.message}</p>`;
             }
@@ -416,7 +496,10 @@
                 return;
             }
 
-            requiredImages.forEach((img, index) => {
+            const filter = String(document.getElementById('media-search')?.value || '').toLowerCase().trim();
+            requiredImages
+            .filter((img) => !filter || String(img.filename || '').toLowerCase().includes(filter))
+            .forEach((img, index) => {
                 const div = document.createElement('div');
                 div.className = 'flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg hover:shadow-md transition-shadow bg-gray-50';
                 
@@ -465,10 +548,10 @@
             
             try {
                 const res = await authorizedFetch('/api/upload', { method: 'POST', body: formData });
-                if (res.ok) loadImages();
-                else alert('Ошибка загрузки');
+                if (res.ok) { showToast('Файл загружен', 'success'); markLastAction('Загружено изображение'); loadImages(); }
+                else showToast('Ошибка загрузки', 'error');
             } catch (e) {
-                alert('Ошибка сети: ' + e.message);
+                showToast('Ошибка сети: ' + e.message, 'error');
             }
         }
 
@@ -476,16 +559,16 @@
             if (!confirm(`Удалить ${filename}?`)) return;
             try {
                 const res = await authorizedFetch(`/api/images/${encodeURIComponent(filename)}`, { method: 'DELETE' });
-                if (res.ok) loadImages();
-            } catch (err) { alert('Ошибка сети'); }
+                if (res.ok) { showToast('Изображение удалено', 'success'); markLastAction('Удалено изображение'); loadImages(); }
+            } catch (err) { showToast('Ошибка сети', 'error'); }
         }
 
         async function deleteAllImages() {
             if (!confirm('Удалить ВСЕ фотографии?')) return;
             try {
                 const res = await authorizedFetch('/api/images', { method: 'DELETE' });
-                if (res.ok) loadImages();
-            } catch (err) { alert('Ошибка сети'); }
+                if (res.ok) { showToast('Все изображения удалены', 'warning'); markLastAction('Удалены все изображения'); loadImages(); }
+            } catch (err) { showToast('Ошибка сети', 'error'); }
         }
 
         // --- Products Logic ---
@@ -498,9 +581,11 @@
                 if (!Array.isArray(productData.products)) productData.products = [];
                 renderProducts();
                 populateCategorySelect();
+                const stat = document.getElementById('stats-products');
+                if (stat) stat.textContent = String(productData.products.length);
             } catch (err) {
                 console.error(err);
-                alert('Не удалось загрузить товары. Проверьте доступ администратора.');
+                showToast('Не удалось загрузить товары. Проверьте доступ администратора.', 'error');
             }
         }
 
@@ -508,7 +593,14 @@
             const tbody = document.getElementById('products-table-body');
             tbody.innerHTML = '';
             
-            productData.products.forEach(p => {
+            const filter = String(document.getElementById('products-search')?.value || '').toLowerCase().trim();
+            productData.products
+            .filter((p) => {
+                if (!filter) return true;
+                const cat = productData.categories.find(c => c.id === p.category);
+                return String(p.name || '').toLowerCase().includes(filter) || String(cat?.name || p.category || '').toLowerCase().includes(filter);
+            })
+            .forEach(p => {
                 const tr = document.createElement('tr');
                 const cat = productData.categories.find(c => c.id === p.category);
                 const safeName = escapeHtml(p.name);
@@ -517,21 +609,21 @@
                 const safeCategoryName = escapeHtml(cat ? cat.name : p.category);
                 
                 tr.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap">
+                    <td data-label="Фото" class="px-6 py-4 whitespace-nowrap">
                         <div class="w-10 h-10 bg-gray-100 rounded overflow-hidden border">
                             <img src="${safeImage}?t=${new Date().getTime()}" onerror="this.src='${FALLBACK_IMG}'" class="w-full h-full object-cover">
                         </div>
                     </td>
-                    <td class="px-6 py-4">
+                    <td data-label="Название" class="px-6 py-4">
                         <div class="text-sm font-medium text-gray-900">${safeName}</div>
                         <div class="text-xs text-gray-500">${safeLink}</div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
+                    <td data-label="Категория" class="px-6 py-4 whitespace-nowrap">
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
                             ${safeCategoryName}
                         </span>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <td data-label="Действия" class="actions-cell px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button data-edit-product="${escapeHtml(p.id)}" class="text-indigo-600 hover:text-indigo-900 mr-4">Изменить</button>
                         <button data-delete-product="${escapeHtml(p.id)}" class="text-red-600 hover:text-red-900">Удалить</button>
                     </td>
@@ -632,9 +724,11 @@
                 });
                 if (res.ok) {
                     closeProductModal();
+                    showToast(id ? 'Товар обновлен' : 'Товар добавлен', 'success');
+                    markLastAction(id ? 'Обновлен товар' : 'Добавлен товар');
                     loadProducts();
                 }
-            } catch (err) { alert('Ошибка сохранения'); }
+            } catch (err) { showToast('Ошибка сохранения', 'error'); }
         }
 
         async function deleteProduct(id) {
@@ -646,8 +740,8 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(productData)
                 });
-                if (res.ok) loadProducts();
-            } catch (err) { alert('Ошибка удаления'); }
+                if (res.ok) { showToast('Товар удален', 'warning'); markLastAction('Удален товар'); loadProducts(); }
+            } catch (err) { showToast('Ошибка удаления', 'error'); }
         }
 
         // --- Certificates Logic ---
@@ -658,9 +752,11 @@
                 certificateData = await res.json();
                 if (!Array.isArray(certificateData.certificates)) certificateData.certificates = [];
                 renderCertificates();
+                const stat = document.getElementById('stats-certificates');
+                if (stat) stat.textContent = String(certificateData.certificates.length);
             } catch (err) {
                 console.error(err);
-                alert('Не удалось загрузить сертификаты. Проверьте доступ администратора.');
+                showToast('Не удалось загрузить сертификаты. Проверьте доступ администратора.', 'error');
             }
         }
 
@@ -668,27 +764,30 @@
             const tbody = document.getElementById('certificates-table-body');
             tbody.innerHTML = '';
 
-            certificateData.certificates.forEach((cert) => {
+            const filter = String(document.getElementById('certificates-search')?.value || '').toLowerCase().trim();
+            certificateData.certificates
+            .filter((cert) => !filter || String(cert.title || '').toLowerCase().includes(filter) || String(cert.description || '').toLowerCase().includes(filter))
+            .forEach((cert) => {
                 const tr = document.createElement('tr');
                 const safeTitle = escapeHtml(cert.title || '');
                 const safeDescription = escapeHtml(cert.description || '');
                 const safeImage = escapeHtml(cert.image || '');
 
                 tr.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap">
+                    <td data-label="Превью" class="px-6 py-4 whitespace-nowrap">
                         <div class="w-10 h-10 bg-gray-100 rounded overflow-hidden border flex items-center justify-center">
                             ${safeImage
                                 ? `<img src="${safeImage}?t=${new Date().getTime()}" onerror="this.src='${FALLBACK_IMG}'" class="w-full h-full object-cover">`
                                 : '<span class="text-[9px] text-gray-400">Нет</span>'}
                         </div>
                     </td>
-                    <td class="px-6 py-4">
+                    <td data-label="Название" class="px-6 py-4">
                         <div class="text-sm font-medium text-gray-900">${safeTitle}</div>
                     </td>
-                    <td class="px-6 py-4">
+                    <td data-label="Описание" class="px-6 py-4">
                         <div class="text-xs text-gray-500 max-w-[420px] line-clamp-3 whitespace-pre-line">${safeDescription}</div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <td data-label="Действия" class="actions-cell px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button data-edit-certificate="${escapeHtml(cert.id)}" class="text-indigo-600 hover:text-indigo-900 mr-4">Изменить</button>
                         <button data-delete-certificate="${escapeHtml(cert.id)}" class="text-red-600 hover:text-red-900">Удалить</button>
                     </td>
@@ -760,10 +859,12 @@
                 });
                 if (res.ok) {
                     closeCertificateModal();
+                    showToast(id ? 'Сертификат обновлен' : 'Сертификат добавлен', 'success');
+                    markLastAction(id ? 'Обновлен сертификат' : 'Добавлен сертификат');
                     loadCertificates();
                 }
             } catch (err) {
-                alert('Ошибка сохранения сертификата');
+                showToast('Ошибка сохранения сертификата', 'error');
             }
         }
 
@@ -776,9 +877,9 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(certificateData)
                 });
-                if (res.ok) loadCertificates();
+                if (res.ok) { showToast('Сертификат удален', 'warning'); markLastAction('Удален сертификат'); loadCertificates(); }
             } catch (err) {
-                alert('Ошибка удаления сертификата');
+                showToast('Ошибка удаления сертификата', 'error');
             }
         }
 
@@ -787,10 +888,10 @@
             try {
                 const res = await authorizedFetch('/api/clear-cache', { method: 'POST' });
                 if (res.ok) {
-                    alert('Кэш очищен. Страница будет перезагружена.');
+                    showToast('Кэш очищен. Страница перезагружается...', 'success');
                     window.location.reload(true);
                 }
-            } catch (err) { alert('Ошибка сети'); }
+            } catch (err) { showToast('Ошибка сети', 'error'); }
         }
         
         function initEventHandlers() {
@@ -810,6 +911,9 @@
             const imagesList = document.getElementById('images-list');
             const productsTableBody = document.getElementById('products-table-body');
             const certificatesTableBody = document.getElementById('certificates-table-body');
+            const mediaSearch = document.getElementById('media-search');
+            const productsSearch = document.getElementById('products-search');
+            const certificatesSearch = document.getElementById('certificates-search');
 
             mediaTab?.addEventListener('click', () => switchTab('media'));
             productsTab?.addEventListener('click', () => switchTab('products'));
@@ -824,6 +928,14 @@
             uploadCertificateImageBtn?.addEventListener('click', uploadCertificateImageFromModal);
             closeModalBtn?.addEventListener('click', closeProductModal);
             closeCertificateModalBtn?.addEventListener('click', closeCertificateModal);
+            mediaSearch?.addEventListener('input', renderImages);
+            productsSearch?.addEventListener('input', renderProducts);
+            certificatesSearch?.addEventListener('input', renderCertificates);
+            window.addEventListener('keydown', (e) => {
+                if (e.key !== 'Escape') return;
+                closeProductModal();
+                closeCertificateModal();
+            });
 
             imagesList?.addEventListener('change', (event) => {
                 const target = event.target;
