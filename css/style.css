@@ -262,10 +262,12 @@
     left: 50% !important;
     transform: translateX(-50%) !important;
     overflow: hidden;
+    bottom: -20px !important;
   }
 
   #hero .hero-people-wrap img {
     object-position: center bottom !important;
+    transform: translateY(12px);
   }
 
   #optimization,
@@ -409,6 +411,7 @@
 
   #hero .hero-people-wrap {
     width: 112% !important;
+    bottom: -26px !important;
   }
 
   main > section {
