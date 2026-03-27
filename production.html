@@ -96,8 +96,8 @@
 
             <div class="flex items-center space-x-3">
                 <div class="hidden xl:flex items-center gap-5 mr-6">
-                    <a href="mailto:info@re-spo.com" class="text-respo-dark font-medium leading-tight text-sm hover:text-respo-blue transition-colors">INFO@re-spo.com</a>
-                    <a href="tel:+74959616215" class="text-respo-dark font-medium leading-tight text-sm hover:text-respo-blue transition-colors">+7 (495) 961 62 15</a>
+                    <a href="#contacts" class="text-respo-dark font-medium leading-tight text-sm hover:text-respo-blue transition-colors">INFO@re-spo.com</a>
+                    <a href="#contacts" class="text-respo-dark font-medium leading-tight text-sm hover:text-respo-blue transition-colors">+7 (495) 961 62 15</a>
                 </div>
                 <a href="#" id="btn-cart" aria-label="Открыть корзину"
                     class="bg-[#B2CD50] text-white px-6 py-3 rounded-full flex items-center space-x-3 hover:brightness-105 transition-all shadow-sm">
@@ -149,9 +149,16 @@
         <section class="pt-20 pb-[30px] bg-white">
             <div class="container-respo">
                 <span class="text-respo-blue text-[18px] font-medium block leading-none mb-4">//</span>
-                <h2 class="text-[36px] lg:text-[48px] text-respo-blue font-medium leading-[40px] mb-12">Клапана</h2>
+                <button type="button"
+                    class="catalog-toggle w-full flex items-center justify-between gap-4 text-left bg-respo-blue-light border-2 border-respo-cyan/40 rounded-2xl px-6 py-5 lg:px-8 lg:py-6 mb-8 hover:border-respo-blue transition-colors"
+                    data-accordion-target="valves-panel" aria-expanded="false" aria-controls="valves-panel">
+                    <h2 class="text-[32px] lg:text-[44px] text-respo-blue font-medium leading-[1.1]">Клапана</h2>
+                    <span class="catalog-toggle-icon text-respo-blue text-[22px] leading-none transition-transform duration-200" aria-hidden="true">+</span>
+                </button>
 
-                <div id="valves-container"><p class="text-respo-dark/60 py-6">Загрузка клапанов...</p></div>
+                <div id="valves-panel" class="hidden">
+                    <div id="valves-container"><p class="text-respo-dark/60 py-6">Загрузка клапанов...</p></div>
+                </div>
             </div>
         </section>
 
@@ -159,18 +166,25 @@
         <section class="py-10 bg-white">
             <div class="container-respo">
                 <span class="text-respo-blue text-[18px] font-medium block leading-none mb-4">//</span>
-                <h2 class="text-[36px] lg:text-[48px] text-respo-blue font-medium leading-[40px] mb-12">Оборудование</h2>
+                <button type="button"
+                    class="catalog-toggle w-full flex items-center justify-between gap-4 text-left bg-respo-blue-light border-2 border-respo-cyan/40 rounded-2xl px-6 py-5 lg:px-8 lg:py-6 mb-8 hover:border-respo-blue transition-colors"
+                    data-accordion-target="equipment-panel" aria-expanded="false" aria-controls="equipment-panel">
+                    <h2 class="text-[32px] lg:text-[44px] text-respo-blue font-medium leading-[1.1]">Оборудование</h2>
+                    <span class="catalog-toggle-icon text-respo-blue text-[22px] leading-none transition-transform duration-200" aria-hidden="true">+</span>
+                </button>
 
-                <div id="equipment-container"><p class="text-respo-dark/60 py-6">Загрузка оборудования...</p></div>
+                <div id="equipment-panel" class="hidden">
+                    <div id="equipment-container"><p class="text-respo-dark/60 py-6">Загрузка оборудования...</p></div>
 
-                <!-- Counter -->
-                <div
-                    class="bg-[#E9F5FF] rounded-[6px] py-2.5 px-6 flex flex-col md:flex-row items-center justify-between gap-6 mt-6">
-                    <span class="text-[14px] lg:text-[16px] text-respo-dark/80 font-normal whitespace-nowrap">Счетчик
-                        установленных клапанов</span>
-                    <span class="text-[14px] lg:text-[16px] text-respo-dark/40 font-normal">-</span>
-                    <span
-                        class="text-[14px] lg:text-[16px] text-respo-dark font-normal tabular-nums tracking-wide">10 000 000</span>
+                    <!-- Counter -->
+                    <div
+                        class="bg-[#E9F5FF] rounded-[6px] py-2.5 px-6 flex flex-col md:flex-row items-center justify-between gap-6 mt-6">
+                        <span class="text-[14px] lg:text-[16px] text-respo-dark/80 font-normal whitespace-nowrap">Счетчик
+                            установленных клапанов</span>
+                        <span class="text-[14px] lg:text-[16px] text-respo-dark/40 font-normal">-</span>
+                        <span
+                            class="text-[14px] lg:text-[16px] text-respo-dark font-normal tabular-nums tracking-wide">10 000 000</span>
+                    </div>
                 </div>
             </div>
         </section>
@@ -179,19 +193,25 @@
         <section class="py-20 lg:py-24 bg-white">
             <div class="container-respo">
                 <span class="text-respo-blue text-[18px] font-medium block leading-none mb-4">//</span>
-                <h2 class="text-[36px] lg:text-[48px] text-respo-blue font-medium leading-[40px] mb-12">Теплообменники
-                </h2>
+                <button type="button"
+                    class="catalog-toggle w-full flex items-center justify-between gap-4 text-left bg-respo-blue-light border-2 border-respo-cyan/40 rounded-2xl px-6 py-5 lg:px-8 lg:py-6 mb-8 hover:border-respo-blue transition-colors"
+                    data-accordion-target="exchangers-panel" aria-expanded="false" aria-controls="exchangers-panel">
+                    <h2 class="text-[32px] lg:text-[44px] text-respo-blue font-medium leading-[1.1]">Теплообменники</h2>
+                    <span class="catalog-toggle-icon text-respo-blue text-[22px] leading-none transition-transform duration-200" aria-hidden="true">+</span>
+                </button>
 
-                <div id="exchangers-container"><p class="text-respo-dark/60 py-6">Загрузка теплообменников...</p></div>
+                <div id="exchangers-panel" class="hidden">
+                    <div id="exchangers-container"><p class="text-respo-dark/60 py-6">Загрузка теплообменников...</p></div>
 
-                <!-- Counter -->
-                <div
-                    class="bg-[#E9F5FF] rounded-[6px] py-2.5 px-6 flex flex-col md:flex-row items-center justify-between gap-6 mt-6">
-                    <span class="text-[14px] lg:text-[16px] text-respo-dark/80 font-normal whitespace-nowrap">Счетчик
-                        установленных клапанов</span>
-                    <span class="text-[14px] lg:text-[16px] text-respo-dark/40 font-normal">-</span>
-                    <span
-                        class="text-[14px] lg:text-[16px] text-respo-dark font-normal tabular-nums tracking-wide">10 000 000</span>
+                    <!-- Counter -->
+                    <div
+                        class="bg-[#E9F5FF] rounded-[6px] py-2.5 px-6 flex flex-col md:flex-row items-center justify-between gap-6 mt-6">
+                        <span class="text-[14px] lg:text-[16px] text-respo-dark/80 font-normal whitespace-nowrap">Счетчик
+                            установленных клапанов</span>
+                        <span class="text-[14px] lg:text-[16px] text-respo-dark/40 font-normal">-</span>
+                        <span
+                            class="text-[14px] lg:text-[16px] text-respo-dark font-normal tabular-nums tracking-wide">10 000 000</span>
+                    </div>
                 </div>
             </div>
         </section>
@@ -247,11 +267,17 @@
         <section class="py-20 lg:py-24 bg-white">
             <div class="container-respo">
                 <span class="text-respo-blue text-[18px] font-medium block leading-none mb-4">//</span>
-                <h2 class="text-[36px] lg:text-[48px] text-respo-blue font-medium leading-[40px] mb-12">Сертификаты на
-                    оборудование</h2>
+                <button type="button"
+                    class="catalog-toggle w-full flex items-center justify-between gap-4 text-left bg-respo-blue-light border-2 border-respo-cyan/40 rounded-2xl px-6 py-5 lg:px-8 lg:py-6 mb-8 hover:border-respo-blue transition-colors"
+                    data-accordion-target="certificates-panel" aria-expanded="false" aria-controls="certificates-panel">
+                    <h2 class="text-[32px] lg:text-[44px] text-respo-blue font-medium leading-[1.1]">Сертификаты на оборудование</h2>
+                    <span class="catalog-toggle-icon text-respo-blue text-[22px] leading-none transition-transform duration-200" aria-hidden="true">+</span>
+                </button>
 
-                <div id="certificates-container">
-                    <p class="text-respo-dark/60 py-6">Загрузка сертификатов...</p>
+                <div id="certificates-panel" class="hidden">
+                    <div id="certificates-container">
+                        <p class="text-respo-dark/60 py-6">Загрузка сертификатов...</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -429,6 +455,30 @@
     <script src="js/products.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.catalog-toggle').forEach((button) => {
+                const panelId = button.getAttribute('data-accordion-target');
+                const panel = panelId ? document.getElementById(panelId) : null;
+                const icon = button.querySelector('.catalog-toggle-icon');
+
+                if (!panel) return;
+
+                const setExpandedState = (expanded) => {
+                    button.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+                    panel.classList.toggle('hidden', !expanded);
+
+                    if (icon) {
+                        icon.textContent = expanded ? '−' : '+';
+                        icon.classList.toggle('rotate-180', expanded);
+                    }
+                };
+
+                setExpandedState(false);
+                button.addEventListener('click', () => {
+                    const isExpanded = button.getAttribute('aria-expanded') === 'true';
+                    setExpandedState(!isExpanded);
+                });
+            });
+
             initCategoryRender('equipment', 'equipment-container', 'list');
             initCategoryRender('valves', 'valves-container', 'grid');
             initCategoryRender('heat_exchangers', 'exchangers-container', 'grid');
