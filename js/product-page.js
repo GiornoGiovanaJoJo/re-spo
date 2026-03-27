@@ -71,6 +71,7 @@
             imageEl.onerror = () => {
                 imageEl.src = PLACEHOLDER;
             };
+            imageEl.dispatchEvent(new CustomEvent('product-image-changed'));
             applyDotStyles();
         }
 
@@ -99,6 +100,122 @@
         show(0);
     }
 
+    /**
+     * @param {HTMLElement | null} stageEl
+     * @param {HTMLImageElement | null} imageEl
+     * @param {HTMLElement | null} zoomInBtn
+     * @param {HTMLElement | null} zoomOutBtn
+     * @param {HTMLElement | null} zoomResetBtn
+     */
+    function setupImageZoom(stageEl, imageEl, zoomInBtn, zoomOutBtn, zoomResetBtn) {
+        if (!stageEl || !imageEl) return;
+
+        const MIN_ZOOM = 1;
+        const MAX_ZOOM = 5;
+        const ZOOM_STEP = 0.25;
+        let scale = 1;
+        let tx = 0;
+        let ty = 0;
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let startTx = 0;
+        let startTy = 0;
+
+        function clamp(value, min, max) {
+            return Math.max(min, Math.min(value, max));
+        }
+
+        function getBoundsForScale(nextScale) {
+            const maxX = Math.max(0, (stageEl.clientWidth * (nextScale - 1)) / 2);
+            const maxY = Math.max(0, (stageEl.clientHeight * (nextScale - 1)) / 2);
+            return { maxX, maxY };
+        }
+
+        function applyTransform() {
+            const { maxX, maxY } = getBoundsForScale(scale);
+            tx = clamp(tx, -maxX, maxX);
+            ty = clamp(ty, -maxY, maxY);
+            imageEl.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${scale})`;
+            stageEl.classList.toggle('cursor-grab', scale > 1 && !isDragging);
+            stageEl.classList.toggle('cursor-grabbing', isDragging);
+            stageEl.classList.toggle('cursor-zoom-in', scale === 1);
+            if (zoomResetBtn) {
+                zoomResetBtn.textContent = `${Math.round(scale * 100)}%`;
+            }
+        }
+
+        function setScale(nextScale) {
+            scale = clamp(nextScale, MIN_ZOOM, MAX_ZOOM);
+            if (scale === 1) {
+                tx = 0;
+                ty = 0;
+            }
+            applyTransform();
+        }
+
+        function resetZoom() {
+            scale = 1;
+            tx = 0;
+            ty = 0;
+            isDragging = false;
+            applyTransform();
+        }
+
+        if (zoomInBtn) {
+            zoomInBtn.addEventListener('click', () => setScale(scale + ZOOM_STEP));
+        }
+        if (zoomOutBtn) {
+            zoomOutBtn.addEventListener('click', () => setScale(scale - ZOOM_STEP));
+        }
+        if (zoomResetBtn) {
+            zoomResetBtn.addEventListener('click', resetZoom);
+        }
+
+        stageEl.addEventListener('wheel', (event) => {
+            event.preventDefault();
+            const delta = event.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP;
+            setScale(scale + delta);
+        }, { passive: false });
+
+        stageEl.addEventListener('pointerdown', (event) => {
+            if (scale <= 1) return;
+            isDragging = true;
+            dragStartX = event.clientX;
+            dragStartY = event.clientY;
+            startTx = tx;
+            startTy = ty;
+            stageEl.setPointerCapture(event.pointerId);
+            applyTransform();
+        });
+
+        stageEl.addEventListener('pointermove', (event) => {
+            if (!isDragging) return;
+            tx = startTx + (event.clientX - dragStartX);
+            ty = startTy + (event.clientY - dragStartY);
+            applyTransform();
+        });
+
+        function endDrag(event) {
+            if (!isDragging) return;
+            isDragging = false;
+            if (stageEl.hasPointerCapture(event.pointerId)) {
+                stageEl.releasePointerCapture(event.pointerId);
+            }
+            applyTransform();
+        }
+
+        stageEl.addEventListener('pointerup', endDrag);
+        stageEl.addEventListener('pointercancel', endDrag);
+        stageEl.addEventListener('pointerleave', (event) => {
+            if (!isDragging) return;
+            endDrag(event);
+        });
+
+        imageEl.addEventListener('product-image-changed', resetZoom);
+        resetZoom();
+    }
+
     async function loadProductData() {
         const id = getIdFromQuery();
         if (!id) return;
@@ -112,8 +229,12 @@
 
             const titleEl = document.getElementById('product-title');
             const imageEl = document.getElementById('product-main-image');
+            const stageEl = document.getElementById('product-image-stage');
             const dotsEl = document.getElementById('product-gallery-dots');
             const specsEl = document.getElementById('product-spec-list');
+            const zoomInBtn = document.getElementById('zoom-in-btn');
+            const zoomOutBtn = document.getElementById('zoom-out-btn');
+            const zoomResetBtn = document.getElementById('zoom-reset-btn');
             const addToCartBtn = document.querySelector('[data-add-to-cart="1"]');
 
             const name = product.name || 'Товар';
@@ -121,6 +242,7 @@
 
             const gallerySources = normalizeGallerySources(product);
             setupGallery(imageEl, dotsEl, gallerySources, name);
+            setupImageZoom(stageEl, imageEl, zoomInBtn, zoomOutBtn, zoomResetBtn);
 
             renderSpecs(specsEl, product.specs);
             if (addToCartBtn) {
