@@ -35,9 +35,10 @@ function createProductCard(product) {
     const div = document.createElement('div');
     const isValve = product.category === 'valves';
     const isExchanger = product.category === 'heat_exchangers';
+    const cardSizeClass = isValve ? 'w-full max-w-[420px]' : (isExchanger ? 'w-full max-w-[320px]' : 'w-full');
     div.className = isExchanger
-        ? 'bg-[#F8F9FA] p-6 rounded-[20px] flex flex-col items-start h-full'
-        : 'bg-[#F8F9FA] p-6 lg:p-8 rounded-[20px] flex flex-col items-start group hover:shadow-xl transition-all h-full';
+        ? `bg-[#F8F9FA] p-6 rounded-[20px] flex flex-col items-start h-full ${cardSizeClass}`
+        : `bg-[#F8F9FA] p-6 lg:p-8 rounded-[20px] flex flex-col items-start group hover:shadow-xl transition-all h-full ${cardSizeClass}`;
     
     const safeName = escapeHtml(product.name);
     const href = getProductHref(product);
@@ -187,9 +188,9 @@ async function initCategoryRender(categoryId, containerId, displayType = 'grid')
     } else {
         const gridDiv = document.createElement('div');
         if (categoryId === 'valves') {
-            gridDiv.className = 'grid grid-cols-1 md:grid-cols-2 gap-8 mb-12';
+            gridDiv.className = 'grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 justify-items-center';
         } else if (categoryId === 'heat_exchangers') {
-            gridDiv.className = 'grid grid-cols-1 md:grid-cols-2 gap-8 mb-12';
+            gridDiv.className = 'grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 justify-items-center';
         } else {
             gridDiv.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8';
         }
