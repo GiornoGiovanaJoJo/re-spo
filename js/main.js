@@ -171,20 +171,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // "Добавить в корзину" Buttons
     // =====================================================
     function attachAddToCartHandlers() {
-        // Product page button
-        const productPageBtn = document.querySelector('main button');
-        if (productPageBtn && !productPageBtn.dataset.cartBound) {
-            productPageBtn.dataset.cartBound = '1';
-            productPageBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const name = document.querySelector('main h1')?.textContent?.trim() || 'Товар';
-                cartItems.push(name);
-                updateCartBadge();
-                showToast(`«${name}» добавлен в корзину`, 'success');
-            });
-        }
-
-        // Dynamic catalog buttons
+        // Bind only explicit add-to-cart controls.
+        // This prevents unrelated UI buttons (accordions, zoom, etc.) from adding items.
         document.querySelectorAll('[data-add-to-cart="1"]').forEach((btn) => {
             if (btn.dataset.cartBound) return;
             btn.dataset.cartBound = '1';

@@ -137,7 +137,7 @@
         if (!stageEl || !imageEl) return;
 
         const MIN_ZOOM = 1;
-        const MAX_ZOOM = 5;
+        const MAX_ZOOM = 8;
         const ZOOM_STEP = 0.25;
         let scale = 1;
         let tx = 0;
@@ -169,6 +169,16 @@
             if (zoomResetBtn) {
                 zoomResetBtn.textContent = `${Math.round(scale * 100)}%`;
             }
+            if (zoomInBtn) {
+                zoomInBtn.disabled = scale >= MAX_ZOOM;
+                zoomInBtn.classList.toggle('opacity-50', zoomInBtn.disabled);
+                zoomInBtn.classList.toggle('cursor-not-allowed', zoomInBtn.disabled);
+            }
+            if (zoomOutBtn) {
+                zoomOutBtn.disabled = scale <= MIN_ZOOM;
+                zoomOutBtn.classList.toggle('opacity-50', zoomOutBtn.disabled);
+                zoomOutBtn.classList.toggle('cursor-not-allowed', zoomOutBtn.disabled);
+            }
         }
 
         function setScale(nextScale) {
@@ -188,6 +198,18 @@
             applyTransform();
         }
 
+        function blockStagePointerHandling(event) {
+            event.stopPropagation();
+        }
+
+        [zoomInBtn, zoomOutBtn, zoomResetBtn].forEach((btn) => {
+            if (!btn) return;
+            // Prevent drag/pointer-capture from hijacking zoom control clicks.
+            btn.addEventListener('pointerdown', blockStagePointerHandling);
+            btn.addEventListener('pointerup', blockStagePointerHandling);
+            btn.addEventListener('click', blockStagePointerHandling);
+        });
+
         if (zoomInBtn) {
             zoomInBtn.addEventListener('click', () => setScale(scale + ZOOM_STEP));
         }
@@ -205,6 +227,7 @@
         }, { passive: false });
 
         stageEl.addEventListener('pointerdown', (event) => {
+            if (event.target instanceof Element && event.target.closest('button')) return;
             if (scale <= 1) return;
             isDragging = true;
             dragStartX = event.clientX;
