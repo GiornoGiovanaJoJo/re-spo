@@ -108,7 +108,13 @@ function adminAuth(req, res, next) {
 
 const cspDirectives = {
     defaultSrc: ["'self'"],
-    scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdn.tailwindcss.com', 'https://mc.yandex.ru'],
+    scriptSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        'https://cdn.tailwindcss.com',
+        'https://mc.yandex.ru',
+        'https://yastatic.net'
+    ],
     styleSrc: [
         "'self'",
         "'unsafe-inline'",
@@ -117,7 +123,8 @@ const cspDirectives = {
         'https://db.onlinewebfonts.com'
     ],
     imgSrc: ["'self'", 'data:', 'https:'],
-    connectSrc: ["'self'", 'https://mc.yandex.ru'],
+    connectSrc: ["'self'", 'https://mc.yandex.ru', 'wss://mc.yandex.ru'],
+    frameSrc: ["'self'", 'https://mc.yandex.ru'],
     fontSrc: [
         "'self'",
         'https://fonts.gstatic.com',
@@ -202,6 +209,13 @@ app.get('/admin', adminAuth, (req, res) => res.sendFile(path.join(__dirname, 'ad
 app.get('/index.html', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/production.html', (req, res) => res.sendFile(path.join(__dirname, 'production.html')));
 app.get('/product.html', (req, res) => res.sendFile(path.join(__dirname, 'product.html')));
+app.get('/favicon.ico', (req, res) => {
+    const faviconPath = path.join(assetsDir, 'logo.png');
+    if (fs.existsSync(faviconPath)) {
+        return res.sendFile(faviconPath);
+    }
+    return res.status(204).end();
+});
 
 app.get('/api/products', (req, res) => {
     try {
