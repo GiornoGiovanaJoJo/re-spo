@@ -251,9 +251,9 @@
   }
 
   #hero {
-    min-height: auto !important;
+    min-height: 700px !important;
     padding-top: 5.75rem !important;
-    padding-bottom: 2.5rem !important;
+    padding-bottom: 7.25rem !important;
   }
 
   #hero .hero-people-wrap {
@@ -405,8 +405,9 @@
   }
 
   #hero {
+    min-height: 660px !important;
     padding-top: 5.15rem !important;
-    padding-bottom: 2rem !important;
+    padding-bottom: 7.75rem !important;
   }
 
   #hero .hero-people-wrap {
