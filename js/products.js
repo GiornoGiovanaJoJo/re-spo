@@ -42,6 +42,18 @@ function getProductHref(product) {
     return raw;
 }
 
+function getNormalizedCategory(product) {
+    const sourceCategory = String(product?.category || '').trim();
+    if (sourceCategory === 'valves' || sourceCategory === 'heat_exchangers') {
+        return sourceCategory;
+    }
+
+    const name = String(product?.name || '').toLowerCase();
+    if (name.includes('клапан')) return 'valves';
+    if (name.includes('теплообмен')) return 'heat_exchangers';
+    return sourceCategory || 'equipment';
+}
+
 function formatExchangerTitle(name) {
     const raw = String(name ?? '').trim();
     const sizeMatch = raw.match(/^(.*?)(\s*\((?:Размер|размер)[^)]+\))$/);
@@ -194,7 +206,7 @@ async function initCategoryRender(categoryId, containerId, displayType = 'grid')
     const data = await fetchProducts();
     container.innerHTML = '';
     
-    const categoryProducts = data.products.filter(p => p.category === categoryId);
+    const categoryProducts = data.products.filter((p) => getNormalizedCategory(p) === categoryId);
     
     if (categoryProducts.length === 0) {
         container.innerHTML = '<p class="text-gray-400 py-10">В данной категории товаров пока нет.</p>';
