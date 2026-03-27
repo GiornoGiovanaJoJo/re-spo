@@ -170,6 +170,10 @@ app.use(helmet({
 
 app.use(compression());
 app.use(express.json({ limit: '256kb' }));
+app.use('/api', (req, res, next) => {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    next();
+});
 
 app.get('/assets/product_placeholder.png', (req, res, next) => {
     const filepath = path.join(assetsDir, 'product_placeholder.png');
@@ -232,7 +236,12 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/production', (req, res) => res.sendFile(path.join(__dirname, 'production.html')));
 app.get('/product', (req, res) => res.sendFile(path.join(__dirname, 'product.html')));
 app.get('/privacy-policy', (req, res) => res.sendFile(path.join(__dirname, 'privacy-policy.html')));
-app.get('/admin', adminAuth, (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
+app.get('/admin', adminAuth, (req, res) => {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    res.sendFile(path.join(__dirname, 'admin.html'));
+});
+app.get('/robots.txt', (req, res) => res.sendFile(path.join(__dirname, 'robots.txt')));
+app.get('/sitemap.xml', (req, res) => res.sendFile(path.join(__dirname, 'sitemap.xml')));
 
 app.get('/index.html', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/production.html', (req, res) => res.sendFile(path.join(__dirname, 'production.html')));
