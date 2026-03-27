@@ -31,6 +31,19 @@ function getProductHref(product) {
     return raw;
 }
 
+function formatExchangerTitle(name) {
+    const raw = String(name ?? '').trim();
+    const sizeMatch = raw.match(/^(.*?)(\s*\((?:Размер|размер)[^)]+\))$/);
+
+    if (!sizeMatch) {
+        return escapeHtml(raw);
+    }
+
+    const baseName = escapeHtml(sizeMatch[1].trim());
+    const sizePart = escapeHtml(sizeMatch[2].trim());
+    return `${baseName}<br><span class="text-respo-dark/70">${sizePart}</span>`;
+}
+
 function createProductCard(product) {
     const div = document.createElement('div');
     const isValve = product.category === 'valves';
@@ -40,7 +53,9 @@ function createProductCard(product) {
         ? `bg-[#F8F9FA] p-6 rounded-[20px] flex flex-col items-start h-full ${cardSizeClass}`
         : `bg-[#F8F9FA] p-6 lg:p-8 rounded-[20px] flex flex-col items-start group hover:shadow-xl transition-all h-full ${cardSizeClass}`;
     
-    const safeName = escapeHtml(product.name);
+    const rawName = String(product.name ?? '').trim();
+    const safeName = escapeHtml(rawName);
+    const exchangerTitle = formatExchangerTitle(rawName);
     const href = getProductHref(product);
     const safeHref = escapeHtml(href);
     const safeDescription = escapeHtml(product.description || '');
@@ -48,16 +63,20 @@ function createProductCard(product) {
     // Use t parameter to bust cache if needed, or just standard path
     const imgSrc = product.image || 'assets/product_placeholder.png';
     
-    const mediaAspectClass = (isValve || isExchanger)
-        ? 'aspect-[4/5]'
-        : 'aspect-[16/10] sm:aspect-[2/1]';
+    const mediaAspectClass = 'aspect-[4/5]';
 
     if (isExchanger) {
         div.innerHTML = `
+            <h3 class="text-[14px] text-respo-dark/80 font-medium mb-4 leading-[1.45] min-h-[2.8rem]">${exchangerTitle}</h3>
             <div class="bg-white w-full ${mediaAspectClass} rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center p-4">
                 <img src="${imgSrc}" alt="${safeName}" class="max-h-full max-w-[92%] w-auto h-auto object-contain">
             </div>
-            <h3 class="text-[14px] text-respo-dark/80 font-medium mt-auto">${safeName}</h3>
+            <div class="mt-auto w-full">
+                <a href="${safeHref}" class="bg-respo-cyan text-white py-2.5 px-5 rounded-full flex items-center justify-center space-x-2 hover:brightness-110 transition-all w-full text-[12px]">
+                    <span class="font-medium">Подробнее</span>
+                    <img src="assets/arrow-right.svg" alt="Icon" class="w-4 h-4 brightness-0 invert">
+                </a>
+            </div>
         `;
         return div;
     }
@@ -69,16 +88,10 @@ function createProductCard(product) {
             <img src="${imgSrc}" alt="${safeName}" class="max-h-full max-w-[92%] w-auto h-auto object-contain group-hover:scale-105 transition-transform">
         </div>
         <div class="mt-auto w-full">
-            ${isValve
-                ? `<button data-add-to-cart="1" data-product-name="${safeName}" class="bg-respo-cyan text-white py-2.5 px-5 rounded-full flex items-center justify-center space-x-2 hover:brightness-110 transition-all w-full text-[12px]">
-                    <span class="font-medium">добавить в корзину</span>
-                    <img src="assets/arrow-right.svg" alt="Icon" class="w-4 h-4 brightness-0 invert">
-                </button>`
-                : `<a href="${safeHref}" class="bg-respo-cyan text-white py-2.5 px-5 rounded-full flex items-center justify-center space-x-2 hover:brightness-110 transition-all w-full text-[12px]">
-                    <span class="font-medium">Подробнее</span>
-                    <img src="assets/arrow-right.svg" alt="Icon" class="w-4 h-4 brightness-0 invert">
-                </a>`
-            }
+            <a href="${safeHref}" class="bg-respo-cyan text-white py-2.5 px-5 rounded-full flex items-center justify-center space-x-2 hover:brightness-110 transition-all w-full text-[12px]">
+                <span class="font-medium">Подробнее</span>
+                <img src="assets/arrow-right.svg" alt="Icon" class="w-4 h-4 brightness-0 invert">
+            </a>
         </div>
     `;
     return div;
@@ -188,11 +201,11 @@ async function initCategoryRender(categoryId, containerId, displayType = 'grid')
     } else {
         const gridDiv = document.createElement('div');
         if (categoryId === 'valves') {
-            gridDiv.className = 'grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 justify-items-center';
+            gridDiv.className = 'grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 justify-items-center';
         } else if (categoryId === 'heat_exchangers') {
-            gridDiv.className = 'grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 justify-items-center';
+            gridDiv.className = 'grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 justify-items-center';
         } else {
-            gridDiv.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8';
+            gridDiv.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6';
         }
         categoryProducts.forEach(p => {
             const card = createProductCard(p);
