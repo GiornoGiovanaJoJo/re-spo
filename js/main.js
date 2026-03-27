@@ -5,19 +5,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('RESPO Website Initialized');
 
-    // ----- State -----
-    let cartItems = [];
-    const CART_STORAGE_KEY = 'respo_cart_v1';
-    try {
-        const stored = localStorage.getItem(CART_STORAGE_KEY);
-        if (stored) {
-            const parsed = JSON.parse(stored);
-            if (Array.isArray(parsed)) cartItems = parsed;
-        }
-    } catch (e) {
-        console.warn('Failed to restore cart from storage', e);
-    }
-
     // =====================================================
     // Toast Notification System
     // =====================================================
@@ -144,60 +131,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mobileMenuBtn && mobileMenu) {
         mobileMenuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
-        });
-    }
-
-    // =====================================================
-    // Cart Badge Update
-    // =====================================================
-    const cartCountEl = document.getElementById('cart-count');
-
-    function updateCartBadge() {
-        if (!cartCountEl) return;
-        if (cartItems.length > 0) {
-            cartCountEl.textContent = cartItems.length;
-            cartCountEl.classList.remove('hidden');
-        } else {
-            cartCountEl.classList.add('hidden');
-        }
-        try {
-            localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
-        } catch (e) {
-            console.warn('Failed to persist cart', e);
-        }
-    }
-
-    // =====================================================
-    // "Добавить в корзину" Buttons
-    // =====================================================
-    function attachAddToCartHandlers() {
-        // Bind only explicit add-to-cart controls.
-        // This prevents unrelated UI buttons (accordions, zoom, etc.) from adding items.
-        document.querySelectorAll('[data-add-to-cart="1"]').forEach((btn) => {
-            if (btn.dataset.cartBound) return;
-            btn.dataset.cartBound = '1';
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const name = btn.dataset.productName || 'Товар';
-                cartItems.push(name);
-                updateCartBadge();
-                showToast(`«${name}» добавлен в корзину`, 'success');
-            });
-        });
-    }
-
-    // =====================================================
-    // Header "Корзина" Button
-    // =====================================================
-    const cartBtn = document.getElementById('btn-cart');
-    if (cartBtn) {
-        cartBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (cartItems.length === 0) {
-                showToast('Корзина пуста', 'info');
-            } else {
-                showToast(`В корзине: ${cartItems.length} товар(ов)`, 'success');
-            }
         });
     }
 
@@ -466,8 +399,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     initInteractiveCow();
-    attachAddToCartHandlers();
-    updateCartBadge();
 
     // =====================================================
     // "Узнать больше" Button

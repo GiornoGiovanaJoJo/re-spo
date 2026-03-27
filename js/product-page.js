@@ -286,7 +286,6 @@
             const zoomInBtn = document.getElementById('zoom-in-btn');
             const zoomOutBtn = document.getElementById('zoom-out-btn');
             const zoomResetBtn = document.getElementById('zoom-reset-btn');
-            const addToCartBtn = document.querySelector('[data-add-to-cart="1"]');
 
             const name = product.name || 'Товар';
             if (titleEl) titleEl.textContent = name;
@@ -297,9 +296,6 @@
 
             renderSpecs(specsEl, product.specs);
             renderParametersTable(paramsBodyEl, paramsWrapEl, product.parameters);
-            if (addToCartBtn) {
-                addToCartBtn.dataset.productName = name;
-            }
 
             document.title = `${name} - RESPO`;
         } catch (error) {
