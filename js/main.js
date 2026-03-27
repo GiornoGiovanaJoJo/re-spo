@@ -64,15 +64,15 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', () => {
         if (!header) return;
         if (window.scrollY > 50) {
-            header.classList.add('shadow-lg');
+            header.classList.add('border-b', 'border-gray-200');
             if (isTransparentHeader) {
-                header.classList.add('bg-white/90', 'backdrop-blur-md');
+                header.classList.add('bg-white');
                 header.classList.remove('bg-transparent');
             }
         } else {
-            header.classList.remove('shadow-lg');
+            header.classList.remove('border-b', 'border-gray-200');
             if (isTransparentHeader) {
-                header.classList.remove('bg-white/90', 'backdrop-blur-md');
+                header.classList.remove('bg-white');
                 header.classList.add('bg-transparent');
             }
         }
