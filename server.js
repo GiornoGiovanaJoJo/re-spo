@@ -158,10 +158,23 @@ app.get('/assets/product_placeholder.png', (req, res, next) => {
 
 app.use('/assets', express.static(assetsDir, {
     maxAge: '7d',
-    etag: true
+    etag: true,
+    setHeaders: (res, filePath) => {
+        if (/\.(png|svg|jpe?g|gif|webp)$/i.test(filePath)) {
+            res.setHeader('Cache-Control', 'public, max-age=604800, immutable');
+        }
+    }
 }));
-app.use('/css', express.static(path.join(__dirname, 'css'), { maxAge: '7d', etag: true }));
-app.use('/js', express.static(path.join(__dirname, 'js'), { maxAge: '7d', etag: true }));
+app.use('/css', express.static(path.join(__dirname, 'css'), {
+    maxAge: '7d',
+    etag: true,
+    setHeaders: (res) => res.setHeader('Cache-Control', 'public, max-age=604800, immutable')
+}));
+app.use('/js', express.static(path.join(__dirname, 'js'), {
+    maxAge: '7d',
+    etag: true,
+    setHeaders: (res) => res.setHeader('Cache-Control', 'public, max-age=604800, immutable')
+}));
 app.use('/images', express.static(path.join(__dirname, 'images'), { maxAge: '7d', etag: true }));
 
 const upload = multer({

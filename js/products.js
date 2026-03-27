@@ -138,6 +138,8 @@ async function initCatalogPreview(containerId, limit = 4) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
+    container.setAttribute('aria-busy', 'true');
+    container.innerHTML = '<p class="text-respo-dark/60">Загрузка товаров...</p>';
     const data = await fetchProducts();
     container.innerHTML = '';
     
@@ -148,6 +150,7 @@ async function initCatalogPreview(containerId, limit = 4) {
         const card = createProductCard(p);
         container.appendChild(card);
     });
+    container.setAttribute('aria-busy', 'false');
 }
 
 /**
@@ -157,6 +160,8 @@ async function initCategoryRender(categoryId, containerId, displayType = 'grid')
     const container = document.getElementById(containerId);
     if (!container) return;
 
+    container.setAttribute('aria-busy', 'true');
+    container.innerHTML = '<p class="text-respo-dark/60 py-6">Загрузка категории...</p>';
     const data = await fetchProducts();
     container.innerHTML = '';
     
@@ -164,6 +169,7 @@ async function initCategoryRender(categoryId, containerId, displayType = 'grid')
     
     if (categoryProducts.length === 0) {
         container.innerHTML = '<p class="text-gray-400 py-10">В данной категории товаров пока нет.</p>';
+        container.setAttribute('aria-busy', 'false');
         return;
     }
 
@@ -189,4 +195,5 @@ async function initCategoryRender(categoryId, containerId, displayType = 'grid')
         });
         container.appendChild(gridDiv);
     }
+    container.setAttribute('aria-busy', 'false');
 }

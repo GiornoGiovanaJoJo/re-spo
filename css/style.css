@@ -82,7 +82,7 @@
 }
 
 /* =====================================================
-   Interactive SVG Cow
+   Interactive Cow Sprite
    ===================================================== */
 #interactive-cow-area {
   z-index: 9999;
@@ -94,71 +94,42 @@
 }
 
 .cow-svg {
+  display: none;
+}
+
+.cow-sprite {
   width: 100%;
   height: 100%;
-  overflow: visible;
+  background-image: url('/assets/cow_sprite.png');
+  background-repeat: no-repeat;
+  background-size: 200% 200%;
+  background-position: 0 0;
   transform-origin: center;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
-/* Base Body Parts */
-/* No separate head/legs for user asset, using group transformations if needed */
-.cow-main-path {
-  transition: transform 0.3s ease-out;
+@keyframes cow-frames {
+  0%, 24.99% {
+    background-position: 0% 0%;
+  }
+  25%, 49.99% {
+    background-position: 100% 0%;
+  }
+  50%, 74.99% {
+    background-position: 0% 100%;
+  }
+  75%, 100% {
+    background-position: 100% 100%;
+  }
 }
 
-/* Leg Animations */
-.leg {
-  transform-origin: top center;
-  transition: transform 0.2s ease-out;
+.cow-walking .cow-sprite {
+  animation: cow-frames 0.55s steps(1, end) infinite;
 }
 
-/* Walking State (Wobble & Bob for single-path SVG) */
-.cow-walking .cow-svg {
-  animation: body-wobble 0.6s infinite ease-in-out;
-}
-
-@keyframes body-wobble {
-  0% { transform: translateY(0) rotate(-2deg); }
-  50% { transform: translateY(-6px) rotate(2deg); }
-  100% { transform: translateY(0) rotate(-2deg); }
-}
-
-/* Udder Area Jiggle */
-.cow-walking .cow-udder-area {
-  animation: udder-jiggle 0.6s infinite alternate ease-in-out;
-  transform-origin: 100px 140px; /* Approximate center in viewbox */
-}
-
-/* Munching State (Whole body bob if head is not separate) */
-.cow-munching .cow-svg {
-  animation: munch-bob 0.3s infinite alternate ease-in-out;
-}
-
-@keyframes munch-bob {
-  0% { transform: translateY(0) rotate(0); }
-  100% { transform: translateY(4px) rotate(2deg); }
-}
-
-/* Idle Effects */
-.cow-eye-pixel {
-  animation: eye-blink 4s infinite;
-  transform-origin: center;
-}
-
-@keyframes eye-blink {
-  0%, 90%, 100% { transform: scaleY(1); }
-  95% { transform: scaleY(0.1); }
-}
-
-.cow-tail {
-  transform-origin: 180px 60px;
-  animation: tail-wag 3s infinite ease-in-out;
-}
-
-@keyframes tail-wag {
-  0%, 100% { transform: rotate(0deg); }
-  10%, 20% { transform: rotate(15deg); }
-  15% { transform: rotate(-10deg); }
+.cow-munching .cow-sprite {
+  animation: cow-frames 0.75s steps(1, end) infinite;
 }
 
 .grass-patch {

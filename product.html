@@ -86,7 +86,7 @@
                     <span class="text-respo-dark font-medium leading-tight text-sm">INFO@re-spo.com</span>
                     <span class="text-respo-blue font-bold leading-tight">+7 (495) 961 62 15</span>
                 </div>
-                <a href="#" id="btn-cart"
+                <a href="#" id="btn-cart" aria-label="Открыть корзину"
                     class="bg-[#B2CD50] text-white px-6 py-3 rounded-full flex items-center space-x-3 hover:brightness-105 transition-all shadow-sm">
                     <img src="assets/shopping-bag.svg" alt="Cart" class="w-5 h-5 invert">
                     <span class="text-[16px] font-medium">Корзина</span>
@@ -94,7 +94,7 @@
                         class="hidden bg-white text-[#B2CD50] text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
                 </a>
                 <!-- Mobile Menu Button -->
-                <button id="mobile-menu-toggle"
+                <button id="mobile-menu-toggle" aria-label="Открыть мобильное меню"
                     class="lg:hidden p-2 text-respo-dark hover:bg-respo-blue-light rounded-lg transition-colors">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -123,7 +123,7 @@
         <section class="pt-[120px] lg:pt-[140px] pb-16 bg-white">
             <div class="container-respo">
                 <span class="text-respo-blue text-[18px] font-medium block leading-none mb-4">//</span>
-                <h1 id="product-title" class="text-[40px] md:text-[56px] lg:text-[48px] text-respo-blue font-medium leading-[40px] mb-12 lg:indent-[48px]">
+                <h1 id="product-title" class="text-[40px] md:text-[56px] lg:text-[56px] text-respo-blue font-medium leading-[1.1] mb-12 lg:indent-[48px]">
                     Butterfly valves, SS304
                 </h1>
                 
@@ -131,7 +131,7 @@
                     <!-- Left: Image Gallery -->
                     <div class="bg-[#F5F5F5] rounded-[8px] p-4 lg:p-6 w-full max-w-[min(100%,760px)]">
                         <div class="bg-white rounded-[4px] w-full aspect-[4/3] sm:aspect-[12/5] max-h-[520px] flex items-center justify-center overflow-hidden">
-                            <img id="product-main-image" src="assets/product_placeholder.png" alt="Product" class="w-full h-full object-contain">
+                            <img id="product-main-image" src="assets/product_placeholder.png" alt="Product" width="1200" height="750" decoding="async" class="w-full h-full object-contain">
                         </div>
                         <div id="product-gallery-dots" class="hidden mt-[18px]" role="tablist" aria-label="Галерея фото товара"></div>
                     </div>
@@ -147,9 +147,9 @@
                             <li>BFV IA type NC, SS304, size 101.6</li>
                         </ul>
                         
-                        <button data-add-to-cart="1" class="bg-respo-cyan text-white h-12 px-[14px] rounded-full inline-flex items-center justify-center gap-2 text-[16px] font-semibold w-[298px] hover:brightness-105 transition-all mt-2">
+                        <button type="button" aria-label="Добавить товар в корзину" data-add-to-cart="1" class="bg-respo-cyan text-white h-12 px-[14px] rounded-full inline-flex items-center justify-center gap-2 text-[16px] font-semibold w-[298px] hover:brightness-105 transition-all mt-2">
                             <span>Добавить в корзину</span>
-                            <img src="assets/shopping-bag.svg" alt="Cart" class="w-5 h-5 invert brightness-0">
+                            <img src="assets/shopping-bag.svg" alt="" aria-hidden="true" class="w-5 h-5 invert brightness-0">
                         </button>
                     </div>
                 </div>
@@ -190,11 +190,11 @@
                     </div>
                 </div>
 
-                <div class="flex justify-center mt-12 space-x-3">
-                    <div class="w-2.5 h-2.5 rounded-full bg-respo-blue opacity-100"></div>
-                    <div class="w-2.5 h-2.5 rounded-full bg-white opacity-60"></div>
-                    <div class="w-2.5 h-2.5 rounded-full bg-white opacity-60"></div>
-                    <div class="w-2.5 h-2.5 rounded-full bg-white opacity-60"></div>
+                <div class="flex justify-center mt-12 space-x-3" role="tablist" aria-label="Отзывы">
+                    <button type="button" aria-label="Показать отзыв 1" class="w-2.5 h-2.5 rounded-full bg-respo-blue opacity-100"></button>
+                    <button type="button" aria-label="Показать отзыв 2" class="w-2.5 h-2.5 rounded-full bg-white opacity-60"></button>
+                    <button type="button" aria-label="Показать отзыв 3" class="w-2.5 h-2.5 rounded-full bg-white opacity-60"></button>
+                    <button type="button" aria-label="Показать отзыв 4" class="w-2.5 h-2.5 rounded-full bg-white opacity-60"></button>
                 </div>
             </div>
         </section>
@@ -213,18 +213,18 @@
                         <form class="space-y-8">
                             <div class="space-y-2">
                                 <label class="text-[14px] text-respo-dark/50 block">Ваше имя</label>
-                                <input type="text" placeholder="Введите свое имя"
-                                    class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-cyan focus:border-respo-cyan outline-none transition-all">
+                                <input id="contact-name" name="name" type="text" required autocomplete="name" placeholder="Введите свое имя"
+                                    class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-dark/50 focus:border-respo-cyan outline-none transition-all">
                             </div>
                             <div class="space-y-2">
                                 <label class="text-[14px] text-respo-dark/50 block">Номер телефона</label>
-                                <input type="tel" placeholder="Введите свой номер телефона"
-                                    class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-cyan focus:border-respo-cyan outline-none transition-all">
+                                <input id="contact-phone" name="phone" type="tel" required autocomplete="tel" placeholder="Введите свой номер телефона"
+                                    class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-dark/50 focus:border-respo-cyan outline-none transition-all">
                             </div>
                             <div class="space-y-2">
                                 <label class="text-[14px] text-respo-dark/50 block">Электронная почта</label>
-                                <input type="email" placeholder="your@mail.ru"
-                                    class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-cyan focus:border-respo-cyan outline-none transition-all">
+                                <input id="contact-email" name="email" type="email" required autocomplete="email" placeholder="your@mail.ru"
+                                    class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-dark/50 focus:border-respo-cyan outline-none transition-all">
                             </div>
                             <div class="pt-8">
                                 <button type="submit"

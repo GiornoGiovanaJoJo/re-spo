@@ -60,11 +60,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Sticky Header
     // =====================================================
     const header = document.querySelector('header');
+    const isTransparentHeader = header?.classList.contains('bg-transparent');
     window.addEventListener('scroll', () => {
+        if (!header) return;
         if (window.scrollY > 50) {
             header.classList.add('shadow-lg');
+            if (isTransparentHeader) {
+                header.classList.add('bg-white/90', 'backdrop-blur-md');
+                header.classList.remove('bg-transparent');
+            }
         } else {
             header.classList.remove('shadow-lg');
+            if (isTransparentHeader) {
+                header.classList.remove('bg-white/90', 'backdrop-blur-md');
+                header.classList.add('bg-transparent');
+            }
         }
     });
 
@@ -302,8 +312,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!cow || !cowArea) return;
 
         const cowSpeech = cow.querySelector('.cow-speech');
-        const cowImg = cow.querySelector('.cow-svg');
         const cowSpriteContainer = cow.querySelector('.cow-container');
+        const legacySvg = cow.querySelector('.cow-svg');
+        if (legacySvg) legacySvg.style.display = 'none';
+
+        // Build sprite node once and use it for all animation states.
+        let cowImg = cow.querySelector('.cow-sprite');
+        if (!cowImg && cowSpriteContainer) {
+            cowImg = document.createElement('div');
+            cowImg.className = 'cow-sprite';
+            cowImg.setAttribute('aria-hidden', 'true');
+            cowSpriteContainer.prepend(cowImg);
+        }
         
         console.log('Cow elements found:', { cow, cowArea, cowSpriteContainer });
 
@@ -360,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 direction = dx > 0 ? 1 : -1;
                 currentX += direction * speed;
                 cow.style.left = `${currentX}px`;
-                cowImg.style.transform = `scaleX(${direction})`;
+                if (cowImg) cowImg.style.transform = `scaleX(${direction})`;
                 cow.classList.add('cow-walking');
             }
 
@@ -442,7 +462,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentX = newX;
             targetX = newX; // Stop wandering for a bit
             
-            cowImg.style.transform = `scaleX(${escapeDir})`;
+            if (cowImg) cowImg.style.transform = `scaleX(${escapeDir})`;
 
             setTimeout(() => {
                 cow.style.transition = '';
