@@ -44,16 +44,49 @@
     </script>
 </head>
 <body class="font-['Inter',sans-serif] text-respo-dark bg-white">
-    <header class="border-b border-respo-blue/10 bg-white">
-        <div class="max-w-[1040px] mx-auto px-6 py-5 flex items-center justify-between gap-4">
-            <a href="index.html" class="inline-flex items-center gap-3">
-                <img src="assets/logo.png" alt="RE-SPO Logo" class="h-10 w-auto">
+    <header class="fixed top-0 left-0 w-full z-50 bg-white border-b border-respo-blue/10">
+        <div class="container-respo py-4 lg:py-6 flex items-center justify-between">
+            <a href="index.html" class="flex-shrink-0 lg:ml-[-10px]">
+                <img src="assets/logo.png" alt="RE-SPO Logo" class="h-10 lg:h-[54px] w-auto">
             </a>
-            <a href="index.html" class="text-sm text-respo-blue hover:underline">Вернуться на сайт</a>
+
+            <nav class="hidden lg:flex items-center space-x-6 ml-auto mr-6">
+                <a href="index.html#hero" class="nav-link text-[16px]">Главная</a>
+                <a href="index.html#about" class="nav-link text-[16px]">О компании</a>
+                <a href="index.html#services" class="nav-link text-[16px]">Услуги</a>
+                <a href="index.html#values" class="nav-link text-[16px]">Наши ценности</a>
+                <a href="production.html" class="nav-link text-[16px]">Каталог</a>
+            </nav>
+
+            <div class="flex items-center space-x-3">
+                <div class="hidden xl:flex items-center gap-5 mr-6">
+                    <a href="mailto:INFO@RE-SPO.COM" class="text-respo-dark font-medium leading-tight text-sm hover:text-respo-blue transition-colors">INFO@RE-SPO.COM</a>
+                    <a href="tel:+74959616215" class="text-respo-dark font-medium leading-tight text-sm hover:text-respo-blue transition-colors">+7 (495) 961 62 15</a>
+                </div>
+                <button id="mobile-menu-toggle" aria-label="Открыть мобильное меню"
+                    class="lg:hidden p-2 text-respo-dark hover:bg-respo-blue-light rounded-lg transition-colors">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu"
+            class="hidden lg:hidden bg-white border-t border-respo-blue/10 p-6 shadow-2xl space-y-4 flex flex-col items-center">
+            <div class="flex items-center justify-center gap-5 mb-4 pb-4 border-b border-respo-blue/5 w-full">
+                <a href="mailto:INFO@RE-SPO.COM" class="text-respo-dark font-medium leading-tight text-sm hover:text-respo-blue transition-colors">INFO@RE-SPO.COM</a>
+                <a href="tel:+74959616215" class="text-respo-dark font-medium leading-tight text-sm hover:text-respo-blue transition-colors">+7 (495) 961 62 15</a>
+            </div>
+            <a href="index.html#hero" class="nav-link font-medium py-2">Главная</a>
+            <a href="index.html#about" class="nav-link font-medium py-2">О компании</a>
+            <a href="index.html#services" class="nav-link font-medium py-2">Услуги</a>
+            <a href="index.html#values" class="nav-link font-medium py-2">Наши ценности</a>
+            <a href="production.html" class="nav-link font-medium py-2">Каталог</a>
         </div>
     </header>
 
-    <main class="max-w-[1040px] mx-auto px-6 py-12 md:py-16">
+    <main class="max-w-[1040px] mx-auto px-6 pt-[120px] md:pt-[132px] pb-12 md:pb-16">
         <h1 class="text-3xl md:text-4xl font-semibold text-respo-blue mb-8">Политика конфиденциальности и обработки персональных данных</h1>
 
         <div class="space-y-8 text-[15px] leading-7">
@@ -210,5 +243,6 @@
             © РЕ-СПО Группа компаний 2026
         </div>
     </footer>
+    <script src="js/main.js?v=2"></script>
 </body>
 </html>
