@@ -1,9 +1,9 @@
 // =====================================================
-// RESPO — Main Application Script
+// RE-SPO — Main Application Script
 // =====================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('RESPO Website Initialized');
+    console.log('RE-SPO Website Initialized');
 
     // =====================================================
     // Toast Notification System
@@ -51,13 +51,13 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', () => {
         if (!header) return;
         if (window.scrollY > 50) {
-            header.classList.add('border-b', 'border-respo-blue/10');
+            header.classList.add('border-b', 'border-RE-SPO-blue/10');
             if (isTransparentHeader) {
                 header.classList.add('bg-white');
                 header.classList.remove('bg-transparent');
             }
         } else {
-            header.classList.remove('border-b', 'border-respo-blue/10');
+            header.classList.remove('border-b', 'border-RE-SPO-blue/10');
             if (isTransparentHeader) {
                 header.classList.remove('bg-white');
                 header.classList.add('bg-transparent');

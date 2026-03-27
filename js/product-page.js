@@ -59,8 +59,8 @@
 
         tableBodyEl.innerHTML = rows.map((row) => `
             <tr>
-                <td class="border border-respo-dark/80 py-2 px-4 text-center text-[16px] md:text-[22px]">${escapeHtml(row.label)}</td>
-                <td class="border border-respo-dark/80 py-2 px-4 text-center text-[16px] md:text-[22px]">${escapeHtml(row.value)}</td>
+                <td class="border border-RE-SPO-dark/80 py-2 px-4 text-center text-[16px] md:text-[22px]">${escapeHtml(row.label)}</td>
+                <td class="border border-RE-SPO-dark/80 py-2 px-4 text-center text-[16px] md:text-[22px]">${escapeHtml(row.value)}</td>
             </tr>
         `).join('');
         tableWrapEl.classList.remove('hidden');
@@ -117,7 +117,7 @@
             btn.type = 'button';
             btn.dataset.galleryDot = '1';
             btn.className =
-                'w-[7px] h-[7px] rounded-full bg-respo-blue shrink-0 cursor-pointer hover:opacity-100 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-respo-blue/40';
+                'w-[7px] h-[7px] rounded-full bg-RE-SPO-blue shrink-0 cursor-pointer hover:opacity-100 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-RE-SPO-blue/40';
             btn.setAttribute('aria-label', `Фото ${i + 1} из ${list.length}`);
             btn.setAttribute('role', 'tab');
             btn.addEventListener('click', () => show(i));
@@ -270,9 +270,9 @@
         if (!id) return;
 
         try {
-            const response = await fetch('/api/products');
-            if (!response.ok) throw new Error('Failed to load products');
-            const data = await response.json();
+            const RE-SPOnse = await fetch('/api/products');
+            if (!RE-SPOnse.ok) throw new Error('Failed to load products');
+            const data = await RE-SPOnse.json();
             const product = (data.products || []).find((p) => String(p.id) === String(id));
             if (!product) return;
 
@@ -297,7 +297,7 @@
             renderSpecs(specsEl, product.specs);
             renderParametersTable(paramsBodyEl, paramsWrapEl, product.parameters);
 
-            document.title = `${name} - RESPO`;
+            document.title = `${name} - RE-SPO`;
         } catch (error) {
             console.error('Product page load error:', error);
         }

@@ -1,7 +1,7 @@
 {
-  "name": "respo-web",
+  "name": "RE-SPO-web",
   "version": "1.0.0",
-  "description": "RESPO — Reliable Experts, Successful Plant Operation",
+  "description": "RE-SPO — Reliable Experts, Successful Plant Operation",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

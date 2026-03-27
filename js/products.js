@@ -1,5 +1,5 @@
 /**
- * RESPO - Dynamic Product Rendering
+ * RE-SPO - Dynamic Product Rendering
  */
 
 async function fetchProducts() {
@@ -64,7 +64,7 @@ function formatExchangerTitle(name) {
 
     const baseName = escapeHtml(sizeMatch[1].trim());
     const sizePart = escapeHtml(sizeMatch[2].trim());
-    return `${baseName}<br><span class="text-respo-dark/70">${sizePart}</span>`;
+    return `${baseName}<br><span class="text-RE-SPO-dark/70">${sizePart}</span>`;
 }
 
 function createProductCard(product) {
@@ -90,12 +90,12 @@ function createProductCard(product) {
 
     if (isExchanger) {
         div.innerHTML = `
-            <h3 class="text-[14px] text-respo-dark/80 font-medium mb-4 leading-[1.45] min-h-[2.8rem]">${exchangerTitle}</h3>
+            <h3 class="text-[14px] text-RE-SPO-dark/80 font-medium mb-4 leading-[1.45] min-h-[2.8rem]">${exchangerTitle}</h3>
             <div class="bg-white w-full ${mediaAspectClass} rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center p-4">
                 <img src="${imgSrc}" alt="${safeName}" class="max-h-full max-w-[92%] w-auto h-auto object-contain">
             </div>
             <div class="mt-auto w-full">
-                <a href="${safeHref}" class="bg-respo-cyan text-white py-2.5 px-5 rounded-full flex items-center justify-center space-x-2 hover:brightness-110 transition-all w-full text-[12px]">
+                <a href="${safeHref}" class="bg-RE-SPO-cyan text-white py-2.5 px-5 rounded-full flex items-center justify-center space-x-2 hover:brightness-110 transition-all w-full text-[12px]">
                     <span class="font-medium">Подробнее</span>
                     <img src="assets/arrow-right.svg" alt="Icon" class="w-4 h-4 brightness-0 invert">
                 </a>
@@ -105,13 +105,13 @@ function createProductCard(product) {
     }
 
     div.innerHTML = `
-        <h3 class="${isValve ? 'text-[14px]' : 'text-lg'} font-medium text-respo-dark mb-4 line-clamp-2 min-h-[3.5rem]">${safeName}</h3>
-        ${safeDescription ? `<p class="text-[12px] text-respo-dark/60 mb-4 line-clamp-2 w-full">${safeDescription}</p>` : ''}
+        <h3 class="${isValve ? 'text-[14px]' : 'text-lg'} font-medium text-RE-SPO-dark mb-4 line-clamp-2 min-h-[3.5rem]">${safeName}</h3>
+        ${safeDescription ? `<p class="text-[12px] text-RE-SPO-dark/60 mb-4 line-clamp-2 w-full">${safeDescription}</p>` : ''}
         <div class="bg-white w-full ${mediaAspectClass} rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center p-4">
             <img src="${imgSrc}" alt="${safeName}" class="max-h-full max-w-[92%] w-auto h-auto object-contain group-hover:scale-105 transition-transform">
         </div>
         <div class="mt-auto w-full">
-            <a href="${safeHref}" class="bg-respo-cyan text-white py-2.5 px-5 rounded-full flex items-center justify-center space-x-2 hover:brightness-110 transition-all w-full text-[12px]">
+            <a href="${safeHref}" class="bg-RE-SPO-cyan text-white py-2.5 px-5 rounded-full flex items-center justify-center space-x-2 hover:brightness-110 transition-all w-full text-[12px]">
                 <span class="font-medium">Подробнее</span>
                 <img src="assets/arrow-right.svg" alt="Icon" class="w-4 h-4 brightness-0 invert">
             </a>
@@ -122,15 +122,15 @@ function createProductCard(product) {
 
 function createProductListItem(product) {
     const div = document.createElement('div');
-    div.className = 'border-b border-respo-blue/10';
+    div.className = 'border-b border-RE-SPO-blue/10';
     
     // Check if it's an equipment item (accordion style)
     if (product.category === 'equipment') {
         const equipImg = escapeHtml(product.image || 'assets/product_placeholder.png');
         div.innerHTML = `
-            <div class="py-8 flex items-center justify-between group cursor-pointer hover:bg-respo-blue-light/30 transition-colors px-4 -mx-4 rounded-xl accordion-header">
-                <h3 class="text-[20px] lg:text-[24px] text-respo-dark font-medium transition-colors group-hover:text-respo-cyan">${escapeHtml(product.name)}</h3>
-                <div class="flex-shrink-0 w-12 h-12 bg-respo-green rounded-full flex items-center justify-center transition-all group-hover:scale-110 ml-4 arrow-container">
+            <div class="py-8 flex items-center justify-between group cursor-pointer hover:bg-RE-SPO-blue-light/30 transition-colors px-4 -mx-4 rounded-xl accordion-header">
+                <h3 class="text-[20px] lg:text-[24px] text-RE-SPO-dark font-medium transition-colors group-hover:text-RE-SPO-cyan">${escapeHtml(product.name)}</h3>
+                <div class="flex-shrink-0 w-12 h-12 bg-RE-SPO-green rounded-full flex items-center justify-center transition-all group-hover:scale-110 ml-4 arrow-container">
                     <img src="assets/arrow-right.svg" alt="Arrow" class="w-5 h-5 transition-transform duration-300">
                 </div>
             </div>
@@ -152,14 +152,14 @@ function createProductListItem(product) {
         header.addEventListener('click', () => {
             content.classList.toggle('hidden');
             arrow.classList.toggle('rotate-90');
-            header.classList.toggle('bg-respo-blue-light/20');
+            header.classList.toggle('bg-RE-SPO-blue-light/20');
         });
     } else {
         // Standard item (link style)
         div.innerHTML = `
-            <div class="py-8 flex items-center justify-between group cursor-pointer hover:bg-respo-blue-light/30 transition-colors px-4 -mx-4 rounded-xl">
-                <h3 class="text-[20px] lg:text-[24px] text-respo-dark font-medium transition-colors group-hover:text-respo-cyan">${escapeHtml(product.name)}</h3>
-                <div class="flex-shrink-0 w-12 h-12 bg-respo-green rounded-full flex items-center justify-center transition-transform group-hover:scale-110 ml-4">
+            <div class="py-8 flex items-center justify-between group cursor-pointer hover:bg-RE-SPO-blue-light/30 transition-colors px-4 -mx-4 rounded-xl">
+                <h3 class="text-[20px] lg:text-[24px] text-RE-SPO-dark font-medium transition-colors group-hover:text-RE-SPO-cyan">${escapeHtml(product.name)}</h3>
+                <div class="flex-shrink-0 w-12 h-12 bg-RE-SPO-green rounded-full flex items-center justify-center transition-transform group-hover:scale-110 ml-4">
                     <img src="assets/arrow-right.svg" alt="Arrow" class="w-5 h-5">
                 </div>
             </div>
@@ -180,7 +180,7 @@ async function initCatalogPreview(containerId, limit = 4) {
     if (!container) return;
 
     container.setAttribute('aria-busy', 'true');
-    container.innerHTML = '<p class="text-respo-dark/60">Загрузка товаров...</p>';
+    container.innerHTML = '<p class="text-RE-SPO-dark/60">Загрузка товаров...</p>';
     const data = await fetchProducts();
     container.innerHTML = '';
     
@@ -202,7 +202,7 @@ async function initCategoryRender(categoryId, containerId, displayType = 'grid')
     if (!container) return;
 
     container.setAttribute('aria-busy', 'true');
-    container.innerHTML = '<p class="text-respo-dark/60 py-6">Загрузка категории...</p>';
+    container.innerHTML = '<p class="text-RE-SPO-dark/60 py-6">Загрузка категории...</p>';
     const data = await fetchProducts();
     container.innerHTML = '';
     
@@ -216,7 +216,7 @@ async function initCategoryRender(categoryId, containerId, displayType = 'grid')
 
     if (displayType === 'list') {
         const listDiv = document.createElement('div');
-        listDiv.className = 'border-t border-respo-blue/10';
+        listDiv.className = 'border-t border-RE-SPO-blue/10';
         categoryProducts.forEach(p => {
             listDiv.appendChild(createProductListItem(p));
         });
@@ -247,7 +247,7 @@ async function initCertificatesRender(containerId) {
     if (!container) return;
 
     container.setAttribute('aria-busy', 'true');
-    container.innerHTML = '<p class="text-respo-dark/60 py-6">Загрузка сертификатов...</p>';
+    container.innerHTML = '<p class="text-RE-SPO-dark/60 py-6">Загрузка сертификатов...</p>';
     const data = await fetchCertificates();
     const certificates = Array.isArray(data.certificates) ? data.certificates : [];
 
@@ -273,8 +273,8 @@ async function initCertificatesRender(containerId) {
                     ? `<img src="${escapeHtml(imageSrc)}" alt="${title}" class="w-full h-full object-contain">`
                     : '<span class="text-gray-400 text-xs">Нет изображения</span>'}
             </div>
-            <h4 class="text-[18px] font-medium text-respo-dark mb-4 pr-4">${title}</h4>
-            <p class="text-[12px] text-respo-blue font-sans leading-[1.6]">${description}</p>
+            <h4 class="text-[18px] font-medium text-RE-SPO-dark mb-4 pr-4">${title}</h4>
+            <p class="text-[12px] text-RE-SPO-blue font-sans leading-[1.6]">${description}</p>
         `;
         gridDiv.appendChild(card);
     });

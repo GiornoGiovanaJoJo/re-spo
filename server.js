@@ -1,5 +1,5 @@
 // =====================================================
-// RESPO — Express Server (production hardened)
+// RE-SPO — Express Server (production hardened)
 // =====================================================
 
 const express = require('express');
@@ -107,7 +107,7 @@ function adminAuth(req, res, next) {
 
     const auth = req.headers.authorization || '';
     if (!auth.startsWith('Basic ')) {
-        res.set('WWW-Authenticate', 'Basic realm="RESPO Admin"');
+        res.set('WWW-Authenticate', 'Basic realm="RE-SPO Admin"');
         return res.status(401).send('Authentication required');
     }
 
@@ -127,7 +127,7 @@ function adminAuth(req, res, next) {
     const user = decoded.slice(0, separatorIdx);
     const pass = decoded.slice(separatorIdx + 1);
     if (user !== configuredUser || pass !== configuredPass) {
-        res.set('WWW-Authenticate', 'Basic realm="RESPO Admin"');
+        res.set('WWW-Authenticate', 'Basic realm="RE-SPO Admin"');
         return res.status(401).send('Invalid credentials');
     }
     next();
@@ -383,6 +383,6 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`RESPO server running at http://localhost:${PORT}`);
+    console.log(`RE-SPO server running at http://localhost:${PORT}`);
     console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });

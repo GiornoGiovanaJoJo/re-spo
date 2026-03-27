@@ -174,6 +174,19 @@
   animation: fade-in-up 0.7s ease-out both;
 }
 
+/* About text readable rounded container */
+.about-text-card {
+  background: linear-gradient(180deg, rgba(233, 245, 255, 0.72) 0%, rgba(233, 245, 255, 0.38) 100%);
+  border: 1px solid rgba(37, 132, 190, 0.14);
+  border-radius: 20px;
+  padding: 1.35rem 1.35rem 1.15rem;
+  box-shadow: 0 10px 26px rgba(20, 63, 97, 0.08);
+}
+
+.about-text-card p {
+  line-height: 1.62;
+}
+
 @keyframes fade-in-up {
   0% {
     opacity: 0;
@@ -318,6 +331,17 @@
     word-break: break-word;
   }
 
+  /* About section card tuning for mobile readability */
+  .about-text-card {
+    border-radius: 16px;
+    padding: 1rem 1rem 0.85rem;
+    box-shadow: 0 8px 18px rgba(20, 63, 97, 0.06);
+  }
+
+  .about-text-card p {
+    line-height: 1.56;
+  }
+
   /* Competencies cards: tighten vertical rhythm */
   #competencies .competency-card {
     padding-top: 1.1rem !important;
@@ -331,6 +355,25 @@
 
   #competencies .competency-card p {
     line-height: 1.35 !important;
+  }
+
+  /* Steps section: remove ladder dividers and offsets on mobile */
+  .audit-steps-wrap {
+    gap: 1rem;
+  }
+
+  .audit-step-col {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .audit-step-col h3 {
+    margin-bottom: 0.95rem !important;
+  }
+
+  .audit-step-divider {
+    border-left: 0 !important;
   }
 }
 
@@ -378,5 +421,14 @@
   #projects .group,
   #competencies .competency-card {
     border-radius: 16px !important;
+  }
+
+  .audit-steps-wrap {
+    gap: 0.9rem;
+  }
+
+  .about-text-card {
+    border-radius: 14px;
+    padding: 0.9rem 0.9rem 0.75rem;
   }
 }
