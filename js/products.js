@@ -94,10 +94,10 @@ function createProductListItem(product) {
                 </div>
             </div>
             <div class="accordion-content hidden">
-                <div class="pb-12 pt-4">
-                    <div class="rounded-[32px] overflow-hidden bg-[#E9F5FF] border border-respo-blue/10 shadow-inner w-full">
-                        <div class="aspect-[16/10] sm:aspect-[2/1] w-full flex items-center justify-center p-6 lg:p-8">
-                            <img src="${equipImg}" alt="${escapeHtml(product.name)}" class="max-h-full max-w-[94%] w-auto h-auto object-contain">
+                <div class="pb-10 pt-3">
+                    <div class="rounded-[8px] overflow-hidden bg-[#F5F5F5] w-full max-w-[1322px] mx-auto">
+                        <div class="w-full aspect-[4/3] sm:aspect-[12/5] max-h-[531px] flex items-center justify-center">
+                            <img src="${equipImg}" alt="${escapeHtml(product.name)}" class="w-full h-full object-cover">
                         </div>
                     </div>
                 </div>
