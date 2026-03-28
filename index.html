@@ -89,9 +89,9 @@
             <nav class="hidden lg:flex items-center space-x-6 ml-auto mr-6">
                 <a href="#hero" class="nav-link active text-[16px]">Главная</a>
                 <a href="#about" class="nav-link text-[16px]">О компании</a>
-                <a href="#services" class="nav-link text-[16px]">Услуги</a>
                 <a href="#values" class="nav-link text-[16px]">Наши ценности</a>
-                <a href="production.html" class="nav-link text-[16px]">Каталог</a>
+                <a href="#services" class="nav-link text-[16px]">Услуги</a>
+                <a href="production.html" class="nav-link text-[16px]">Каталог товаров</a>
             </nav>
 
             <div class="flex items-center space-x-3">
@@ -118,9 +118,9 @@
             </div>
             <a href="#hero" class="nav-link font-medium py-2">Главная</a>
             <a href="#about" class="nav-link font-medium py-2">О компании</a>
-            <a href="#services" class="nav-link font-medium py-2">Услуги</a>
             <a href="#values" class="nav-link font-medium py-2">Наши ценности</a>
-            <a href="production.html" class="nav-link font-medium py-2">Каталог</a>
+            <a href="#services" class="nav-link font-medium py-2">Услуги</a>
+            <a href="production.html" class="nav-link font-medium py-2">Каталог товаров</a>
         </div>
     </header>
 
@@ -250,14 +250,14 @@
                             </h3>
                         </div>
                     </a>
-                    <a href="production.html" class="group bg-[#E4F6FF] rounded-[12px] h-[176px] p-6 flex items-center justify-center">
+                    <a href="#competencies" class="group bg-[#E4F6FF] rounded-[12px] h-[176px] p-6 flex items-center justify-center">
                         <div class="backdrop-blur-[2px] bg-white/0 rounded-[4px] px-3 py-2 w-full">
                             <h3 class="text-[#0C0A08] text-[16px] leading-[24px] font-normal uppercase text-center">
                                 комплексное проектирование и реализация проектов технологических линий
                             </h3>
                         </div>
                     </a>
-                    <a href="production.html" class="group bg-[#E4F6FF] rounded-[12px] h-[176px] p-6 flex items-center justify-center">
+                    <a href="#projects" class="group bg-[#E4F6FF] rounded-[12px] h-[176px] p-6 flex items-center justify-center">
                         <div class="backdrop-blur-[2px] bg-white/0 rounded-[4px] px-3 py-2 w-full">
                             <h3 class="text-[#0C0A08] text-[16px] leading-[24px] font-normal uppercase text-center">
                                 импортозамещение: собственный завод по производству оборудования для пищевой промышленности
@@ -508,7 +508,7 @@
 
         <!-- Ключевые компетенции (Full-width BG) -->
         <section class="py-24 lg:py-32 w-full" id="competencies"
-            style="background: linear-gradient(to top, rgba(74, 174, 242, 0.15), white);">
+            style="background: linear-gradient(to top, rgba(74, 174, 242, 0.15), white); scroll-margin-top: 7rem;">
             <div class="container-respo">
                 <div class="mb-16 text-center">
                     <h2 class="text-[32px] lg:text-[48px] text-respo-blue font-medium mb-4">Ключевые компетенции</h2>
@@ -545,13 +545,13 @@
         </section>
 
         <!-- Реализованные проекты (Full-width BG) -->
-        <section class="py-12 lg:py-24 w-full" id="projects" style="background: linear-gradient(to top, rgba(74, 174, 242, 0.15), white);">
+        <section class="py-12 lg:py-24 w-full" id="projects" style="background: linear-gradient(to top, rgba(74, 174, 242, 0.15), white); scroll-margin-top: 7rem;">
             <div class="container-respo">
                 <div class="mb-16 text-center">
                     <h2 class="text-[32px] lg:text-[48px] text-respo-blue font-medium mb-4">Реализованы проекты по следующим технологиям</h2>
                     <p class="text-respo-green max-w-[800px] mx-auto">Наш опыт охватывает широкий спектр отраслевых задач и технических решений</p>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div id="home-technology-tiles" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="group relative aspect-[320/176] overflow-hidden rounded-[24px]">
                         <div class="absolute inset-0 bg-respo-blue/10 transition-colors group-hover:bg-respo-blue/20"></div>
                         <div class="absolute inset-0 p-4 sm:p-6 flex items-center justify-center text-center">
@@ -698,9 +698,9 @@
                         <ul class="space-y-3 text-[14px] text-respo-dark font-sans font-medium">
                             <li><a href="#hero" class="hover:text-respo-blue transition-colors">Главная</a></li>
                             <li><a href="#about" class="hover:text-respo-blue transition-colors">О компании</a></li>
-                            <li><a href="#services" class="hover:text-respo-blue transition-colors">Услуги</a></li>
                             <li><a href="#values" class="hover:text-respo-blue transition-colors">Наши ценности</a></li>
-                            <li><a href="production.html" class="hover:text-respo-blue transition-colors">Каталог</a>
+                            <li><a href="#services" class="hover:text-respo-blue transition-colors">Услуги</a></li>
+                            <li><a href="production.html" class="hover:text-respo-blue transition-colors">Каталог товаров</a>
                             </li>
                             <li><a href="#contacts" class="hover:text-respo-blue transition-colors">Связаться с нами</a>
                             </li>
@@ -767,6 +767,7 @@
 
 
 
+    <script src="js/home-content.js?v=1"></script>
     <script src="js/main.js?v=2"></script>
 </body>
 

@@ -16,6 +16,7 @@ const isAdminOpen = process.env.ADMIN_OPEN !== 'false';
 const assetsDir = path.join(__dirname, 'assets');
 const productsFile = path.join(__dirname, 'products.json');
 const certificatesFile = path.join(__dirname, 'certificates.json');
+const homeContentFile = path.join(__dirname, 'home-content.json');
 const IMAGE_EXT_RE = /\.(png|svg|jpe?g|gif|webp|tiff?)$/i;
 const DEFAULT_SITE_URL = 'https://re-spo.com';
 
@@ -89,6 +90,20 @@ function validateCertificatesPayload(payload) {
             const imageName = safeImageFilename(cert.image.replace(/^assets\//, ''));
             if (!imageName) return false;
         }
+    }
+    return true;
+}
+
+const HOME_TECH_TILE_COUNT = 4;
+const HOME_TECH_TILE_MAX_LEN = 400;
+
+function validateHomeContentPayload(payload) {
+    if (!payload || typeof payload !== 'object') return false;
+    if (!Array.isArray(payload.technologyTiles)) return false;
+    if (payload.technologyTiles.length !== HOME_TECH_TILE_COUNT) return false;
+    for (const t of payload.technologyTiles) {
+        if (typeof t !== 'string' || !t.trim()) return false;
+        if (t.length > HOME_TECH_TILE_MAX_LEN) return false;
     }
     return true;
 }
@@ -350,6 +365,44 @@ app.post('/api/certificates', adminAuth, (req, res) => {
         }
         const data = JSON.stringify(req.body, null, 2);
         fs.writeFileSync(certificatesFile, data, 'utf8');
+        res.json({ success: true });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+app.get('/api/home-content', (req, res) => {
+    try {
+        if (!fs.existsSync(homeContentFile)) {
+            return res.json({
+                technologyTiles: [
+                    'Молочные линии',
+                    'Асептический разлив',
+                    'СИП-станции',
+                    'Модернизация цехов'
+                ]
+            });
+        }
+        const data = fs.readFileSync(homeContentFile, 'utf8');
+        const parsed = JSON.parse(data);
+        if (!validateHomeContentPayload(parsed)) {
+            return res.status(500).json({ error: 'home-content.json has invalid structure' });
+        }
+        res.json(parsed);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+app.post('/api/home-content', adminAuth, (req, res) => {
+    try {
+        if (!validateHomeContentPayload(req.body)) {
+            return res.status(400).json({
+                error: `Invalid home content: need exactly ${HOME_TECH_TILE_COUNT} non-empty texts (max ${HOME_TECH_TILE_MAX_LEN} chars each)`
+            });
+        }
+        const data = JSON.stringify(req.body, null, 2);
+        fs.writeFileSync(homeContentFile, data, 'utf8');
         res.json({ success: true });
     } catch (e) {
         res.status(500).json({ error: e.message });

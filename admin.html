@@ -78,10 +78,11 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-6 bg-gray-100 p-1 rounded-lg">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6 bg-gray-100 p-1 rounded-lg">
             <button id="tab-media" data-tab="media" class="px-4 py-2 rounded-md text-sm font-medium transition-all bg-white shadow-sm text-blue-600">Медиафайлы</button>
             <button id="tab-products" data-tab="products" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Товары (Каталог)</button>
             <button id="tab-certificates" data-tab="certificates" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Сертификаты</button>
+            <button id="tab-home" data-tab="home" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Главная</button>
         </div>
         
         <!-- Media Tab -->
@@ -154,6 +155,33 @@
                         <!-- Loaded via JS -->
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- Home page content tab -->
+        <div id="content-home" class="hidden">
+            <h2 class="text-xl font-bold text-gray-800 mb-2">Блоки «Технологии» на главной</h2>
+            <p class="text-gray-600 text-sm mb-6">Четыре подписи в секции «Реализованы проекты по следующим технологиям». Отображаются на <code class="text-xs bg-gray-100 px-1 rounded">index.html</code> после сохранения.</p>
+            <div class="space-y-4 max-w-2xl">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="home-tile-0">Плитка 1</label>
+                    <input type="text" id="home-tile-0" maxlength="400" class="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="home-tile-1">Плитка 2</label>
+                    <input type="text" id="home-tile-1" maxlength="400" class="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="home-tile-2">Плитка 3</label>
+                    <input type="text" id="home-tile-2" maxlength="400" class="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="home-tile-3">Плитка 4</label>
+                    <input type="text" id="home-tile-3" maxlength="400" class="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                </div>
+                <button type="button" id="btn-save-home-content" class="bg-blue-600 text-white px-5 py-2.5 rounded-md font-medium text-sm hover:bg-blue-700 transition-colors shadow-sm">
+                    Сохранить тексты
+                </button>
             </div>
         </div>
     </div>
@@ -254,6 +282,9 @@
         let requiredImages = [];
         let productData = { categories: [], products: [] };
         let certificateData = { certificates: [] };
+        let homeContentData = {
+            technologyTiles: ['Молочные линии', 'Асептический разлив', 'СИП-станции', 'Модернизация цехов']
+        };
         const FALLBACK_IMG = 'https://via.placeholder.com/40?text=?';
         const ADMIN_AUTH_STORAGE_KEY = 'respo_admin_basic_auth';
         let currentTab = 'media';
@@ -450,26 +481,24 @@
             }
         }
 
+        const tabInactiveClass = 'px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800';
+        const tabActiveClass = 'px-4 py-2 rounded-md text-sm font-medium transition-all bg-white shadow-sm text-blue-600';
+
         function switchTab(tab) {
             currentTab = tab;
             document.getElementById('content-media').classList.toggle('hidden', tab !== 'media');
             document.getElementById('content-products').classList.toggle('hidden', tab !== 'products');
             document.getElementById('content-certificates').classList.toggle('hidden', tab !== 'certificates');
-            
-            document.getElementById('tab-media').className = tab === 'media' 
-                ? 'px-6 py-2 rounded-md text-sm font-medium transition-all bg-white shadow-sm text-blue-600'
-                : 'px-6 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800';
-            
-            document.getElementById('tab-products').className = tab === 'products'
-                ? 'px-6 py-2 rounded-md text-sm font-medium transition-all bg-white shadow-sm text-blue-600'
-                : 'px-6 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800';
+            document.getElementById('content-home').classList.toggle('hidden', tab !== 'home');
 
-            document.getElementById('tab-certificates').className = tab === 'certificates'
-                ? 'px-6 py-2 rounded-md text-sm font-medium transition-all bg-white shadow-sm text-blue-600'
-                : 'px-6 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800';
+            document.getElementById('tab-media').className = tab === 'media' ? tabActiveClass : tabInactiveClass;
+            document.getElementById('tab-products').className = tab === 'products' ? tabActiveClass : tabInactiveClass;
+            document.getElementById('tab-certificates').className = tab === 'certificates' ? tabActiveClass : tabInactiveClass;
+            document.getElementById('tab-home').className = tab === 'home' ? tabActiveClass : tabInactiveClass;
 
             if (tab === 'products') loadProducts();
             else if (tab === 'certificates') loadCertificates();
+            else if (tab === 'home') loadHomeContent();
             else loadImages();
         }
 
@@ -883,6 +912,53 @@
             }
         }
 
+        async function loadHomeContent() {
+            try {
+                const res = await authorizedFetch('/api/home-content');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                if (!data || !Array.isArray(data.technologyTiles) || data.technologyTiles.length !== 4) {
+                    throw new Error('Invalid payload');
+                }
+                homeContentData = data;
+                for (let i = 0; i < 4; i++) {
+                    const el = document.getElementById(`home-tile-${i}`);
+                    if (el) el.value = data.technologyTiles[i] || '';
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Не удалось загрузить тексты главной страницы.', 'error');
+            }
+        }
+
+        async function saveHomeContent() {
+            const tiles = [0, 1, 2, 3].map((i) =>
+                String(document.getElementById(`home-tile-${i}`)?.value || '').trim()
+            );
+            if (tiles.some((t) => !t)) {
+                showToast('Заполните все четыре поля.', 'error');
+                return;
+            }
+            const payload = { technologyTiles: tiles };
+            try {
+                const res = await authorizedFetch('/api/home-content', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    homeContentData = payload;
+                    showToast('Тексты сохранены', 'success');
+                    markLastAction('Обновлены плитки технологий на главной');
+                } else {
+                    const errBody = await res.json().catch(() => ({}));
+                    showToast(errBody.error || 'Ошибка сохранения', 'error');
+                }
+            } catch (err) {
+                showToast('Ошибка сети', 'error');
+            }
+        }
+
         async function clearCache() {
             if (!confirm('Очистить кэш сайта и перезагрузить страницу?')) return;
             try {
@@ -898,6 +974,8 @@
             const mediaTab = document.getElementById('tab-media');
             const productsTab = document.getElementById('tab-products');
             const certificatesTab = document.getElementById('tab-certificates');
+            const homeTab = document.getElementById('tab-home');
+            const saveHomeBtn = document.getElementById('btn-save-home-content');
             const clearCacheBtn = document.getElementById('btn-clear-cache');
             const deleteAllBtn = document.getElementById('btn-delete-all-images');
             const addProductBtn = document.getElementById('btn-add-product');
@@ -918,6 +996,8 @@
             mediaTab?.addEventListener('click', () => switchTab('media'));
             productsTab?.addEventListener('click', () => switchTab('products'));
             certificatesTab?.addEventListener('click', () => switchTab('certificates'));
+            homeTab?.addEventListener('click', () => switchTab('home'));
+            saveHomeBtn?.addEventListener('click', saveHomeContent);
             clearCacheBtn?.addEventListener('click', clearCache);
             deleteAllBtn?.addEventListener('click', deleteAllImages);
             addProductBtn?.addEventListener('click', () => openProductModal());
