@@ -61,7 +61,7 @@ html = html.replace('проектирование технологических
 html = html.replace('производство оборудования для пищевой промышленности', 'импортозамещение: собственный завод по производству оборудования для пищевой промышленности')
 
 # Also point catalog button to production.html
-html = html.replace('href="#catalog"', 'href="production.html"')
+html = html.replace('href="#catalog"', 'href="/production"')
 
 # 7. Remove 'Мы помогаем', 'Мы снижаем' and 'Почему мы?'
 # They are sections with comments before them.

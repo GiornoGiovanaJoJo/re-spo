@@ -73,7 +73,7 @@ main_content = """
                     <div class="bg-[#F8F9FA] rounded-[32px] p-6 lg:p-10 flex flex-col group hover:shadow-xl transition-shadow w-full max-w-[500px]">
                         <h3 class="text-[20px] text-respo-dark font-medium mb-8">Butterfly valves, SS304</h3>
                         <div class="w-full aspect-square bg-white rounded-[24px] mb-8 shadow-sm"></div>
-                        <a href="product.html" class="w-full bg-[#7DD5FF] text-white py-4 rounded-full flex items-center justify-center space-x-3 hover:brightness-105 transition-all text-[16px] font-medium tooltip-trigger mt-auto">
+                        <a href="/product" class="w-full bg-[#7DD5FF] text-white py-4 rounded-full flex items-center justify-center space-x-3 hover:brightness-105 transition-all text-[16px] font-medium tooltip-trigger mt-auto">
                             <span>Добавить в корзину</span>
                             <img src="assets/shopping-bag.svg" alt="Cart" class="w-5 h-5 invert brightness-0">
                         </a>
@@ -82,7 +82,7 @@ main_content = """
                     <div class="bg-[#F8F9FA] rounded-[32px] p-6 lg:p-10 flex flex-col group hover:shadow-xl transition-shadow w-full max-w-[500px]">
                         <h3 class="text-[20px] text-respo-dark font-medium mb-8">Butterfly valves, SS304</h3>
                         <div class="w-full aspect-square bg-white rounded-[24px] mb-8 shadow-sm"></div>
-                        <a href="product.html" class="w-full bg-[#7DD5FF] text-white py-4 rounded-full flex items-center justify-center space-x-3 hover:brightness-105 transition-all text-[16px] font-medium tooltip-trigger mt-auto">
+                        <a href="/product" class="w-full bg-[#7DD5FF] text-white py-4 rounded-full flex items-center justify-center space-x-3 hover:brightness-105 transition-all text-[16px] font-medium tooltip-trigger mt-auto">
                             <span>Добавить в корзину</span>
                             <img src="assets/shopping-bag.svg" alt="Cart" class="w-5 h-5 invert brightness-0">
                         </a>

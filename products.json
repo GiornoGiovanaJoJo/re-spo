@@ -22,56 +22,56 @@
       "category": "equipment",
       "name": "Система охлаждения закупорочных плит фасовочных\\упаковочных автоматов. 3D модель",
       "image": "assets/product_placeholder.png",
-      "link": "product.html"
+      "link": "/product"
     },
     {
       "id": "2",
       "category": "equipment",
       "name": "Узел Раскачки и Дозировки концентратов хим реактивов. 3D модель",
       "image": "assets/product_placeholder.png",
-      "link": "product.html"
+      "link": "/product"
     },
     {
       "id": "3",
       "category": "equipment",
       "name": "Модульная СИП станция. 3D модель",
       "image": "assets/product_placeholder.png",
-      "link": "product.html"
+      "link": "/product"
     },
     {
       "id": "4",
       "category": "valves",
       "name": "Butterfly valves, SS304",
       "image": "assets/product_placeholder.png",
-      "link": "product.html"
+      "link": "/product"
     },
     {
       "id": "5",
       "category": "valves",
       "name": "Single seat valves, SS304",
       "image": "assets/product_placeholder.png",
-      "link": "product.html"
+      "link": "/product"
     },
     {
       "id": "6",
       "category": "heat_exchangers",
       "name": "Пластинчатый теплообменник (Размер S)",
       "image": "assets/product_placeholder.png",
-      "link": "product.html"
+      "link": "/product"
     },
     {
       "id": "7",
       "category": "heat_exchangers",
       "name": "Пластинчатый теплообменник (Размер M)",
       "image": "assets/product_placeholder.png",
-      "link": "product.html"
+      "link": "/product"
     },
     {
       "id": "8",
       "category": "heat_exchangers",
       "name": "Пластинчатый теплообменник (Размер L)",
       "image": "assets/product_placeholder.png",
-      "link": "product.html"
+      "link": "/product"
     }
   ]
 }

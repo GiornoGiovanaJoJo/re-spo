@@ -301,10 +301,16 @@ app.get('/sitemap-products.xml', (req, res) => {
     }
 });
 
-app.get('/index.html', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
-app.get('/production.html', (req, res) => res.sendFile(path.join(__dirname, 'production.html')));
-app.get('/product.html', (req, res) => res.sendFile(path.join(__dirname, 'product.html')));
-app.get('/privacy-policy.html', (req, res) => res.sendFile(path.join(__dirname, 'privacy-policy.html')));
+function redirectToCanonicalPath(req, res, targetPath) {
+    const q = req.url.indexOf('?');
+    const search = q >= 0 ? req.url.slice(q) : '';
+    res.redirect(301, targetPath + search);
+}
+
+app.get('/index.html', (req, res) => redirectToCanonicalPath(req, res, '/'));
+app.get('/production.html', (req, res) => redirectToCanonicalPath(req, res, '/production'));
+app.get('/product.html', (req, res) => redirectToCanonicalPath(req, res, '/product'));
+app.get('/privacy-policy.html', (req, res) => redirectToCanonicalPath(req, res, '/privacy-policy'));
 app.get('/favicon.ico', (req, res) => {
     const faviconPath = path.join(assetsDir, 'logo.png');
     if (fs.existsSync(faviconPath)) {

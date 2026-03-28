@@ -34,8 +34,11 @@ function escapeHtml(input) {
 }
 
 function getProductHref(product) {
-    const raw = String(product.link || 'product.html').trim();
-    if (/^product\.html(?:\?|$)/i.test(raw) && !/[?&]id=/.test(raw)) {
+    let raw = String(product.link || '/product').trim();
+    if (/^product\.html(\?|$)/i.test(raw)) {
+        raw = '/product' + raw.slice('product.html'.length);
+    }
+    if (/^\/product(?:\?|$)/.test(raw) && !/[?&]id=/.test(raw)) {
         const sep = raw.includes('?') ? '&' : '?';
         return `${raw}${sep}id=${encodeURIComponent(product.id)}`;
     }

@@ -173,9 +173,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            if (/production\.html/i.test(rawHref)) {
+            const catalogHref =
+                rawHref === '/production' ||
+                rawHref === 'production.html' ||
+                /\/production\.html$/i.test(rawHref);
+            if (catalogHref) {
                 e.preventDefault();
-                window.location.href = 'production.html';
+                window.location.href = '/production';
             }
         });
     });
@@ -420,7 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // =====================================================
     // Logo Click — scroll to top
     // =====================================================
-    const logo = document.querySelector('header a[href="/"], header a[href="index.html"]');
+    const logo = document.querySelector('header a[href="/"], header a[href="index.html"], header a[href="/index.html"]');
     if (logo) {
         logo.addEventListener('click', (e) => {
             const isHomePage = window.location.pathname === '/' || window.location.pathname.endsWith('index.html') || window.location.pathname === '';
