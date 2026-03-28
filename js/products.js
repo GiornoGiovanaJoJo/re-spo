@@ -75,9 +75,10 @@ function createProductCard(product) {
     const isValve = product.category === 'valves';
     const isExchanger = product.category === 'heat_exchangers';
     const cardSizeClass = isValve ? 'w-full max-w-[420px]' : (isExchanger ? 'w-full max-w-[320px]' : 'w-full');
+    /* min-w-0: во flex-ряду карусели иначе min-width:auto не даёт сужаться — текст не переносится и режется */
     div.className = isExchanger
-        ? `bg-[#F8F9FA] p-6 rounded-[20px] flex flex-col items-start h-full ${cardSizeClass}`
-        : `bg-[#F8F9FA] p-6 lg:p-8 rounded-[20px] flex flex-col items-start group hover:shadow-xl transition-all h-full ${cardSizeClass}`;
+        ? `bg-[#F8F9FA] p-6 rounded-[20px] flex flex-col items-start h-full min-w-0 w-full ${cardSizeClass}`
+        : `bg-[#F8F9FA] p-6 lg:p-8 rounded-[20px] flex flex-col items-start group hover:shadow-xl transition-all h-full min-w-0 w-full ${cardSizeClass}`;
     
     const rawName = String(product.name ?? '').trim();
     const safeName = escapeHtml(rawName);
@@ -93,7 +94,7 @@ function createProductCard(product) {
 
     if (isExchanger) {
         div.innerHTML = `
-            <h3 class="text-[14px] text-respo-dark/80 font-medium mb-4 leading-[1.45] min-h-[2.8rem]">${exchangerTitle}</h3>
+            <h3 class="text-[14px] text-respo-dark/80 font-medium mb-4 leading-[1.45] break-words line-clamp-5">${exchangerTitle}</h3>
             <div class="bg-white w-full ${mediaAspectClass} rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center p-4">
                 <img src="${imgSrc}" alt="${safeName}" class="max-h-full max-w-[92%] w-auto h-auto object-contain">
             </div>
@@ -108,8 +109,8 @@ function createProductCard(product) {
     }
 
     div.innerHTML = `
-        <h3 class="${isValve ? 'text-[14px]' : 'text-lg'} font-medium text-respo-dark mb-4 line-clamp-2 min-h-[3.5rem]">${safeName}</h3>
-        ${safeDescription ? `<p class="text-[12px] text-respo-dark/60 mb-4 line-clamp-2 w-full">${safeDescription}</p>` : ''}
+        <h3 class="${isValve ? 'text-[14px]' : 'text-lg'} font-medium text-respo-dark mb-4 w-full min-w-0 break-words leading-snug line-clamp-4 lg:line-clamp-3">${safeName}</h3>
+        ${safeDescription ? `<p class="text-[12px] text-respo-dark/60 mb-4 w-full min-w-0 break-words leading-relaxed line-clamp-4 lg:line-clamp-2">${safeDescription}</p>` : ''}
         <div class="bg-white w-full ${mediaAspectClass} rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center p-4">
             <img src="${imgSrc}" alt="${safeName}" class="max-h-full max-w-[92%] w-auto h-auto object-contain group-hover:scale-105 transition-transform">
         </div>
@@ -191,8 +192,9 @@ function createProductListItem(product) {
 
 function getSlidesPerView(context, categoryId) {
     const width = window.innerWidth || 1280;
-    if (width <= 390) return 1.08;
-    if (width <= 720) return 1.16;
+    /* ~1 слайд на очень узких экранах — больше ширина под перенос длинных названий */
+    if (width <= 390) return 1;
+    if (width <= 720) return 1.12;
     if (width <= 1024) return 2.12;
 
     if (context === 'home') return 3.1;
@@ -227,7 +229,7 @@ function createHorizontalProductsCarousel(products, options = {}) {
 
     products.forEach((product) => {
         const slide = document.createElement('div');
-        slide.className = 'snap-center shrink-0';
+        slide.className = 'snap-center shrink-0 min-w-0';
         slide.style.minWidth = '0';
 
         const card = createProductCard(product);
