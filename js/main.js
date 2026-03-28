@@ -145,8 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const categoryCards = document.querySelectorAll('#services .grid a.group');
     categoryCards.forEach(card => {
         card.addEventListener('click', (e) => {
-            e.preventDefault();
-            const title = (card.querySelector('h3')?.textContent || '').toLowerCase();
+            const rawHref = (card.getAttribute('href') || '').trim();
             const goToSection = (id) => {
                 const el = document.getElementById(id);
                 if (!el) return;
@@ -155,17 +154,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.scrollTo({ top: pos, behavior: 'smooth' });
             };
 
-            if (title.includes('аудит')) {
-                goToSection('audit');
-                showToast('Переход к технологическому аудиту', 'info');
-                return;
+            if (rawHref.startsWith('#')) {
+                const id = rawHref.slice(1);
+                if (id && document.getElementById(id)) {
+                    e.preventDefault();
+                    goToSection(id);
+                    const title = (card.querySelector('h3')?.textContent || '').toLowerCase();
+                    if (title.includes('аудит')) {
+                        showToast('Переход к технологическому аудиту', 'info');
+                    } else if (title.includes('сервисное')) {
+                        showToast('Переход к сервисному обслуживанию', 'info');
+                    }
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                    return;
+                }
             }
-            if (title.includes('сервисное')) {
-                goToSection('optimization');
-                showToast('Переход к сервисному обслуживанию', 'info');
-                return;
+
+            if (/production\.html/i.test(rawHref)) {
+                e.preventDefault();
+                window.location.href = 'production.html';
             }
-            window.location.href = 'production.html';
         });
     });
 
