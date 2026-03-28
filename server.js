@@ -17,6 +17,7 @@ const assetsDir = path.join(__dirname, 'assets');
 const productsFile = path.join(__dirname, 'products.json');
 const certificatesFile = path.join(__dirname, 'certificates.json');
 const homeContentFile = path.join(__dirname, 'home-content.json');
+const siteTextFile = path.join(__dirname, 'site-text.json');
 const IMAGE_EXT_RE = /\.(png|svg|jpe?g|gif|webp|tiff?)$/i;
 const DEFAULT_SITE_URL = 'https://re-spo.com';
 
@@ -104,6 +105,23 @@ function validateHomeContentPayload(payload) {
     for (const t of payload.technologyTiles) {
         if (typeof t !== 'string' || !t.trim()) return false;
         if (t.length > HOME_TECH_TILE_MAX_LEN) return false;
+    }
+    return true;
+}
+
+const SITE_TEXT_KEY_RE = /^[a-z][a-z0-9_.-]{0,100}$/i;
+const SITE_TEXT_MAX_KEYS = 900;
+const SITE_TEXT_MAX_VALUE_LEN = 15000;
+
+function validateSiteTextPayload(payload) {
+    if (!payload || typeof payload !== 'object') return false;
+    const s = payload.strings;
+    if (!s || typeof s !== 'object' || Array.isArray(s)) return false;
+    const keys = Object.keys(s);
+    if (keys.length > SITE_TEXT_MAX_KEYS) return false;
+    for (const k of keys) {
+        if (!SITE_TEXT_KEY_RE.test(k)) return false;
+        if (typeof s[k] !== 'string' || s[k].length > SITE_TEXT_MAX_VALUE_LEN) return false;
     }
     return true;
 }
@@ -409,6 +427,36 @@ app.post('/api/home-content', adminAuth, (req, res) => {
         }
         const data = JSON.stringify(req.body, null, 2);
         fs.writeFileSync(homeContentFile, data, 'utf8');
+        res.json({ success: true });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+app.get('/api/site-text', (req, res) => {
+    try {
+        if (!fs.existsSync(siteTextFile)) {
+            return res.json({ strings: {} });
+        }
+        const raw = fs.readFileSync(siteTextFile, 'utf8');
+        const parsed = JSON.parse(raw);
+        if (!validateSiteTextPayload(parsed)) {
+            return res.status(500).json({ error: 'site-text.json has invalid structure' });
+        }
+        res.json(parsed);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+app.post('/api/site-text', adminAuth, (req, res) => {
+    try {
+        if (!validateSiteTextPayload(req.body)) {
+            return res.status(400).json({
+                error: 'Invalid site-text: need { strings: { key: "value", ... } }, safe keys, max value length'
+            });
+        }
+        fs.writeFileSync(siteTextFile, JSON.stringify(req.body, null, 2), 'utf8');
         res.json({ success: true });
     } catch (e) {
         res.status(500).json({ error: e.message });

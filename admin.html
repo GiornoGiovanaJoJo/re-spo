@@ -78,10 +78,11 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6 bg-gray-100 p-1 rounded-lg">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 bg-gray-100 p-1 rounded-lg">
             <button id="tab-media" data-tab="media" class="px-4 py-2 rounded-md text-sm font-medium transition-all bg-white shadow-sm text-blue-600">Медиафайлы</button>
             <button id="tab-products" data-tab="products" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Товары (Каталог)</button>
             <button id="tab-certificates" data-tab="certificates" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Сертификаты</button>
+            <button id="tab-texts" data-tab="texts" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Тексты</button>
             <button id="tab-home" data-tab="home" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Главная</button>
         </div>
         
@@ -156,6 +157,27 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        <!-- Site texts (CMS) tab -->
+        <div id="content-texts" class="hidden">
+            <h2 class="text-xl font-bold text-gray-800 mb-2">Тексты сайта</h2>
+            <p class="text-gray-600 text-sm mb-4">
+                Редактирование <code class="text-xs bg-gray-100 px-1 rounded">site-text.json</code> через API.
+                В HTML для подстановки используйте атрибут <code class="text-xs bg-gray-100 px-1 rounded">data-site-text="ключ"</code>
+                или <code class="text-xs bg-gray-100 px-1 rounded">data-site-text-placeholder</code> для полей ввода.
+                Четыре подписи плиток «Технологии» на главной по-прежнему задаются во вкладке «Главная».
+            </p>
+            <div class="flex flex-col sm:flex-row flex-wrap gap-2 mb-4">
+                <input type="search" id="site-text-filter" placeholder="Фильтр по ключу..." class="flex-1 min-w-[160px] border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                <div class="flex flex-wrap gap-2 items-center">
+                    <input type="text" id="site-text-new-key" placeholder="новый.ключ" maxlength="120" class="w-40 sm:w-48 border border-slate-300 rounded-md px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                    <button type="button" id="btn-site-text-add" class="bg-slate-100 text-slate-800 px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-200">Добавить ключ</button>
+                    <button type="button" id="btn-site-text-reload" class="bg-white border border-slate-300 text-slate-700 px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-50">С сервера</button>
+                    <button type="button" id="btn-site-text-save" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 shadow-sm">Сохранить все</button>
+                </div>
+            </div>
+            <div id="site-text-editor" class="space-y-3 max-h-[min(70vh,720px)] overflow-y-auto soft-scroll border border-slate-200 rounded-lg p-3 bg-white"></div>
         </div>
 
         <!-- Home page content tab -->
@@ -285,6 +307,8 @@
         let homeContentData = {
             technologyTiles: ['Молочные линии', 'Асептический разлив', 'СИП-станции', 'Модернизация цехов']
         };
+        let siteTextStrings = {};
+        const SITE_TEXT_KEY_RE = /^[a-z][a-z0-9_.-]{0,100}$/i;
         const FALLBACK_IMG = 'https://via.placeholder.com/40?text=?';
         const ADMIN_AUTH_STORAGE_KEY = 'respo_admin_basic_auth';
         let currentTab = 'media';
@@ -489,17 +513,130 @@
             document.getElementById('content-media').classList.toggle('hidden', tab !== 'media');
             document.getElementById('content-products').classList.toggle('hidden', tab !== 'products');
             document.getElementById('content-certificates').classList.toggle('hidden', tab !== 'certificates');
+            document.getElementById('content-texts').classList.toggle('hidden', tab !== 'texts');
             document.getElementById('content-home').classList.toggle('hidden', tab !== 'home');
 
             document.getElementById('tab-media').className = tab === 'media' ? tabActiveClass : tabInactiveClass;
             document.getElementById('tab-products').className = tab === 'products' ? tabActiveClass : tabInactiveClass;
             document.getElementById('tab-certificates').className = tab === 'certificates' ? tabActiveClass : tabInactiveClass;
+            document.getElementById('tab-texts').className = tab === 'texts' ? tabActiveClass : tabInactiveClass;
             document.getElementById('tab-home').className = tab === 'home' ? tabActiveClass : tabInactiveClass;
 
             if (tab === 'products') loadProducts();
             else if (tab === 'certificates') loadCertificates();
+            else if (tab === 'texts') loadSiteTextEditor();
             else if (tab === 'home') loadHomeContent();
             else loadImages();
+        }
+
+        function syncSiteTextFromDom() {
+            document.querySelectorAll('[data-site-text-row]').forEach((row) => {
+                const key = row.getAttribute('data-site-text-row');
+                const ta = row.querySelector('textarea[data-st-value]');
+                if (key && ta) siteTextStrings[key] = ta.value;
+            });
+        }
+
+        function renderSiteTextEditor() {
+            const container = document.getElementById('site-text-editor');
+            if (!container) return;
+            const filter = String(document.getElementById('site-text-filter')?.value || '').toLowerCase().trim();
+            const keys = Object.keys(siteTextStrings).sort((a, b) => a.localeCompare(b));
+            container.innerHTML = '';
+            keys.forEach((key) => {
+                if (filter && !key.toLowerCase().includes(filter)) return;
+                const wrap = document.createElement('div');
+                wrap.className = 'border border-slate-200 rounded-lg p-3 bg-slate-50/50';
+                wrap.setAttribute('data-site-text-row', key);
+                const head = document.createElement('div');
+                head.className = 'flex justify-between items-center gap-2 mb-1';
+                const lab = document.createElement('span');
+                lab.className = 'font-mono text-xs text-slate-800 break-all';
+                lab.textContent = key;
+                const rm = document.createElement('button');
+                rm.type = 'button';
+                rm.className = 'text-xs text-red-600 hover:underline shrink-0';
+                rm.textContent = 'Удалить';
+                rm.setAttribute('data-site-text-remove', key);
+                head.appendChild(lab);
+                head.appendChild(rm);
+                const ta = document.createElement('textarea');
+                ta.className = 'w-full border border-slate-300 rounded-md px-2 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white';
+                ta.dataset.stValue = '1';
+                const val = siteTextStrings[key];
+                ta.value = typeof val === 'string' ? val : '';
+                const len = ta.value.length;
+                ta.rows = len > 400 ? 8 : len > 160 ? 4 : 2;
+                wrap.appendChild(head);
+                wrap.appendChild(ta);
+                container.appendChild(wrap);
+            });
+            if (!keys.length) {
+                container.innerHTML = '<p class="text-sm text-gray-500">Нет ключей. Нажмите «С сервера» или добавьте ключ.</p>';
+            }
+        }
+
+        async function loadSiteTextEditor() {
+            try {
+                const res = await fetch('/api/site-text');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                const s = data && data.strings;
+                siteTextStrings = s && typeof s === 'object' ? { ...s } : {};
+                renderSiteTextEditor();
+            } catch (err) {
+                console.error(err);
+                showToast('Не удалось загрузить тексты сайта.', 'error');
+            }
+        }
+
+        async function saveSiteTextPayload() {
+            syncSiteTextFromDom();
+            const payload = { strings: { ...siteTextStrings } };
+            try {
+                const res = await authorizedFetch('/api/site-text', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    showToast('Тексты сайта сохранены', 'success');
+                    markLastAction('Обновлены тексты сайта (site-text)');
+                    await loadSiteTextEditor();
+                } else {
+                    const errBody = await res.json().catch(() => ({}));
+                    showToast(errBody.error || 'Ошибка сохранения текстов', 'error');
+                }
+            } catch (err) {
+                showToast('Ошибка сети при сохранении текстов', 'error');
+            }
+        }
+
+        function addSiteTextKey() {
+            const raw = String(document.getElementById('site-text-new-key')?.value || '').trim();
+            if (!raw) {
+                showToast('Введите ключ', 'warning');
+                return;
+            }
+            if (!SITE_TEXT_KEY_RE.test(raw)) {
+                showToast('Ключ: латиница/цифры/._- , начинается с буквы, до 101 символа.', 'error');
+                return;
+            }
+            syncSiteTextFromDom();
+            if (Object.prototype.hasOwnProperty.call(siteTextStrings, raw)) {
+                showToast('Такой ключ уже есть', 'warning');
+                return;
+            }
+            siteTextStrings[raw] = '';
+            document.getElementById('site-text-new-key').value = '';
+            renderSiteTextEditor();
+        }
+
+        function removeSiteTextKey(key) {
+            if (!key || !confirm(`Удалить ключ «${key}» из файла при следующем сохранении?`)) return;
+            syncSiteTextFromDom();
+            delete siteTextStrings[key];
+            renderSiteTextEditor();
         }
 
         // --- Media Logic ---
@@ -979,8 +1116,14 @@
             const mediaTab = document.getElementById('tab-media');
             const productsTab = document.getElementById('tab-products');
             const certificatesTab = document.getElementById('tab-certificates');
+            const textsTab = document.getElementById('tab-texts');
             const homeTab = document.getElementById('tab-home');
             const saveHomeBtn = document.getElementById('btn-save-home-content');
+            const siteTextSaveBtn = document.getElementById('btn-site-text-save');
+            const siteTextReloadBtn = document.getElementById('btn-site-text-reload');
+            const siteTextAddBtn = document.getElementById('btn-site-text-add');
+            const siteTextFilter = document.getElementById('site-text-filter');
+            const siteTextEditor = document.getElementById('site-text-editor');
             const clearCacheBtn = document.getElementById('btn-clear-cache');
             const deleteAllBtn = document.getElementById('btn-delete-all-images');
             const addProductBtn = document.getElementById('btn-add-product');
@@ -1001,8 +1144,23 @@
             mediaTab?.addEventListener('click', () => switchTab('media'));
             productsTab?.addEventListener('click', () => switchTab('products'));
             certificatesTab?.addEventListener('click', () => switchTab('certificates'));
+            textsTab?.addEventListener('click', () => switchTab('texts'));
             homeTab?.addEventListener('click', () => switchTab('home'));
             saveHomeBtn?.addEventListener('click', saveHomeContent);
+            siteTextSaveBtn?.addEventListener('click', saveSiteTextPayload);
+            siteTextReloadBtn?.addEventListener('click', () => loadSiteTextEditor());
+            siteTextAddBtn?.addEventListener('click', addSiteTextKey);
+            siteTextFilter?.addEventListener('input', () => {
+                syncSiteTextFromDom();
+                renderSiteTextEditor();
+            });
+            siteTextEditor?.addEventListener('click', (event) => {
+                if (!(event.target instanceof Element)) return;
+                const btn = event.target.closest('[data-site-text-remove]');
+                if (!btn) return;
+                const key = btn.getAttribute('data-site-text-remove');
+                if (key) removeSiteTextKey(key);
+            });
             clearCacheBtn?.addEventListener('click', clearCache);
             deleteAllBtn?.addEventListener('click', deleteAllImages);
             addProductBtn?.addEventListener('click', () => openProductModal());
