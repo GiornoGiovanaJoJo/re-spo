@@ -33,6 +33,46 @@ function escapeHtml(input) {
         .replace(/'/g, '&#39;');
 }
 
+/** Defaults for category-driven catalog / product UI (admin + site). */
+function mergeCategoryConfig(raw) {
+    const defaults = {
+        id: '',
+        name: '',
+        sortOrder: 0,
+        catalogMode: 'carousel',
+        listStyle: 'simple',
+        cardStyle: 'default',
+        gridCols: 4,
+        showCounter: false,
+        fields: { description: true, specs: true, parameters: true, gallery: true },
+        labels: { specsHeading: '', paramLabelCol: '', paramValueCol: '' }
+    };
+    const base = { ...defaults, fields: { ...defaults.fields }, labels: { ...defaults.labels } };
+    if (!raw || typeof raw !== 'object') return base;
+    const fields = { ...base.fields, ...(raw.fields && typeof raw.fields === 'object' ? raw.fields : {}) };
+    const labels = { ...base.labels, ...(raw.labels && typeof raw.labels === 'object' ? raw.labels : {}) };
+    let catalogMode = raw.catalogMode;
+    if (!catalogMode && raw.display === 'list') catalogMode = 'list';
+    if (!catalogMode && raw.display === 'grid') catalogMode = 'grid';
+    return {
+        ...base,
+        ...raw,
+        catalogMode: catalogMode || base.catalogMode,
+        fields,
+        labels
+    };
+}
+
+function catalogCounterStripHtml() {
+    return (
+        '<div class="bg-[#E9F5FF] rounded-[6px] py-2.5 px-6 flex flex-col md:flex-row items-center justify-between gap-6 mt-6">' +
+        '<span class="text-[14px] lg:text-[16px] text-respo-dark/80 font-normal whitespace-nowrap" data-site-text="production.counter_label">Счетчик установленных клапанов</span>' +
+        '<span class="text-[14px] lg:text-[16px] text-respo-dark/40 font-normal">-</span>' +
+        '<span class="text-[14px] lg:text-[16px] text-respo-dark font-normal tabular-nums tracking-wide">10 000 000</span>' +
+        '</div>'
+    );
+}
+
 function getProductHref(product) {
     let raw = String(product.link || '/product').trim();
     if (/^product\.html(\?|$)/i.test(raw)) {
@@ -70,10 +110,11 @@ function formatExchangerTitle(name) {
     return `${baseName}<br><span class="text-respo-dark/70">${sizePart}</span>`;
 }
 
-function createProductCard(product) {
+function createProductCard(product, categoryConfig) {
+    const cfg = categoryConfig || mergeCategoryConfig({});
     const div = document.createElement('div');
-    const isValve = product.category === 'valves';
-    const isExchanger = product.category === 'heat_exchangers';
+    const isValve = cfg.cardStyle === 'valve';
+    const isExchanger = cfg.cardStyle === 'exchanger';
     const cardSizeClass = isValve ? 'w-full max-w-[420px]' : (isExchanger ? 'w-full max-w-[320px]' : 'w-full');
     /* min-w-0: во flex-ряду карусели иначе min-width:auto не даёт сужаться — текст не переносится и режется */
     div.className = isExchanger
@@ -86,6 +127,7 @@ function createProductCard(product) {
     const href = getProductHref(product);
     const safeHref = escapeHtml(href);
     const safeDescription = escapeHtml(product.description || '');
+    const showDescription = cfg.fields.description !== false && Boolean(String(product.description || '').trim());
 
     // Use t parameter to bust cache if needed, or just standard path
     const imgSrc = product.image || 'assets/product_placeholder.png';
@@ -110,7 +152,7 @@ function createProductCard(product) {
 
     div.innerHTML = `
         <h3 class="${isValve ? 'text-[14px]' : 'text-lg'} font-medium text-respo-dark mb-4 w-full min-w-0 break-words leading-snug line-clamp-4 lg:line-clamp-3">${safeName}</h3>
-        ${safeDescription ? `<p class="text-[12px] text-respo-dark/60 mb-4 w-full min-w-0 break-words leading-relaxed line-clamp-4 lg:line-clamp-2">${safeDescription}</p>` : ''}
+        ${showDescription ? `<p class="text-[12px] text-respo-dark/60 mb-4 w-full min-w-0 break-words leading-relaxed line-clamp-4 lg:line-clamp-2">${safeDescription}</p>` : ''}
         <div class="bg-white w-full ${mediaAspectClass} rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center p-4">
             <img src="${imgSrc}" alt="${safeName}" class="max-h-full max-w-[92%] w-auto h-auto object-contain group-hover:scale-105 transition-transform">
         </div>
@@ -124,15 +166,15 @@ function createProductCard(product) {
     return div;
 }
 
-function createProductListItem(product) {
+function createProductListItem(product, categoryConfig) {
+    const cfg = categoryConfig || mergeCategoryConfig({});
     const div = document.createElement('div');
     div.className = 'border-b border-respo-blue/10';
     const href = getProductHref(product);
     const safeHref = escapeHtml(href);
     const safeName = escapeHtml(product.name);
     
-    // Check if it's an equipment item (accordion style)
-    if (product.category === 'equipment') {
+    if (cfg.listStyle === 'accordion') {
         const equipImg = escapeHtml(product.image || 'assets/product_placeholder.png');
         div.innerHTML = `
             <div class="py-8 flex items-center justify-between group cursor-pointer hover:bg-respo-blue-light/30 transition-colors px-4 -mx-4 rounded-xl accordion-header">
@@ -190,7 +232,7 @@ function createProductListItem(product) {
     return div;
 }
 
-function getSlidesPerView(context, categoryId) {
+function getSlidesPerView(context, categoryConfig) {
     const width = window.innerWidth || 1280;
     /* ~1 слайд на очень узких экранах — больше ширина под перенос длинных названий */
     if (width <= 390) return 1;
@@ -198,13 +240,15 @@ function getSlidesPerView(context, categoryId) {
     if (width <= 1024) return 2.12;
 
     if (context === 'home') return 3.1;
-    if (categoryId === 'equipment') return 2.4;
-    if (categoryId === 'heat_exchangers') return 3.1;
-    return 2.8;
+    const cfg = categoryConfig || mergeCategoryConfig({});
+    if (cfg.cardStyle === 'exchanger') return 3.1;
+    if (cfg.cardStyle === 'valve') return 2.8;
+    return 2.4;
 }
 
 function createHorizontalProductsCarousel(products, options = {}) {
-    const { context = 'catalog', categoryId = 'catalog' } = options;
+    const { context = 'catalog', categoryId = 'catalog', categoryConfig } = options;
+    const cfg = categoryConfig || mergeCategoryConfig({});
 
     const root = document.createElement('div');
     root.className = 'relative';
@@ -232,7 +276,7 @@ function createHorizontalProductsCarousel(products, options = {}) {
         slide.className = 'snap-center shrink-0 min-w-0';
         slide.style.minWidth = '0';
 
-        const card = createProductCard(product);
+        const card = createProductCard(product, cfg);
         card.classList.add('h-full');
         card.style.maxWidth = 'none';
         card.style.width = '100%';
@@ -244,7 +288,7 @@ function createHorizontalProductsCarousel(products, options = {}) {
     const updateSlideWidths = () => {
         if (!track.isConnected) return;
         if (track.clientWidth === 0) return;
-        const perView = getSlidesPerView(context, categoryId);
+        const perView = getSlidesPerView(context, cfg);
         const basis = `${100 / perView}%`;
         Array.from(track.children).forEach((slide) => {
             slide.style.flex = `0 0 ${basis}`;
@@ -313,24 +357,32 @@ async function initCatalogPreview(containerId, limit = 4) {
     }
 
     container.className = '';
-    container.appendChild(createHorizontalProductsCarousel(featured, { context: 'home', categoryId: 'home' }));
+    container.appendChild(createHorizontalProductsCarousel(featured, { context: 'home', categoryId: 'home', categoryConfig: mergeCategoryConfig({ cardStyle: 'default' }) }));
     container.setAttribute('aria-busy', 'false');
 }
 
 /**
  * Render products by category on the Production page
+ * @param {string} categoryId
+ * @param {string} containerId
+ * @param {'list'|'grid'|'carousel'} displayType
+ * @param {object} [categoryConfig] merged config; if omitted, loaded from preloadedData / API
+ * @param {object} [preloadedData] full { categories, products } to avoid duplicate fetch
  */
-async function initCategoryRender(categoryId, containerId, displayType = 'grid') {
+async function initCategoryRender(categoryId, containerId, displayType = 'grid', categoryConfig, preloadedData) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
     container.setAttribute('aria-busy', 'true');
     container.innerHTML = '<p class="text-respo-dark/60 py-6">Загрузка категории...</p>';
-    const data = await fetchProducts();
+    const data = preloadedData || await fetchProducts();
     container.innerHTML = '';
-    
+
+    const rawCat = (data.categories || []).find((c) => c.id === categoryId);
+    const cfg = categoryConfig || mergeCategoryConfig(rawCat || { id: categoryId, name: categoryId });
+
     const categoryProducts = data.products.filter((p) => getNormalizedCategory(p) === categoryId);
-    
+
     if (categoryProducts.length === 0) {
         container.innerHTML = '<p class="text-gray-400 py-10">В данной категории товаров пока нет.</p>';
         container.setAttribute('aria-busy', 'false');
@@ -340,28 +392,75 @@ async function initCategoryRender(categoryId, containerId, displayType = 'grid')
     if (displayType === 'list') {
         const listDiv = document.createElement('div');
         listDiv.className = 'border-t border-respo-blue/10';
-        categoryProducts.forEach(p => {
-            listDiv.appendChild(createProductListItem(p));
+        categoryProducts.forEach((p) => {
+            listDiv.appendChild(createProductListItem(p, cfg));
         });
         container.appendChild(listDiv);
     } else if (displayType === 'carousel') {
-        container.appendChild(createHorizontalProductsCarousel(categoryProducts, { context: 'catalog', categoryId }));
+        container.appendChild(createHorizontalProductsCarousel(categoryProducts, { context: 'catalog', categoryId, categoryConfig: cfg }));
     } else {
         const gridDiv = document.createElement('div');
-        if (categoryId === 'valves') {
-            gridDiv.className = 'grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 justify-items-center';
-        } else if (categoryId === 'heat_exchangers') {
-            gridDiv.className = 'grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 justify-items-center';
-        } else {
-            gridDiv.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6';
-        }
-        categoryProducts.forEach(p => {
-            const card = createProductCard(p);
-            gridDiv.appendChild(card);
+        const cols = Number(cfg.gridCols) || 4;
+        const gridClassMap = {
+            2: 'grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 justify-items-center',
+            3: 'grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 justify-items-center',
+            4: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'
+        };
+        gridDiv.className = gridClassMap[cols] || gridClassMap[4];
+        categoryProducts.forEach((p) => {
+            gridDiv.appendChild(createProductCard(p, cfg));
         });
         container.appendChild(gridDiv);
     }
     container.setAttribute('aria-busy', 'false');
+}
+
+/**
+ * Build catalog accordion sections from products.json categories (sortOrder) and render each block.
+ */
+async function initProductionCatalogSections(rootId) {
+    const root = document.getElementById(rootId);
+    if (!root) return;
+
+    const data = await fetchProducts();
+    const categories = Array.isArray(data.categories) ? [...data.categories] : [];
+    categories.sort((a, b) => (Number(a.sortOrder) || 0) - (Number(b.sortOrder) || 0));
+
+    root.innerHTML = '';
+    for (const raw of categories) {
+        const cfg = mergeCategoryConfig(raw);
+        const panelId = `catalog-panel-${cfg.id}`;
+        const containerId = `catalog-container-${cfg.id}`;
+        const wrap = document.createElement('div');
+        wrap.innerHTML =
+            '<div>' +
+            '<button type="button" class="catalog-toggle w-full flex items-center justify-between gap-4 text-left bg-respo-blue-light border-2 border-respo-cyan/40 rounded-2xl px-6 py-5 lg:px-8 lg:py-6 hover:border-respo-blue transition-colors" data-accordion-target="' +
+            panelId +
+            '" aria-expanded="false" aria-controls="' +
+            panelId +
+            '">' +
+            '<h2 class="text-[32px] lg:text-[44px] text-respo-blue font-medium leading-[1.1]">' +
+            escapeHtml(cfg.name) +
+            '</h2>' +
+            '<span class="catalog-toggle-icon text-respo-blue text-[22px] leading-none transition-transform duration-200" aria-hidden="true">+</span>' +
+            '</button>' +
+            '<div id="' +
+            panelId +
+            '" class="hidden">' +
+            '<div id="' +
+            containerId +
+            '"><p class="text-respo-dark/60 py-6">Загрузка...</p></div>' +
+            (cfg.showCounter ? catalogCounterStripHtml() : '') +
+            '</div>' +
+            '</div>';
+        root.appendChild(wrap.firstElementChild);
+    }
+
+    for (const raw of categories) {
+        const cfg = mergeCategoryConfig(raw);
+        const mode = cfg.catalogMode || 'carousel';
+        await initCategoryRender(cfg.id, `catalog-container-${cfg.id}`, mode, cfg, data);
+    }
 }
 
 /**
@@ -393,16 +492,20 @@ async function initCertificatesRender(containerId) {
         const description = escapeHtml(cert.description || '').replace(/\n/g, '<br>');
         const imagePath = String(cert.image || '').trim();
         const imageSrc = imagePath || '';
+        const media =
+            imageSrc
+                ? `<img src="${escapeHtml(imageSrc)}" alt="${title}" class="absolute inset-0 w-full h-full object-contain p-2 sm:p-3" loading="lazy" decoding="async">`
+                : '<div class="absolute inset-0 flex items-center justify-center p-3"><span class="text-gray-400 text-xs text-center leading-normal">Нет изображения</span></div>';
         return (
-            '<div>' +
-            '<div class="w-full aspect-[3/4] bg-[#F7F7F7] mb-6 shadow-sm overflow-hidden flex items-center justify-center rounded-[8px]">' +
-            (imageSrc
-                ? `<img src="${escapeHtml(imageSrc)}" alt="${title}" class="w-full h-full object-contain" loading="lazy" decoding="async">`
-                : '<span class="text-gray-400 text-xs">Нет изображения</span>') +
+            '<article class="certificate-card flex min-h-0 min-w-0 flex-col h-full">' +
+            '<div class="relative w-full shrink-0 overflow-hidden rounded-[8px] bg-[#F7F7F7] shadow-sm aspect-[3/4] max-h-[min(88vw,22rem)] sm:max-h-[min(72vw,24rem)] md:max-h-[28rem]">' +
+            media +
             '</div>' +
-            `<h4 class="text-[18px] font-medium text-respo-dark mb-4 pr-4">${title}</h4>` +
-            `<p class="text-[12px] text-respo-blue font-sans leading-[1.6]">${description}</p>` +
-            '</div>'
+            '<div class="flex min-h-0 flex-1 flex-col gap-3 pt-4 md:pt-5">' +
+            `<h4 class="text-[17px] font-medium text-respo-dark leading-snug break-words sm:text-[18px]">${title}</h4>` +
+            `<div class="text-[12px] text-respo-blue font-sans leading-relaxed break-words [overflow-wrap:anywhere] sm:text-[13px] sm:leading-relaxed">${description}</div>` +
+            '</div>' +
+            '</article>'
         );
     }
 
@@ -410,7 +513,7 @@ async function initCertificatesRender(containerId) {
         .map(
             (cards) =>
                 '<div class="min-w-full shrink-0 snap-center snap-always px-1 sm:px-2">' +
-                '<div class="grid grid-cols-1 md:grid-cols-2 gap-8">' +
+                '<div class="grid grid-cols-1 items-stretch gap-8 md:grid-cols-2">' +
                 cards.map(certCardInnerHtml).join('') +
                 '</div></div>'
         )
@@ -424,7 +527,7 @@ async function initCertificatesRender(containerId) {
 
     const track = document.createElement('div');
     track.className =
-        'reviews-scrollbar flex w-full overflow-x-auto snap-x snap-mandatory scroll-smooth touch-pan-x';
+        'reviews-scrollbar flex w-full items-start overflow-x-auto snap-x snap-mandatory scroll-smooth touch-pan-x';
     track.setAttribute('aria-label', 'Сертификаты, горизонтальная прокрутка');
     track.innerHTML = slidesHtml;
 

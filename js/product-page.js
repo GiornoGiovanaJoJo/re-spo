@@ -18,10 +18,40 @@
             .replace(/'/g, '&#39;');
     }
 
+    function mergeCategoryConfig(raw) {
+        const defaults = {
+            id: '',
+            name: '',
+            sortOrder: 0,
+            catalogMode: 'carousel',
+            listStyle: 'simple',
+            cardStyle: 'default',
+            gridCols: 4,
+            showCounter: false,
+            fields: { description: true, specs: true, parameters: true, gallery: true },
+            labels: { specsHeading: '', paramLabelCol: '', paramValueCol: '' }
+        };
+        const base = { ...defaults, fields: { ...defaults.fields }, labels: { ...defaults.labels } };
+        if (!raw || typeof raw !== 'object') return base;
+        const fields = { ...base.fields, ...(raw.fields && typeof raw.fields === 'object' ? raw.fields : {}) };
+        const labels = { ...base.labels, ...(raw.labels && typeof raw.labels === 'object' ? raw.labels : {}) };
+        let catalogMode = raw.catalogMode;
+        if (!catalogMode && raw.display === 'list') catalogMode = 'list';
+        if (!catalogMode && raw.display === 'grid') catalogMode = 'grid';
+        return {
+            ...base,
+            ...raw,
+            catalogMode: catalogMode || base.catalogMode,
+            fields,
+            labels
+        };
+    }
+
     /** @returns {string[]} */
-    function normalizeGallerySources(product) {
+    function normalizeGallerySources(product, categoryConfig) {
+        const cfg = categoryConfig || mergeCategoryConfig({});
         const main = (product.image && String(product.image).trim()) || PLACEHOLDER;
-        if (Array.isArray(product.images) && product.images.length > 0) {
+        if (cfg.fields.gallery !== false && Array.isArray(product.images) && product.images.length > 0) {
             const cleaned = product.images.map((s) => String(s).trim()).filter(Boolean);
             if (cleaned.length) return cleaned;
         }
@@ -276,13 +306,20 @@
             const product = (data.products || []).find((p) => String(p.id) === String(id));
             if (!product) return;
 
+            const rawCat = (data.categories || []).find((c) => c.id === product.category);
+            const cfg = mergeCategoryConfig(rawCat || {});
+
             const titleEl = document.getElementById('product-title');
             const imageEl = document.getElementById('product-main-image');
             const stageEl = document.getElementById('product-image-stage');
             const dotsEl = document.getElementById('product-gallery-dots');
+            const specsBlock = document.getElementById('product-specs-block');
+            const specsTitle = document.getElementById('product-specs-title');
             const specsEl = document.getElementById('product-spec-list');
             const paramsWrapEl = document.getElementById('product-params-wrap');
             const paramsBodyEl = document.getElementById('product-params-table-body');
+            const paramLabelTh = document.getElementById('product-param-label-th');
+            const paramValueTh = document.getElementById('product-param-value-th');
             const zoomInBtn = document.getElementById('zoom-in-btn');
             const zoomOutBtn = document.getElementById('zoom-out-btn');
             const zoomResetBtn = document.getElementById('zoom-reset-btn');
@@ -290,12 +327,37 @@
             const name = product.name || 'Товар';
             if (titleEl) titleEl.textContent = name;
 
-            const gallerySources = normalizeGallerySources(product);
+            const gallerySources = normalizeGallerySources(product, cfg);
             setupGallery(imageEl, dotsEl, gallerySources, name);
             setupImageZoom(stageEl, imageEl, zoomInBtn, zoomOutBtn, zoomResetBtn);
 
-            renderSpecs(specsEl, product.specs);
-            renderParametersTable(paramsBodyEl, paramsWrapEl, product.parameters);
+            if (cfg.fields.specs === false) {
+                if (specsBlock) specsBlock.classList.add('hidden');
+            } else {
+                if (specsBlock) specsBlock.classList.remove('hidden');
+                const sh = String(cfg.labels.specsHeading || '').trim();
+                if (specsTitle) {
+                    if (sh) {
+                        specsTitle.textContent = sh;
+                        specsTitle.classList.remove('hidden');
+                    } else {
+                        specsTitle.textContent = '';
+                        specsTitle.classList.add('hidden');
+                    }
+                }
+                renderSpecs(specsEl, product.specs);
+            }
+
+            const plc = String(cfg.labels.paramLabelCol || '').trim();
+            const pvc = String(cfg.labels.paramValueCol || '').trim();
+            if (paramLabelTh && plc) paramLabelTh.textContent = plc;
+            if (paramValueTh && pvc) paramValueTh.textContent = pvc;
+
+            if (cfg.fields.parameters === false) {
+                if (paramsWrapEl) paramsWrapEl.classList.add('hidden');
+            } else {
+                renderParametersTable(paramsBodyEl, paramsWrapEl, product.parameters);
+            }
 
             document.title = `${name} - RE-SPO`;
         } catch (error) {

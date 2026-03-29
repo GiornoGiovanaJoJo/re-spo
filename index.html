@@ -619,7 +619,7 @@
                         <h2 class="text-[32px] sm:text-[36px] lg:text-[48px] font-medium text-respo-dark leading-tight" data-site-text="contact.heading">Остались вопросы?</h2>
                     </div>
                     <div class="flex flex-col">
-                        <form class="space-y-8">
+                        <form id="contact-form" class="relative space-y-8" data-contact-form data-yandex-smartcaptcha-sitekey="" action="#" method="post" novalidate>
                             <div class="space-y-3 pb-2">
                                 <a href="mailto:INFO@RE-SPO.COM"
                                     class="inline-flex items-center justify-center bg-respo-cyan text-white h-11 px-6 rounded-full text-[14px] font-medium hover:brightness-105 transition-all" data-site-text="contact.btn_email">
@@ -630,20 +630,25 @@
                                     +7 (495) 961 62 15
                                 </a>
                             </div>
+                            <div class="absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0" style="clip: rect(0,0,0,0)" aria-hidden="true">
+                                <label>Leave blank <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+                            </div>
                             <div class="space-y-2">
                                 <label class="text-[14px] text-respo-dark/50 block" data-site-text="contact.label_name">Ваше имя</label>
-                                <input id="contact-name" name="name" type="text" required autocomplete="name" data-site-text-placeholder="contact.ph_name" placeholder="Введите свое имя" class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-dark/50 focus:border-respo-cyan outline-none transition-all">
+                                <input id="contact-name" name="name" type="text" required autocomplete="name" data-site-text-placeholder="contact.ph_name" placeholder="Введите свое имя" maxlength="200" class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-dark/50 focus:border-respo-cyan outline-none transition-all">
                             </div>
                             <div class="space-y-2">
                                 <label class="text-[14px] text-respo-dark/50 block" data-site-text="contact.label_phone">Номер телефона</label>
-                                <input id="contact-phone" name="phone" type="tel" required autocomplete="tel" data-site-text-placeholder="contact.ph_phone" placeholder="Введите свой номер телефона" class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-dark/50 focus:border-respo-cyan outline-none transition-all">
+                                <input id="contact-phone" name="phone" type="tel" required autocomplete="tel" data-site-text-placeholder="contact.ph_phone" placeholder="Введите свой номер телефона" maxlength="80" class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-dark/50 focus:border-respo-cyan outline-none transition-all">
                             </div>
                             <div class="space-y-2">
                                 <label class="text-[14px] text-respo-dark/50 block" data-site-text="contact.label_email">Электронная почта</label>
-                                <input id="contact-email" name="email" type="email" required autocomplete="email" data-site-text-placeholder="contact.ph_email" placeholder="your@mail.ru" class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-dark/50 focus:border-respo-cyan outline-none transition-all">
+                                <input id="contact-email" name="email" type="email" required autocomplete="email" data-site-text-placeholder="contact.ph_email" placeholder="your@mail.ru" maxlength="200" class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-dark/50 focus:border-respo-cyan outline-none transition-all">
                             </div>
+                            <div data-contact-captcha-host class="hidden min-h-[100px]"></div>
+                            <p data-contact-status class="hidden text-[14px] text-center" role="status" aria-live="polite"></p>
                             <div class="pt-8">
-                                <button type="submit" class="w-full bg-respo-green text-white py-5 rounded-full text-[18px] font-medium hover:brightness-105 transition-all shadow-lg shadow-respo-green/20" data-site-text="contact.submit">
+                                <button type="submit" data-contact-submit class="w-full bg-respo-green text-white py-5 rounded-full text-[18px] font-medium hover:brightness-105 transition-all shadow-lg shadow-respo-green/20" data-site-text="contact.submit">
                                     Отправить
                                 </button>
                             </div>
@@ -771,6 +776,7 @@
 
 
     <script src="js/site-text.js?v=1"></script>
+    <script src="js/contact-form.js?v=1"></script>
     <script src="js/home-content.js?v=1"></script>
     <script src="js/main.js?v=4"></script>
 </body>

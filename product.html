@@ -141,6 +141,8 @@
                     
                     <!-- Right: Product Info -->
                     <div class="flex flex-col gap-[18px] items-start w-full max-w-[338px] pt-2">
+                        <div id="product-specs-block">
+                        <h2 id="product-specs-title" class="hidden text-[22px] md:text-[26px] font-medium text-respo-blue mb-3"></h2>
                         <ul id="product-spec-list" class="text-respo-blue text-[16px] font-normal list-disc pl-6 space-y-0.5 leading-[24px]">
                             <li>BFV IA type NC, SS304, size 25</li>
                             <li>BFV IA type NC, SS304, size 38</li>
@@ -149,7 +151,7 @@
                             <li>BFV IA type NC, SS304, size 76.1</li>
                             <li>BFV IA type NC, SS304, size 101.6</li>
                         </ul>
-                        
+                        </div>
                         <a href="#contacts"
                             class="bg-respo-cyan text-white h-12 px-[14px] rounded-full inline-flex items-center justify-center gap-2 text-[16px] font-semibold w-[298px] hover:brightness-105 transition-all mt-2">
                             <span data-site-text="product.cta_contacts">Связаться с нами</span>
@@ -163,8 +165,8 @@
                         <table class="w-full border border-respo-dark/80 text-respo-dark bg-white">
                             <thead>
                                 <tr>
-                                    <th class="w-1/2 border border-respo-dark/80 py-3 px-4 text-center text-[20px] md:text-[28px] font-medium" data-site-text="product.params_col_name">Наименование показателей</th>
-                                    <th class="w-1/2 border border-respo-dark/80 py-3 px-4 text-center text-[20px] md:text-[28px] font-medium" data-site-text="product.params_col_value">Значения</th>
+                                    <th id="product-param-label-th" class="w-1/2 border border-respo-dark/80 py-3 px-4 text-center text-[20px] md:text-[28px] font-medium" data-site-text="product.params_col_name">Наименование показателей</th>
+                                    <th id="product-param-value-th" class="w-1/2 border border-respo-dark/80 py-3 px-4 text-center text-[20px] md:text-[28px] font-medium" data-site-text="product.params_col_value">Значения</th>
                                 </tr>
                             </thead>
                             <tbody id="product-params-table-body"></tbody>
@@ -210,24 +212,39 @@
                             Остались вопросы?</h2>
                     </div>
                     <div class="flex flex-col">
-                        <form class="space-y-8">
+                        <form id="contact-form" class="relative space-y-8" data-contact-form data-yandex-smartcaptcha-sitekey="" action="#" method="post" novalidate>
+                            <div class="space-y-3 pb-2">
+                                <a href="mailto:INFO@RE-SPO.COM"
+                                    class="inline-flex items-center justify-center bg-respo-cyan text-white h-11 px-6 rounded-full text-[14px] font-medium hover:brightness-105 transition-all" data-site-text="contact.btn_email">
+                                    INFO@RE-SPO.COM
+                                </a>
+                                <a href="tel:+74959616215"
+                                    class="block text-[18px] text-respo-dark font-medium hover:text-respo-blue transition-colors" data-site-text="contact.phone">
+                                    +7 (495) 961 62 15
+                                </a>
+                            </div>
+                            <div class="absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0" style="clip: rect(0,0,0,0)" aria-hidden="true">
+                                <label>Leave blank <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+                            </div>
                             <div class="space-y-2">
                                 <label class="text-[14px] text-respo-dark/50 block" data-site-text="contact.label_name">Ваше имя</label>
-                                <input id="contact-name" name="name" type="text" required autocomplete="name" data-site-text-placeholder="contact.ph_name" placeholder="Введите свое имя"
+                                <input id="contact-name" name="name" type="text" required autocomplete="name" data-site-text-placeholder="contact.ph_name" placeholder="Введите свое имя" maxlength="200"
                                     class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-dark/50 focus:border-respo-cyan outline-none transition-all">
                             </div>
                             <div class="space-y-2">
                                 <label class="text-[14px] text-respo-dark/50 block" data-site-text="contact.label_phone">Номер телефона</label>
-                                <input id="contact-phone" name="phone" type="tel" required autocomplete="tel" data-site-text-placeholder="contact.ph_phone" placeholder="Введите свой номер телефона"
+                                <input id="contact-phone" name="phone" type="tel" required autocomplete="tel" data-site-text-placeholder="contact.ph_phone" placeholder="Введите свой номер телефона" maxlength="80"
                                     class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-dark/50 focus:border-respo-cyan outline-none transition-all">
                             </div>
                             <div class="space-y-2">
                                 <label class="text-[14px] text-respo-dark/50 block" data-site-text="contact.label_email">Электронная почта</label>
-                                <input id="contact-email" name="email" type="email" required autocomplete="email" data-site-text-placeholder="contact.ph_email" placeholder="your@mail.ru"
+                                <input id="contact-email" name="email" type="email" required autocomplete="email" data-site-text-placeholder="contact.ph_email" placeholder="your@mail.ru" maxlength="200"
                                     class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-dark/50 focus:border-respo-cyan outline-none transition-all">
                             </div>
+                            <div data-contact-captcha-host class="hidden min-h-[100px]"></div>
+                            <p data-contact-status class="hidden text-[14px] text-center" role="status" aria-live="polite"></p>
                             <div class="pt-8">
-                                <button type="submit"
+                                <button type="submit" data-contact-submit
                                     class="w-full bg-respo-green text-white py-5 rounded-full text-[18px] font-medium hover:brightness-105 transition-all shadow-lg shadow-respo-green/20" data-site-text="contact.submit">
                                     Отправить
                                 </button>
@@ -327,6 +344,7 @@
     </footer>
 
     <script src="js/site-text.js?v=1"></script>
+    <script src="js/contact-form.js?v=1"></script>
     <script src="js/carousel-strip.js?v=1"></script>
     <script src="js/product-page.js"></script>
     <script src="js/reviews.js?v=2"></script>

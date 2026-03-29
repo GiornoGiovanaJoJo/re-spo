@@ -8,8 +8,12 @@ const helmet = require('helmet');
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
+const nodemailer = require('nodemailer');
 
 const app = express();
+if (process.env.TRUST_PROXY === '1') {
+    app.set('trust proxy', 1);
+}
 const PORT = Number(process.env.PORT || 3000);
 const isProduction = process.env.NODE_ENV === 'production';
 const isAdminOpen = process.env.ADMIN_OPEN !== 'false';
@@ -35,6 +39,35 @@ function safeImageFilename(input) {
     return cleaned;
 }
 
+/** Basename from original upload name, safe for assets/ and server validation. */
+function normalizeUploadBasename(original) {
+    const raw = String(original || '').trim();
+    const base = path.basename(raw) || 'image.png';
+    const parsedExt = path.extname(base);
+    let ext = parsedExt.toLowerCase();
+    if (!IMAGE_EXT_RE.test(ext)) {
+        ext = '.png';
+    }
+    const stem = parsedExt ? path.basename(base, parsedExt) : base;
+    const sanitizedStem = stem
+        .replace(/[^a-zA-Z0-9._\-()%\s]/g, '_')
+        .replace(/_+/g, '_')
+        .replace(/^[\s._\-()]+|[\s._\-()]+$/g, '');
+    const candidate = (sanitizedStem || 'image') + ext;
+    return safeImageFilename(candidate);
+}
+
+const PRODUCT_PLACEHOLDER_PATH = 'assets/product_placeholder.png';
+const PRODUCT_PLACEHOLDER_BASENAME = 'product_placeholder.png';
+
+const CATEGORY_ID_RE = /^[a-z][a-z0-9_]{0,63}$/;
+const CATEGORY_CATALOG_MODES = new Set(['list', 'grid', 'carousel']);
+const CATEGORY_LIST_STYLES = new Set(['accordion', 'simple']);
+const CATEGORY_CARD_STYLES = new Set(['default', 'valve', 'exchanger']);
+const CATEGORY_GRID_COLS = new Set([2, 3, 4]);
+const CATEGORY_LABEL_KEYS = ['specsHeading', 'paramLabelCol', 'paramValueCol'];
+const CATEGORY_FIELD_KEYS = ['description', 'specs', 'parameters', 'gallery'];
+
 function validateProductsPayload(payload) {
     if (!payload || typeof payload !== 'object') return false;
     if (!Array.isArray(payload.categories) || !Array.isArray(payload.products)) return false;
@@ -43,7 +76,36 @@ function validateProductsPayload(payload) {
     for (const c of payload.categories) {
         if (!c || typeof c !== 'object') return false;
         if (typeof c.id !== 'string' || !c.id.trim()) return false;
+        if (!CATEGORY_ID_RE.test(c.id.trim())) return false;
         if (typeof c.name !== 'string' || !c.name.trim()) return false;
+        if (c.name.length > 200) return false;
+        if (c.display !== undefined) {
+            if (typeof c.display !== 'string' || !['list', 'grid'].includes(c.display)) return false;
+        }
+        if (c.catalogMode !== undefined && !CATEGORY_CATALOG_MODES.has(c.catalogMode)) return false;
+        if (c.listStyle !== undefined && !CATEGORY_LIST_STYLES.has(c.listStyle)) return false;
+        if (c.cardStyle !== undefined && !CATEGORY_CARD_STYLES.has(c.cardStyle)) return false;
+        if (c.gridCols !== undefined) {
+            const gc = Number(c.gridCols);
+            if (!Number.isInteger(gc) || !CATEGORY_GRID_COLS.has(gc)) return false;
+        }
+        if (c.showCounter !== undefined && typeof c.showCounter !== 'boolean') return false;
+        if (c.sortOrder !== undefined) {
+            if (typeof c.sortOrder !== 'number' || !Number.isFinite(c.sortOrder)) return false;
+        }
+        if (c.fields !== undefined) {
+            if (!c.fields || typeof c.fields !== 'object' || Array.isArray(c.fields)) return false;
+            for (const k of CATEGORY_FIELD_KEYS) {
+                if (c.fields[k] !== undefined && typeof c.fields[k] !== 'boolean') return false;
+            }
+        }
+        if (c.labels !== undefined) {
+            if (!c.labels || typeof c.labels !== 'object' || Array.isArray(c.labels)) return false;
+            for (const k of CATEGORY_LABEL_KEYS) {
+                const v = c.labels[k];
+                if (v !== undefined && (typeof v !== 'string' || v.length > 200)) return false;
+            }
+        }
         categoryIds.add(c.id);
     }
 
@@ -150,6 +212,107 @@ function validateSiteTextPayload(payload) {
     return true;
 }
 
+const CONTACT_MAIL_TO_DEFAULT = 'info@re-spo.com';
+const CONTACT_NAME_MAX = 200;
+const CONTACT_PHONE_MAX = 80;
+const CONTACT_EMAIL_MAX = 200;
+const CONTACT_RATE_WINDOW_MS = 15 * 60 * 1000;
+const CONTACT_RATE_MAX = 10;
+const CONTACT_EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const contactRateByIp = new Map();
+
+function getClientIp(req) {
+    const xf = req.headers['x-forwarded-for'];
+    if (typeof xf === 'string' && xf.trim()) {
+        return xf.split(',')[0].trim().slice(0, 64);
+    }
+    const raw = req.socket?.remoteAddress || '';
+    return String(raw).replace(/^::ffff:/, '').slice(0, 64);
+}
+
+function contactRateAllow(ip) {
+    const safeIp = ip || 'unknown';
+    const now = Date.now();
+    const list = contactRateByIp.get(safeIp) || [];
+    const fresh = list.filter((t) => now - t < CONTACT_RATE_WINDOW_MS);
+    if (fresh.length >= CONTACT_RATE_MAX) return false;
+    fresh.push(now);
+    contactRateByIp.set(safeIp, fresh);
+    return true;
+}
+
+function escapeHtmlContact(s) {
+    return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+async function verifySmartCaptcha(token, ip) {
+    const secret = process.env.YANDEX_SMARTCAPTCHA_SECRET;
+    if (!secret || !String(secret).trim()) {
+        return { ok: true };
+    }
+    if (!token || !String(token).trim()) {
+        return { ok: false, code: 'captcha' };
+    }
+    const params = new URLSearchParams({
+        secret: String(secret).trim(),
+        token: String(token).trim(),
+        ip: ip || ''
+    });
+    try {
+        const res = await fetch('https://smartcaptcha.yandexcloud.net/validate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString()
+        });
+        const data = await res.json().catch(() => ({}));
+        if (data.status === 'ok') return { ok: true };
+        return { ok: false, code: 'captcha' };
+    } catch (e) {
+        return { ok: false, code: 'captcha_verify_error' };
+    }
+}
+
+async function sendContactEmail({ name, phone, email }) {
+    const user = process.env.CONTACT_SMTP_USER;
+    const pass = process.env.CONTACT_SMTP_PASS;
+    const toRaw = (process.env.CONTACT_MAIL_TO || CONTACT_MAIL_TO_DEFAULT).trim();
+    if (!user || !pass) {
+        return { ok: false, error: 'CONTACT_SMTP_USER / CONTACT_SMTP_PASS not set' };
+    }
+
+    const host = process.env.CONTACT_SMTP_HOST || 'smtp.yandex.ru';
+    const port = Number(process.env.CONTACT_SMTP_PORT || 465);
+    const secure = process.env.CONTACT_SMTP_SECURE !== 'false' && port === 465;
+
+    const transporter = nodemailer.createTransport({
+        host,
+        port,
+        secure,
+        auth: { user, pass }
+    });
+
+    const safeName = name.slice(0, CONTACT_NAME_MAX);
+    const safePhone = phone.slice(0, CONTACT_PHONE_MAX);
+    const safeEmail = email.slice(0, CONTACT_EMAIL_MAX);
+
+    await transporter.sendMail({
+        from: `"RE-SPO сайт" <${user}>`,
+        to: toRaw,
+        replyTo: safeEmail,
+        subject: `Заявка с сайта: ${safeName}`,
+        text: `Имя: ${safeName}\nТелефон: ${safePhone}\nEmail: ${safeEmail}\n`,
+        html: `<p><b>Имя:</b> ${escapeHtmlContact(safeName)}</p><p><b>Телефон:</b> ${escapeHtmlContact(
+            safePhone
+        )}</p><p><b>Email:</b> ${escapeHtmlContact(safeEmail)}</p>`
+    });
+    return { ok: true };
+}
+
 function getPublicSiteUrl(req) {
     const envSiteUrl = String(process.env.SITE_URL || '').trim();
     const origin = envSiteUrl || `${req.protocol}://${req.get('host')}` || DEFAULT_SITE_URL;
@@ -224,7 +387,8 @@ const cspDirectives = {
         "'unsafe-inline'",
         'https://cdn.tailwindcss.com',
         'https://mc.yandex.ru',
-        'https://yastatic.net'
+        'https://yastatic.net',
+        'https://smartcaptcha.yandexcloud.net'
     ],
     styleSrc: [
         "'self'",
@@ -234,8 +398,8 @@ const cspDirectives = {
         'https://db.onlinewebfonts.com'
     ],
     imgSrc: ["'self'", 'data:', 'https:'],
-    connectSrc: ["'self'", 'https://mc.yandex.ru', 'wss://mc.yandex.ru'],
-    frameSrc: ["'self'", 'https://mc.yandex.ru'],
+    connectSrc: ["'self'", 'https://mc.yandex.ru', 'wss://mc.yandex.ru', 'https://smartcaptcha.yandexcloud.net'],
+    frameSrc: ["'self'", 'https://mc.yandex.ru', 'https://smartcaptcha.yandexcloud.net'],
     fontSrc: [
         "'self'",
         'https://fonts.gstatic.com',
@@ -303,8 +467,20 @@ const upload = multer({
     storage: multer.diskStorage({
         destination: (req, file, cb) => cb(null, assetsDir),
         filename: (req, file, cb) => {
-            const requested = safeImageFilename(req.body.targetFilename || file.originalname);
+            const bodyTf = typeof req.body?.targetFilename === 'string' ? req.body.targetFilename.trim() : '';
+            let requested = bodyTf ? safeImageFilename(bodyTf) : null;
+            if (!requested) {
+                requested = normalizeUploadBasename(file.originalname);
+            }
             if (!requested) return cb(new Error('Invalid target filename'));
+            const fp = path.join(assetsDir, requested);
+            try {
+                if (fs.existsSync(fp) && fs.lstatSync(fp).isFile()) {
+                    fs.unlinkSync(fp);
+                }
+            } catch (e) {
+                return cb(e);
+            }
             cb(null, requested);
         }
     }),
@@ -569,6 +745,85 @@ app.post('/api/upload', adminAuth, (req, res, next) => {
     res.json({ success: true, filename: req.file.filename });
 });
 
+app.post('/api/clear-section-images', adminAuth, (req, res) => {
+    try {
+        const section = req.body?.section;
+        if (section === 'products') {
+            if (!fs.existsSync(productsFile)) {
+                return res.status(404).json({ error: 'products.json not found' });
+            }
+            const raw = fs.readFileSync(productsFile, 'utf8');
+            const parsed = JSON.parse(raw);
+            if (!validateProductsPayload(parsed)) {
+                return res.status(500).json({ error: 'Invalid products.json' });
+            }
+            const toDelete = new Set();
+            for (const p of parsed.products) {
+                const main = safeImageFilename(String(p.image || '').replace(/^assets\//, ''));
+                if (main && main !== PRODUCT_PLACEHOLDER_BASENAME) toDelete.add(main);
+                if (Array.isArray(p.images)) {
+                    for (const im of p.images) {
+                        const bn = safeImageFilename(String(im).replace(/^assets\//, ''));
+                        if (bn && bn !== PRODUCT_PLACEHOLDER_BASENAME) toDelete.add(bn);
+                    }
+                }
+            }
+            for (const fn of toDelete) {
+                const fp = path.join(assetsDir, fn);
+                if (fs.existsSync(fp) && fs.lstatSync(fp).isFile()) fs.unlinkSync(fp);
+            }
+            for (const p of parsed.products) {
+                p.image = PRODUCT_PLACEHOLDER_PATH;
+                delete p.images;
+            }
+            fs.writeFileSync(productsFile, JSON.stringify(parsed, null, 2), 'utf8');
+            return res.json({ success: true, deletedFiles: toDelete.size });
+        }
+        if (section === 'certificates') {
+            if (!fs.existsSync(certificatesFile)) {
+                return res.status(404).json({ error: 'certificates.json not found' });
+            }
+            const raw = fs.readFileSync(certificatesFile, 'utf8');
+            const parsed = JSON.parse(raw);
+            if (!validateCertificatesPayload(parsed)) {
+                return res.status(500).json({ error: 'Invalid certificates.json' });
+            }
+            const toDelete = new Set();
+            for (const c of parsed.certificates) {
+                if (!c.image) continue;
+                const bn = safeImageFilename(String(c.image).replace(/^assets\//, ''));
+                if (bn) toDelete.add(bn);
+            }
+            for (const fn of toDelete) {
+                const fp = path.join(assetsDir, fn);
+                if (fs.existsSync(fp) && fs.lstatSync(fp).isFile()) fs.unlinkSync(fp);
+            }
+            for (const c of parsed.certificates) {
+                c.image = '';
+            }
+            fs.writeFileSync(certificatesFile, JSON.stringify(parsed, null, 2), 'utf8');
+            return res.json({ success: true, deletedFiles: toDelete.size });
+        }
+        if (section === 'media') {
+            const files = fs.readdirSync(assetsDir);
+            let n = 0;
+            for (const file of files) {
+                const filename = safeImageFilename(file);
+                if (!filename) continue;
+                const filepath = path.join(assetsDir, filename);
+                if (fs.lstatSync(filepath).isFile()) {
+                    fs.unlinkSync(filepath);
+                    n += 1;
+                }
+            }
+            return res.json({ success: true, deletedFiles: n });
+        }
+        return res.status(400).json({ error: 'Invalid section' });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 app.delete('/api/images/:filename', adminAuth, (req, res) => {
     const filename = safeImageFilename(req.params.filename);
     if (!filename) return res.status(400).json({ error: 'Invalid filename' });
@@ -602,6 +857,56 @@ app.delete('/api/images', adminAuth, (req, res) => {
 app.post('/api/clear-cache', adminAuth, (req, res) => {
     res.setHeader('Clear-Site-Data', '"cache"');
     res.json({ success: true, message: 'Cache clear signal sent to browser' });
+});
+
+app.post('/api/contact', async (req, res) => {
+    try {
+        const ip = getClientIp(req);
+        if (!contactRateAllow(ip)) {
+            return res.status(429).json({ error: 'Слишком много заявок. Попробуйте позже.' });
+        }
+
+        const body = req.body || {};
+        if (body.website && String(body.website).trim()) {
+            return res.json({ success: true, message: 'Спасибо!' });
+        }
+
+        const name = String(body.name || '').trim();
+        const phone = String(body.phone || '').trim();
+        const email = String(body.email || '').trim();
+        const smartToken = body.smartToken != null ? String(body.smartToken).trim() : '';
+
+        if (!name || name.length > CONTACT_NAME_MAX) {
+            return res.status(400).json({ error: 'Укажите имя.' });
+        }
+        if (!phone || phone.length > CONTACT_PHONE_MAX) {
+            return res.status(400).json({ error: 'Укажите телефон.' });
+        }
+        if (!email || email.length > CONTACT_EMAIL_MAX || !CONTACT_EMAIL_RE.test(email)) {
+            return res.status(400).json({ error: 'Укажите корректный email.' });
+        }
+
+        const cap = await verifySmartCaptcha(smartToken, ip);
+        if (!cap.ok) {
+            return res.status(400).json({
+                error: 'Проверка SmartCaptcha не пройдена. Обновите страницу и попробуйте снова.'
+            });
+        }
+
+        const mail = await sendContactEmail({ name, phone, email });
+        if (!mail.ok) {
+            console.error('[contact]', mail.error);
+            return res.status(503).json({
+                error: 'Отправка почты временно недоступна. Напишите на info@re-spo.com или позвоните.',
+                code: 'MAIL_NOT_CONFIGURED'
+            });
+        }
+
+        res.json({ success: true, message: 'Спасибо! Заявка отправлена.' });
+    } catch (e) {
+        console.error('[contact]', e);
+        res.status(500).json({ error: 'Не удалось отправить заявку.' });
+    }
 });
 
 app.get('*', (req, res) => {

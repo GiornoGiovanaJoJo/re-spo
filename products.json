@@ -1,19 +1,70 @@
 {
   "categories": [
     {
-      "id": "equipment",
-      "name": "Оборудование",
-      "display": "list"
-    },
-    {
       "id": "valves",
       "name": "Клапана",
-      "display": "grid"
+      "display": "grid",
+      "sortOrder": 10,
+      "catalogMode": "carousel",
+      "listStyle": "simple",
+      "cardStyle": "valve",
+      "gridCols": 2,
+      "showCounter": false,
+      "fields": {
+        "description": true,
+        "specs": true,
+        "parameters": false,
+        "gallery": false
+      },
+      "labels": {
+        "specsHeading": "",
+        "paramLabelCol": "",
+        "paramValueCol": ""
+      }
+    },
+    {
+      "id": "equipment",
+      "name": "Оборудование",
+      "display": "list",
+      "sortOrder": 20,
+      "catalogMode": "list",
+      "listStyle": "accordion",
+      "cardStyle": "default",
+      "gridCols": 4,
+      "showCounter": true,
+      "fields": {
+        "description": false,
+        "specs": true,
+        "parameters": false,
+        "gallery": false
+      },
+      "labels": {
+        "specsHeading": "",
+        "paramLabelCol": "",
+        "paramValueCol": ""
+      }
     },
     {
       "id": "heat_exchangers",
       "name": "Теплообменники",
-      "display": "grid"
+      "display": "grid",
+      "sortOrder": 30,
+      "catalogMode": "carousel",
+      "listStyle": "simple",
+      "cardStyle": "exchanger",
+      "gridCols": 3,
+      "showCounter": true,
+      "fields": {
+        "description": false,
+        "specs": true,
+        "parameters": true,
+        "gallery": false
+      },
+      "labels": {
+        "specsHeading": "",
+        "paramLabelCol": "Наименование показателей",
+        "paramValueCol": "Значения"
+      }
     }
   ],
   "products": [

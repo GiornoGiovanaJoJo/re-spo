@@ -83,6 +83,25 @@
             </div>
         </div>
 
+        <section id="admin-instructions-panel" class="mb-6 rounded-xl border-2 border-amber-400/90 bg-gradient-to-br from-amber-50 to-orange-50/90 shadow-md ring-1 ring-amber-200/60" aria-labelledby="admin-instructions-heading">
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 px-4 py-3 border-b border-amber-200/80 bg-amber-100/50 rounded-t-xl">
+                <div>
+                    <h2 id="admin-instructions-heading" class="text-lg font-bold text-amber-950 tracking-tight">Инструкция для администратора</h2>
+                    <p class="text-xs text-amber-900/80 mt-0.5">Кратко: как пользоваться панелью. Полный дубликат — в файле <code class="text-[11px] bg-white/80 px-1 rounded border border-amber-200">admin-instructions.txt</code> в корне проекта.</p>
+                </div>
+            </div>
+            <div class="px-4 py-3 max-h-[min(52vh,420px)] overflow-y-auto soft-scroll text-sm text-amber-950/95 leading-relaxed space-y-3">
+                <p><strong>Вход.</strong> При сохранении или загрузке браузер может запросить логин и пароль; они запоминаются в этом браузере.</p>
+                <p><strong>Общее.</strong> «Очистить кэш сайта» — после крупных правок, если на сайте не видно изменений. «На сайт» — на главную. «Последнее действие» — что сделано последним.</p>
+                <p><strong>Медиафайлы.</strong> Слоты с фиксированными именами: новый файл подставляется под имя слота и заменяет старый. Есть поиск и очистка раздела.</p>
+                <p><strong>Товары и категории.</strong> Категории задают секции на <code class="text-xs bg-white/70 px-1 rounded">/production</code> и порядок. ID категории — латиница, цифры и «_», с буквы; после появления товаров ID не меняйте. «+ Категория» — настройки отображения и полей товара; «Сохранить на сервер» пишет категории и товары одним запросом. Категорию без товаров можно удалить; с товарами — сначала переназначьте категорию. В форме товара поля могут скрываться по настройке категории.</p>
+                <p><strong>Сертификаты и отзывы.</strong> Редактирование списков; отзывы на сайте ограничены по количеству на странице производства.</p>
+                <p><strong>Тексты.</strong> Редактор <code class="text-xs bg-white/70 px-1 rounded">site-text.json</code>: ключи, фильтр, сохранение на сервер. На сайте — атрибуты <code class="text-xs bg-white/70 px-1 rounded">data-site-text</code>.</p>
+                <p><strong>Главная.</strong> Четыре подписи плиток «Технологии».</p>
+                <p><strong>Если не сохраняется:</strong> проверьте авторизацию, текст ошибки во всплывающем уведомлении, затем попробуйте очистить кэш.</p>
+            </div>
+        </section>
+
         <div class="flex flex-wrap gap-2 mb-6 bg-gray-100 p-1 rounded-lg">
             <button id="tab-media" data-tab="media" class="px-4 py-2 rounded-md text-sm font-medium transition-all bg-white shadow-sm text-blue-600">Медиафайлы</button>
             <button id="tab-products" data-tab="products" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Товары (Каталог)</button>
@@ -98,10 +117,10 @@
                 <h2 class="text-xl font-bold text-gray-800">Менеджер изображений</h2>
                 <div class="flex items-center gap-2">
                     <input id="media-search" type="search" placeholder="Поиск по имени файла..." class="w-full md:w-72 border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
-                    <button id="btn-delete-all-images" class="text-red-600 hover:text-red-700 text-sm font-medium whitespace-nowrap">Удалить все фото</button>
+                    <button id="btn-delete-all-images" type="button" class="text-red-600 hover:text-red-700 text-sm font-medium whitespace-nowrap">Очистить все фото раздела</button>
                 </div>
             </div>
-            <p class="text-gray-600 mb-6 bg-blue-50 p-4 rounded-lg text-sm">Здесь отображаются изображения, которые используются на сайте. Если вы добавили новый товар, загрузите его фото сюда.</p>
+            <p class="text-gray-600 mb-6 bg-blue-50 p-4 rounded-lg text-sm">Слоты с фиксированными именами (как в вёрстке сайта): файл сохраняется под именем слота и <strong>перезаписывает</strong> предыдущий. В товарах и сертификатах имя файла на диске берётся из <strong>имени загружаемого файла</strong> (латиница и безопасные символы).</p>
             <div id="images-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 soft-scroll">
                 <!-- Loaded via JS -->
             </div>
@@ -111,11 +130,42 @@
         <div id="content-products" class="hidden">
             <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
                 <h2 class="text-xl font-bold text-gray-800">Управление товарами</h2>
-                <div class="flex items-center gap-2">
+                <div class="flex flex-wrap items-center gap-2">
                     <input id="products-search" type="search" placeholder="Поиск товара..." class="w-full md:w-64 border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                    <button id="btn-clear-section-products" type="button" class="text-red-600 hover:text-red-800 text-sm font-medium whitespace-nowrap border border-red-200 rounded-md px-3 py-2 bg-red-50/80">
+                        Очистить фото раздела
+                    </button>
                     <button id="btn-add-product" class="bg-green-600 text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-green-700 transition-colors shadow-sm whitespace-nowrap">
                         + Добавить товар
                     </button>
+                </div>
+            </div>
+
+            <div class="mb-6 border border-slate-200 rounded-xl p-4 bg-slate-50/80">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Категории каталога</h3>
+                        <p class="text-xs text-gray-600 mt-1 max-w-3xl">Секции на странице <code class="bg-white px-1 rounded border">/production</code> и порядок блоков берутся из этого списка. ID — латиница и <code class="bg-white px-1 rounded border">_</code>, без пробелов.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 shrink-0">
+                        <button type="button" id="btn-save-categories-disk" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 shadow-sm">Сохранить на сервер</button>
+                        <button type="button" id="btn-add-category" class="bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-700 shadow-sm">+ Категория</button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto border border-slate-200 rounded-lg bg-white">
+                    <table class="min-w-full text-sm">
+                        <thead>
+                            <tr class="text-left text-slate-500 border-b border-slate-200 bg-slate-50">
+                                <th class="py-2.5 px-3 font-medium">Порядок</th>
+                                <th class="py-2.5 px-3 font-medium">ID</th>
+                                <th class="py-2.5 px-3 font-medium">Название</th>
+                                <th class="py-2.5 px-3 font-medium">В каталоге</th>
+                                <th class="py-2.5 px-3 font-medium">Карточка</th>
+                                <th class="py-2.5 px-3 font-medium text-right">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categories-table-body" class="divide-y divide-slate-100"></tbody>
+                    </table>
                 </div>
             </div>
             
@@ -140,8 +190,11 @@
         <div id="content-certificates" class="hidden">
             <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
                 <h2 class="text-xl font-bold text-gray-800">Управление сертификатами</h2>
-                <div class="flex items-center gap-2">
+                <div class="flex flex-wrap items-center gap-2">
                     <input id="certificates-search" type="search" placeholder="Поиск сертификата..." class="w-full md:w-64 border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                    <button id="btn-clear-section-certificates" type="button" class="text-red-600 hover:text-red-800 text-sm font-medium whitespace-nowrap border border-red-200 rounded-md px-3 py-2 bg-red-50/80">
+                        Очистить фото раздела
+                    </button>
                     <button id="btn-add-certificate" class="bg-green-600 text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-green-700 transition-colors shadow-sm whitespace-nowrap">
                         + Добавить сертификат
                     </button>
@@ -260,29 +313,32 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Имя файла изображения (в assets/)</label>
-                    <input type="text" id="prod-image" placeholder="example.png" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
-                    <p class="text-[10px] text-gray-400 mt-1">Загрузите файл во вкладке "Медиафайлы" и вставьте его имя здесь.</p>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Имя файла в assets/ (подставляется при загрузке)</label>
+                    <input type="text" id="prod-image" placeholder="product_placeholder.png" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                    <p class="text-[10px] text-gray-400 mt-1">При нажатии «Загрузить» имя берётся из файла (кириллица и лишние символы заменяются). Файл с тем же именем на сервере будет заменён.</p>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Или загрузите фото прямо здесь</label>
-                    <div class="flex gap-2">
-                        <input type="file" id="prod-image-file" accept="image/*,.tif,.tiff" class="flex-1 border rounded-md px-3 py-2 text-sm">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Загрузить фото</label>
+                    <div class="flex flex-wrap gap-2">
+                        <input type="file" id="prod-image-file" accept="image/*,.tif,.tiff" class="flex-1 min-w-[140px] border rounded-md px-3 py-2 text-sm">
                         <button type="button" id="btn-upload-product-image" class="bg-blue-50 text-blue-700 px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-100 transition-colors">
                             Загрузить
+                        </button>
+                        <button type="button" id="btn-clear-product-modal-image" class="border border-red-200 text-red-700 bg-red-50 px-4 py-2 rounded-md text-sm font-semibold hover:bg-red-100 transition-colors">
+                            Очистить фото
                         </button>
                     </div>
                     <p id="prod-image-upload-status" class="text-[11px] text-gray-500 mt-1"></p>
                 </div>
-                <div>
+                <div id="product-field-description">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Краткое описание (для карточки)</label>
                     <textarea id="prod-description" rows="2" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Короткое описание товара"></textarea>
                 </div>
-                <div>
+                <div id="product-field-specs">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Характеристики (по одной в строке)</label>
                     <textarea id="prod-specs" rows="5" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Параметр 1&#10;Параметр 2&#10;Параметр 3"></textarea>
                 </div>
-                <div>
+                <div id="product-field-params">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Таблица параметров (для теплообменников)</label>
                     <textarea id="prod-params" rows="5" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="длина|974мм&#10;ширина|300мм&#10;высота|150мм"></textarea>
                     <p class="text-[10px] text-gray-400 mt-1">Формат: одна строка = "Показатель|Значение". Если заполнено, на странице товара показывается таблица параметров.</p>
@@ -299,6 +355,90 @@
         </div>
     </div>
 
+    <!-- Category Modal -->
+    <div id="category-modal" role="dialog" aria-modal="true" aria-labelledby="category-modal-title" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[100] p-3 md:p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-5 md:p-8 max-h-[90vh] overflow-y-auto soft-scroll">
+            <h3 id="category-modal-title" class="text-2xl font-bold mb-6">Категория</h3>
+            <form id="category-form" class="space-y-4">
+                <input type="hidden" id="cat-edit-original-id" value="">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-id">ID (латиница, _)</label>
+                    <input type="text" id="cat-id" required maxlength="64" pattern="[a-z][a-z0-9_]{0,63}" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none font-mono text-sm" placeholder="my_category">
+                    <p class="text-[10px] text-gray-400 mt-1">После создания товаров с этой категорией ID лучше не менять.</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-name">Название на сайте</label>
+                    <input type="text" id="cat-name" required maxlength="200" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Заголовок секции в каталоге">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-sort-order">Порядок (меньше — выше)</label>
+                    <input type="number" id="cat-sort-order" step="1" value="0" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-catalog-mode">Отображение в каталоге</label>
+                    <select id="cat-catalog-mode" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="carousel">Карусель</option>
+                        <option value="grid">Сетка</option>
+                        <option value="list">Список</option>
+                    </select>
+                </div>
+                <div id="cat-list-style-wrap">
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-list-style">Стиль списка</label>
+                    <select id="cat-list-style" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="simple">Обычный</option>
+                        <option value="accordion">Аккордеон (как «Оборудование»)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-card-style">Вид карточки (сетка / карусель)</label>
+                    <select id="cat-card-style" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="default">Стандарт</option>
+                        <option value="valve">Компактный (клапана)</option>
+                        <option value="exchanger">Теплообменник</option>
+                    </select>
+                </div>
+                <div id="cat-grid-cols-wrap">
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-grid-cols">Колонки сетки (только режим «Сетка»)</label>
+                    <select id="cat-grid-cols" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="cat-show-counter" class="rounded border-gray-300">
+                    <label for="cat-show-counter" class="text-sm text-gray-700">Показывать блок «Счётчик» под категорией</label>
+                </div>
+                <fieldset class="border border-slate-200 rounded-lg p-3 space-y-2">
+                    <legend class="text-sm font-medium text-gray-800 px-1">Поля товара</legend>
+                    <p class="text-[10px] text-gray-500 mb-2">Галерея — несколько фото на странице товара (массив <code class="text-[10px]">images</code> в JSON).</p>
+                    <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="cat-f-desc" class="rounded border-gray-300" checked> Описание в карточке и в форме</label>
+                    <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="cat-f-specs" class="rounded border-gray-300" checked> Характеристики (список)</label>
+                    <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="cat-f-params" class="rounded border-gray-300" checked> Таблица параметров</label>
+                    <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="cat-f-gallery" class="rounded border-gray-300" checked> Галерея на странице товара</label>
+                </fieldset>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-l-specs">Заголовок над характеристиками (страница товара, необязательно)</label>
+                    <input type="text" id="cat-l-specs" maxlength="200" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Пусто — без заголовка">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-l-pl">Таблица: колонка показателей</label>
+                        <input type="text" id="cat-l-pl" maxlength="200" class="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="По умолчанию из текстов сайта">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-l-pv">Таблица: колонка значений</label>
+                        <input type="text" id="cat-l-pv" maxlength="200" class="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="По умолчанию из текстов сайта">
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-4 sticky bottom-0 bg-white/95 pb-1">
+                    <button type="button" id="btn-close-category-modal" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">Отмена</button>
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors shadow-sm">Сохранить категорию</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Certificate Modal -->
     <div id="certificate-modal" role="dialog" aria-modal="true" aria-labelledby="certificate-modal-title" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[100] p-3 md:p-4">
         <div class="bg-white rounded-xl shadow-2xl max-w-xl w-full p-5 md:p-8 max-h-[90vh] overflow-y-auto soft-scroll">
@@ -310,15 +450,19 @@
                     <input type="text" id="cert-title" required class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Имя файла изображения (в assets/)</label>
-                    <input type="text" id="cert-image" placeholder="certificate.png" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Имя файла в assets/ (подставляется при загрузке)</label>
+                    <input type="text" id="cert-image" placeholder="пусто — без картинки" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                    <p class="text-[10px] text-gray-400 mt-1">Имя формируется из загружаемого файла; совпадение имени перезаписывает старый файл.</p>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Или загрузите изображение сертификата</label>
-                    <div class="flex gap-2">
-                        <input type="file" id="cert-image-file" accept="image/*,.tif,.tiff" class="flex-1 border rounded-md px-3 py-2 text-sm">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Загрузить изображение</label>
+                    <div class="flex flex-wrap gap-2">
+                        <input type="file" id="cert-image-file" accept="image/*,.tif,.tiff" class="flex-1 min-w-[140px] border rounded-md px-3 py-2 text-sm">
                         <button type="button" id="btn-upload-certificate-image" class="bg-blue-50 text-blue-700 px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-100 transition-colors">
                             Загрузить
+                        </button>
+                        <button type="button" id="btn-clear-cert-modal-image" class="border border-red-200 text-red-700 bg-red-50 px-4 py-2 rounded-md text-sm font-semibold hover:bg-red-100 transition-colors">
+                            Очистить фото
                         </button>
                     </div>
                     <p id="cert-image-upload-status" class="text-[11px] text-gray-500 mt-1"></p>
@@ -368,6 +512,7 @@
         let siteTextStrings = {};
         const SITE_TEXT_KEY_RE = /^[a-z][a-z0-9_.-]{0,100}$/i;
         const FALLBACK_IMG = 'https://via.placeholder.com/40?text=?';
+        const CATEGORY_ID_RE_ADMIN = /^[a-z][a-z0-9_]{0,63}$/;
         const ADMIN_AUTH_STORAGE_KEY = 'respo_admin_basic_auth';
         let currentTab = 'media';
 
@@ -450,14 +595,6 @@
             return retryResponse;
         }
 
-        function sanitizeFilename(value) {
-            return String(value || '')
-                .normalize('NFKD')
-                .replace(/[^\w.\-]+/g, '_')
-                .replace(/_+/g, '_')
-                .replace(/^_+|_+$/g, '');
-        }
-
         function parseParamsRows(raw) {
             return String(raw || '')
                 .split('\n')
@@ -497,12 +634,8 @@
             }
 
             const file = fileInput.files[0];
-            const cleanedOriginal = sanitizeFilename(file.name);
-            const targetFilename = `${Date.now()}_${cleanedOriginal || 'product_image.png'}`;
-
             const formData = new FormData();
             formData.append('image', file);
-            formData.append('targetFilename', targetFilename);
 
             status.textContent = 'Загружаем...';
             status.className = 'text-[11px] text-gray-500 mt-1';
@@ -514,9 +647,10 @@
                     throw new Error(error.error || 'Upload failed');
                 }
                 const data = await res.json();
-                const finalName = data.filename || targetFilename;
+                const finalName = data.filename;
+                if (!finalName) throw new Error('Сервер не вернул имя файла');
                 document.getElementById('prod-image').value = finalName;
-                status.textContent = `Файл загружен: ${finalName}`;
+                status.textContent = `Сохранено как ${finalName} (имя из вашего файла)`;
                 status.className = 'text-[11px] text-green-600 mt-1';
                 fileInput.value = '';
             } catch (err) {
@@ -535,12 +669,8 @@
             }
 
             const file = fileInput.files[0];
-            const cleanedOriginal = sanitizeFilename(file.name);
-            const targetFilename = `${Date.now()}_${cleanedOriginal || 'certificate_image.png'}`;
-
             const formData = new FormData();
             formData.append('image', file);
-            formData.append('targetFilename', targetFilename);
 
             status.textContent = 'Загружаем...';
             status.className = 'text-[11px] text-gray-500 mt-1';
@@ -552,14 +682,114 @@
                     throw new Error(error.error || 'Upload failed');
                 }
                 const data = await res.json();
-                const finalName = data.filename || targetFilename;
+                const finalName = data.filename;
+                if (!finalName) throw new Error('Сервер не вернул имя файла');
                 document.getElementById('cert-image').value = finalName;
-                status.textContent = `Файл загружен: ${finalName}`;
+                status.textContent = `Сохранено как ${finalName} (имя из вашего файла)`;
                 status.className = 'text-[11px] text-green-600 mt-1';
                 fileInput.value = '';
             } catch (err) {
                 status.textContent = `Ошибка загрузки: ${err.message}`;
                 status.className = 'text-[11px] text-red-500 mt-1';
+            }
+        }
+
+        async function clearProductModalImage() {
+            const inp = document.getElementById('prod-image');
+            const fileInput = document.getElementById('prod-image-file');
+            const status = document.getElementById('prod-image-upload-status');
+            const raw = String(inp.value || '').trim();
+            const base = raw.replace(/^assets\//, '');
+            if (!base || base === 'product_placeholder.png') {
+                inp.value = 'product_placeholder.png';
+                fileInput.value = '';
+                status.textContent = 'Установлена заглушка product_placeholder.png';
+                status.className = 'text-[11px] text-gray-500 mt-1';
+                return;
+            }
+            if (!confirm(`Удалить файл «${base}» с сервера и сбросить на заглушку?`)) return;
+            try {
+                const res = await authorizedFetch(`/api/images/${encodeURIComponent(base)}`, { method: 'DELETE' });
+                if (!res.ok) {
+                    const errBody = await res.json().catch(() => ({}));
+                    throw new Error(errBody.error || `HTTP ${res.status}`);
+                }
+                inp.value = 'product_placeholder.png';
+                fileInput.value = '';
+                status.textContent = 'Файл удалён, заглушка product_placeholder.png';
+                status.className = 'text-[11px] text-green-600 mt-1';
+                markLastAction('Удалено изображение товара (модалка)');
+            } catch (err) {
+                status.textContent = `Ошибка: ${err.message}`;
+                status.className = 'text-[11px] text-red-500 mt-1';
+            }
+        }
+
+        async function clearCertificateModalImage() {
+            const inp = document.getElementById('cert-image');
+            const fileInput = document.getElementById('cert-image-file');
+            const status = document.getElementById('cert-image-upload-status');
+            const raw = String(inp.value || '').trim();
+            const base = raw.replace(/^assets\//, '');
+            if (!base) {
+                fileInput.value = '';
+                status.textContent = 'Поле изображения уже пустое';
+                status.className = 'text-[11px] text-gray-500 mt-1';
+                return;
+            }
+            if (!confirm(`Удалить файл «${base}» с сервера и очистить поле?`)) return;
+            try {
+                const res = await authorizedFetch(`/api/images/${encodeURIComponent(base)}`, { method: 'DELETE' });
+                if (!res.ok && res.status !== 404) {
+                    const errBody = await res.json().catch(() => ({}));
+                    throw new Error(errBody.error || `HTTP ${res.status}`);
+                }
+                inp.value = '';
+                fileInput.value = '';
+                status.textContent = 'Файл удалён, поле очищено';
+                status.className = 'text-[11px] text-green-600 mt-1';
+                markLastAction('Удалено изображение сертификата (модалка)');
+            } catch (err) {
+                status.textContent = `Ошибка: ${err.message}`;
+                status.className = 'text-[11px] text-red-500 mt-1';
+            }
+        }
+
+        async function clearSectionImages(section) {
+            const messages = {
+                media:
+                    'Удалить ВСЕ файлы из папки assets/? Потребуется заново загрузить логотипы и обязательные картинки.',
+                products:
+                    'Удалить все файлы изображений товаров (кроме заглушки) и сбросить каждый товар на product_placeholder.png?',
+                certificates: 'Удалить все файлы изображений сертификатов и очистить поля «картинка» в данных?'
+            };
+            if (!messages[section] || !confirm(messages[section])) return;
+            try {
+                const res = await authorizedFetch('/api/clear-section-images', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ section })
+                });
+                if (!res.ok) {
+                    const errBody = await res.json().catch(() => ({}));
+                    throw new Error(errBody.error || `HTTP ${res.status}`);
+                }
+                const data = await res.json().catch(() => ({}));
+                const n = typeof data.deletedFiles === 'number' ? data.deletedFiles : null;
+                showToast(
+                    section === 'media'
+                        ? 'Медиафайлы раздела очищены'
+                        : section === 'products'
+                          ? `Фото товаров очищены${n !== null ? ` (${n} файлов)` : ''}`
+                          : `Фото сертификатов очищены${n !== null ? ` (${n} файлов)` : ''}`,
+                    section === 'media' ? 'warning' : 'success'
+                );
+                markLastAction(`Очищен раздел: ${section}`);
+                if (section === 'products') await loadProducts();
+                else if (section === 'certificates') await loadCertificates();
+                else loadImages();
+            } catch (err) {
+                showToast(err.message || 'Ошибка очистки раздела', 'error');
             }
         }
 
@@ -725,8 +955,9 @@
 
             const filter = String(document.getElementById('media-search')?.value || '').toLowerCase().trim();
             requiredImages
-            .filter((img) => !filter || String(img.filename || '').toLowerCase().includes(filter))
-            .forEach((img, index) => {
+                .map((img, originalIndex) => ({ img, originalIndex }))
+                .filter(({ img }) => !filter || String(img.filename || '').toLowerCase().includes(filter))
+                .forEach(({ img, originalIndex: index }) => {
                 const div = document.createElement('div');
                 div.className = 'flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg hover:shadow-md transition-shadow bg-gray-50';
                 
@@ -790,12 +1021,8 @@
             } catch (err) { showToast('Ошибка сети', 'error'); }
         }
 
-        async function deleteAllImages() {
-            if (!confirm('Удалить ВСЕ фотографии?')) return;
-            try {
-                const res = await authorizedFetch('/api/images', { method: 'DELETE' });
-                if (res.ok) { showToast('Все изображения удалены', 'warning'); markLastAction('Удалены все изображения'); loadImages(); }
-            } catch (err) { showToast('Ошибка сети', 'error'); }
+        function deleteAllImages() {
+            clearSectionImages('media');
         }
 
         // --- Products Logic ---
@@ -808,6 +1035,7 @@
                 if (!Array.isArray(productData.products)) productData.products = [];
                 renderProducts();
                 populateCategorySelect();
+                renderCategoriesTable();
                 const stat = document.getElementById('stats-products');
                 if (stat) stat.textContent = String(productData.products.length);
             } catch (err) {
@@ -864,6 +1092,260 @@
             select.innerHTML = productData.categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
         }
 
+        function mergeCategoryConfigAdmin(raw) {
+            const defaults = {
+                id: '',
+                name: '',
+                sortOrder: 0,
+                catalogMode: 'carousel',
+                listStyle: 'simple',
+                cardStyle: 'default',
+                gridCols: 4,
+                showCounter: false,
+                fields: { description: true, specs: true, parameters: true, gallery: true },
+                labels: { specsHeading: '', paramLabelCol: '', paramValueCol: '' }
+            };
+            const base = { ...defaults, fields: { ...defaults.fields }, labels: { ...defaults.labels } };
+            if (!raw || typeof raw !== 'object') return base;
+            const fields = { ...base.fields, ...(raw.fields && typeof raw.fields === 'object' ? raw.fields : {}) };
+            const labels = { ...base.labels, ...(raw.labels && typeof raw.labels === 'object' ? raw.labels : {}) };
+            let catalogMode = raw.catalogMode;
+            if (!catalogMode && raw.display === 'list') catalogMode = 'list';
+            if (!catalogMode && raw.display === 'grid') catalogMode = 'grid';
+            return {
+                ...base,
+                ...raw,
+                catalogMode: catalogMode || base.catalogMode,
+                fields,
+                labels
+            };
+        }
+
+        function catalogModeLabel(mode) {
+            const map = { list: 'Список', grid: 'Сетка', carousel: 'Карусель' };
+            return map[mode] || mode;
+        }
+
+        function cardStyleLabel(style) {
+            const map = { default: 'Стандарт', valve: 'Клапан', exchanger: 'Теплообменник' };
+            return map[style] || style;
+        }
+
+        function renderCategoriesTable() {
+            const tbody = document.getElementById('categories-table-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            const sorted = [...(productData.categories || [])].sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+            sorted.forEach((c) => {
+                const m = mergeCategoryConfigAdmin(c);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="py-2 px-3 text-slate-600">${escapeHtml(String(m.sortOrder ?? 0))}</td>
+                    <td class="py-2 px-3 font-mono text-xs">${escapeHtml(m.id)}</td>
+                    <td class="py-2 px-3">${escapeHtml(m.name)}</td>
+                    <td class="py-2 px-3">${escapeHtml(catalogModeLabel(m.catalogMode))}</td>
+                    <td class="py-2 px-3">${escapeHtml(cardStyleLabel(m.cardStyle))}</td>
+                    <td class="py-2 px-3 text-right whitespace-nowrap">
+                        <button type="button" data-edit-category="${escapeHtml(m.id)}" class="text-indigo-600 hover:text-indigo-900 text-sm mr-3">Изменить</button>
+                        <button type="button" data-delete-category="${escapeHtml(m.id)}" class="text-red-600 hover:text-red-900 text-sm">Удалить</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateCategoryModalDependentUi() {
+            const mode = document.getElementById('cat-catalog-mode')?.value || 'carousel';
+            const listWrap = document.getElementById('cat-list-style-wrap');
+            const gridWrap = document.getElementById('cat-grid-cols-wrap');
+            if (listWrap) listWrap.classList.toggle('hidden', mode !== 'list');
+            if (gridWrap) gridWrap.classList.toggle('hidden', mode !== 'grid');
+        }
+
+        function openCategoryModal(originalId = null) {
+            const modal = document.getElementById('category-modal');
+            const form = document.getElementById('category-form');
+            const idInput = document.getElementById('cat-id');
+            const title = document.getElementById('category-modal-title');
+            form?.reset();
+            document.getElementById('cat-edit-original-id').value = originalId || '';
+            if (idInput) idInput.readOnly = false;
+
+            if (!originalId) {
+                title.textContent = 'Новая категория';
+                document.getElementById('cat-sort-order').value = '0';
+                document.getElementById('cat-catalog-mode').value = 'carousel';
+                document.getElementById('cat-list-style').value = 'simple';
+                document.getElementById('cat-card-style').value = 'default';
+                document.getElementById('cat-grid-cols').value = '4';
+                document.getElementById('cat-show-counter').checked = false;
+                document.getElementById('cat-f-desc').checked = true;
+                document.getElementById('cat-f-specs').checked = true;
+                document.getElementById('cat-f-params').checked = true;
+                document.getElementById('cat-f-gallery').checked = true;
+                document.getElementById('cat-l-specs').value = '';
+                document.getElementById('cat-l-pl').value = '';
+                document.getElementById('cat-l-pv').value = '';
+            } else {
+                const c = productData.categories.find((x) => x.id === originalId);
+                if (!c) return;
+                const m = mergeCategoryConfigAdmin(c);
+                title.textContent = 'Категория';
+                idInput.value = m.id;
+                idInput.readOnly = true;
+                document.getElementById('cat-name').value = m.name;
+                document.getElementById('cat-sort-order').value = String(m.sortOrder ?? 0);
+                document.getElementById('cat-catalog-mode').value = m.catalogMode;
+                document.getElementById('cat-list-style').value = m.listStyle;
+                document.getElementById('cat-card-style').value = m.cardStyle;
+                document.getElementById('cat-grid-cols').value = String(m.gridCols ?? 4);
+                document.getElementById('cat-show-counter').checked = !!m.showCounter;
+                document.getElementById('cat-f-desc').checked = m.fields.description !== false;
+                document.getElementById('cat-f-specs').checked = m.fields.specs !== false;
+                document.getElementById('cat-f-params').checked = m.fields.parameters !== false;
+                document.getElementById('cat-f-gallery').checked = m.fields.gallery !== false;
+                document.getElementById('cat-l-specs').value = m.labels.specsHeading || '';
+                document.getElementById('cat-l-pl').value = m.labels.paramLabelCol || '';
+                document.getElementById('cat-l-pv').value = m.labels.paramValueCol || '';
+            }
+            updateCategoryModalDependentUi();
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeCategoryModal() {
+            const modal = document.getElementById('category-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            const idInput = document.getElementById('cat-id');
+            if (idInput) idInput.readOnly = false;
+        }
+
+        async function postProductDataToServer(successMessage, actionText) {
+            const res = await authorizedFetch('/api/products', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(productData)
+            });
+            if (res.ok) {
+                showToast(successMessage, 'success');
+                if (actionText) markLastAction(actionText);
+                await loadProducts();
+                return true;
+            }
+            const errBody = await res.json().catch(() => ({}));
+            showToast(errBody.error || 'Ошибка сохранения', 'error');
+            await loadProducts();
+            return false;
+        }
+
+        async function saveCategoryForm(e) {
+            e.preventDefault();
+            const originalId = document.getElementById('cat-edit-original-id').value.trim();
+            const idRaw = document.getElementById('cat-id').value.trim();
+            const name = document.getElementById('cat-name').value.trim();
+            if (!idRaw || !name) {
+                alert('Укажите ID и название.');
+                return;
+            }
+            if (!CATEGORY_ID_RE_ADMIN.test(idRaw)) {
+                alert('ID: латиница в нижнем регистре, цифры и _, первый символ — буква.');
+                return;
+            }
+            const sortOrder = Number(document.getElementById('cat-sort-order').value);
+            if (!Number.isFinite(sortOrder)) {
+                alert('Порядок должен быть числом.');
+                return;
+            }
+            const catalogMode = document.getElementById('cat-catalog-mode').value;
+            const listStyle = document.getElementById('cat-list-style').value;
+            const cardStyle = document.getElementById('cat-card-style').value;
+            const gridCols = Number(document.getElementById('cat-grid-cols').value);
+            const showCounter = document.getElementById('cat-show-counter').checked;
+            const fields = {
+                description: document.getElementById('cat-f-desc').checked,
+                specs: document.getElementById('cat-f-specs').checked,
+                parameters: document.getElementById('cat-f-params').checked,
+                gallery: document.getElementById('cat-f-gallery').checked
+            };
+            const labels = {
+                specsHeading: document.getElementById('cat-l-specs').value.trim(),
+                paramLabelCol: document.getElementById('cat-l-pl').value.trim(),
+                paramValueCol: document.getElementById('cat-l-pv').value.trim()
+            };
+            const display = catalogMode === 'list' ? 'list' : 'grid';
+
+            const newCat = {
+                id: idRaw,
+                name,
+                sortOrder,
+                catalogMode,
+                listStyle,
+                cardStyle,
+                gridCols,
+                showCounter,
+                fields,
+                labels,
+                display
+            };
+
+            if (!originalId) {
+                if (productData.categories.some((c) => c.id === idRaw)) {
+                    alert('Категория с таким ID уже есть.');
+                    return;
+                }
+                productData.categories.push(newCat);
+            } else {
+                const idx = productData.categories.findIndex((c) => c.id === originalId);
+                if (idx < 0) return;
+                productData.categories[idx] = { ...productData.categories[idx], ...newCat, id: originalId };
+            }
+
+            try {
+                const ok = await postProductDataToServer('Сохранено', originalId ? 'Обновлена категория' : 'Добавлена категория');
+                if (ok) closeCategoryModal();
+            } catch (err) {
+                showToast('Ошибка сети', 'error');
+            }
+        }
+
+        async function deleteCategory(id) {
+            const used = productData.products.filter((p) => p.category === id).length;
+            if (used > 0) {
+                alert(`Нельзя удалить: на эту категорию ссылается ${used} товар(ов). Сначала переназначьте категорию.`);
+                return;
+            }
+            if (!confirm('Удалить категорию «' + id + '»?')) return;
+            productData.categories = productData.categories.filter((c) => c.id !== id);
+            try {
+                await postProductDataToServer('Категория удалена', 'Удалена категория');
+            } catch (err) {
+                showToast('Ошибка сети', 'error');
+            }
+        }
+
+        async function saveCategoriesToDisk() {
+            try {
+                await postProductDataToServer('Сохранено на сервер', 'Сохранены категории и товары');
+            } catch (err) {
+                showToast('Ошибка сети', 'error');
+            }
+        }
+
+        function applyProductFormFieldsForCategory() {
+            const sel = document.getElementById('prod-category');
+            const catId = sel?.value;
+            const c = productData.categories.find((x) => x.id === catId);
+            const m = mergeCategoryConfigAdmin(c);
+            const show = (key) => m.fields[key] !== false;
+            const d = document.getElementById('product-field-description');
+            const s = document.getElementById('product-field-specs');
+            const p = document.getElementById('product-field-params');
+            if (d) d.classList.toggle('hidden', !show('description'));
+            if (s) s.classList.toggle('hidden', !show('specs'));
+            if (p) p.classList.toggle('hidden', !show('parameters'));
+        }
+
         function openProductModal(id = null) {
             const modal = document.getElementById('product-modal');
             const form = document.getElementById('product-form');
@@ -887,6 +1369,7 @@
                 }
             } else {
                 title.innerText = 'Добавить товар';
+                document.getElementById('prod-image').value = 'product_placeholder.png';
                 document.getElementById('prod-description').value = '';
                 document.getElementById('prod-specs').value = '';
                 document.getElementById('prod-params').value = '';
@@ -894,6 +1377,7 @@
             
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+            applyProductFormFieldsForCategory();
         }
 
         function closeProductModal() {
@@ -1330,7 +1814,15 @@
             const siteTextEditor = document.getElementById('site-text-editor');
             const clearCacheBtn = document.getElementById('btn-clear-cache');
             const deleteAllBtn = document.getElementById('btn-delete-all-images');
+            const clearProductsSectionBtn = document.getElementById('btn-clear-section-products');
+            const clearCertificatesSectionBtn = document.getElementById('btn-clear-section-certificates');
             const addProductBtn = document.getElementById('btn-add-product');
+            const btnAddCategory = document.getElementById('btn-add-category');
+            const btnSaveCategoriesDisk = document.getElementById('btn-save-categories-disk');
+            const categoryForm = document.getElementById('category-form');
+            const btnCloseCategoryModal = document.getElementById('btn-close-category-modal');
+            const catCatalogMode = document.getElementById('cat-catalog-mode');
+            const prodCategorySelect = document.getElementById('prod-category');
             const addCertificateBtn = document.getElementById('btn-add-certificate');
             const addReviewBtn = document.getElementById('btn-add-review');
             const productForm = document.getElementById('product-form');
@@ -1338,11 +1830,14 @@
             const reviewForm = document.getElementById('review-form');
             const uploadProductImageBtn = document.getElementById('btn-upload-product-image');
             const uploadCertificateImageBtn = document.getElementById('btn-upload-certificate-image');
+            const clearProductModalImageBtn = document.getElementById('btn-clear-product-modal-image');
+            const clearCertModalImageBtn = document.getElementById('btn-clear-cert-modal-image');
             const closeModalBtn = document.getElementById('btn-close-product-modal');
             const closeCertificateModalBtn = document.getElementById('btn-close-certificate-modal');
             const closeReviewModalBtn = document.getElementById('btn-close-review-modal');
             const imagesList = document.getElementById('images-list');
             const productsTableBody = document.getElementById('products-table-body');
+            const categoriesTableBody = document.getElementById('categories-table-body');
             const certificatesTableBody = document.getElementById('certificates-table-body');
             const reviewsTableBody = document.getElementById('reviews-table-body');
             const mediaSearch = document.getElementById('media-search');
@@ -1373,7 +1868,15 @@
             });
             clearCacheBtn?.addEventListener('click', clearCache);
             deleteAllBtn?.addEventListener('click', deleteAllImages);
+            clearProductsSectionBtn?.addEventListener('click', () => clearSectionImages('products'));
+            clearCertificatesSectionBtn?.addEventListener('click', () => clearSectionImages('certificates'));
             addProductBtn?.addEventListener('click', () => openProductModal());
+            btnAddCategory?.addEventListener('click', () => openCategoryModal(null));
+            btnSaveCategoriesDisk?.addEventListener('click', saveCategoriesToDisk);
+            categoryForm?.addEventListener('submit', saveCategoryForm);
+            btnCloseCategoryModal?.addEventListener('click', closeCategoryModal);
+            catCatalogMode?.addEventListener('change', updateCategoryModalDependentUi);
+            prodCategorySelect?.addEventListener('change', applyProductFormFieldsForCategory);
             addCertificateBtn?.addEventListener('click', () => openCertificateModal());
             addReviewBtn?.addEventListener('click', () => openReviewModal());
             productForm?.addEventListener('submit', saveProduct);
@@ -1381,6 +1884,8 @@
             reviewForm?.addEventListener('submit', saveReview);
             uploadProductImageBtn?.addEventListener('click', uploadProductImageFromModal);
             uploadCertificateImageBtn?.addEventListener('click', uploadCertificateImageFromModal);
+            clearProductModalImageBtn?.addEventListener('click', clearProductModalImage);
+            clearCertModalImageBtn?.addEventListener('click', clearCertificateModalImage);
             closeModalBtn?.addEventListener('click', closeProductModal);
             closeCertificateModalBtn?.addEventListener('click', closeCertificateModal);
             closeReviewModalBtn?.addEventListener('click', closeReviewModal);
@@ -1391,6 +1896,7 @@
             window.addEventListener('keydown', (e) => {
                 if (e.key !== 'Escape') return;
                 closeProductModal();
+                closeCategoryModal();
                 closeCertificateModal();
                 closeReviewModal();
             });
@@ -1426,6 +1932,21 @@
                 if (deleteBtn) {
                     const id = deleteBtn.getAttribute('data-delete-product');
                     if (id) deleteProduct(id);
+                }
+            });
+
+            categoriesTableBody?.addEventListener('click', (event) => {
+                if (!(event.target instanceof Element)) return;
+                const editBtn = event.target.closest('[data-edit-category]');
+                if (editBtn) {
+                    const id = editBtn.getAttribute('data-edit-category');
+                    if (id) openCategoryModal(id);
+                    return;
+                }
+                const deleteBtn = event.target.closest('[data-delete-category]');
+                if (deleteBtn) {
+                    const id = deleteBtn.getAttribute('data-delete-category');
+                    if (id) deleteCategory(id);
                 }
             });
 
