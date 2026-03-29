@@ -24,7 +24,7 @@
     }
 
     function buildDots(dotsWrap, count, goTo, theme, ariaPageLabel) {
-        if (!dotsWrap) return;
+        if (!dotsWrap || count < 1) return;
         const t = theme || 'gradient';
         const label = ariaPageLabel || 'Страница';
         dotsWrap.innerHTML = '';
@@ -48,8 +48,9 @@
      * @param {number} slideCount
      * @param {'light'|'gradient'} [dotsTheme]
      * @param {string} [ariaPageLabel]
+     * @param {{ arrows?: { prev: HTMLElement, next: HTMLElement } }|null} [opts]
      */
-    function bind(track, dotsWrap, slideCount, dotsTheme, ariaPageLabel) {
+    function bind(track, dotsWrap, slideCount, dotsTheme, ariaPageLabel, opts) {
         if (!track || slideCount < 1) {
             return {
                 goTo() {},
@@ -62,11 +63,34 @@
         const signal = ac.signal;
         let scrollRaf = null;
         const theme = dotsTheme || 'gradient';
+        const arrows = opts && opts.arrows;
+
+        function currentIndex() {
+            const cw = track.clientWidth;
+            if (cw < 1) return 0;
+            return Math.min(slideCount - 1, Math.max(0, Math.round(track.scrollLeft / cw)));
+        }
+
+        function updateArrows(idx) {
+            if (!arrows) return;
+            if (arrows.prev) {
+                const dis = idx <= 0;
+                arrows.prev.disabled = dis;
+                arrows.prev.setAttribute('aria-disabled', dis ? 'true' : 'false');
+            }
+            if (arrows.next) {
+                const dis = idx >= slideCount - 1;
+                arrows.next.disabled = dis;
+                arrows.next.setAttribute('aria-disabled', dis ? 'true' : 'false');
+            }
+        }
+
         const syncFromScroll = () => {
             const cw = track.clientWidth;
             if (cw < 1) return;
             const idx = Math.min(slideCount - 1, Math.max(0, Math.round(track.scrollLeft / cw)));
             setDotsActive(dotsWrap, idx, slideCount, theme);
+            updateArrows(idx);
         };
 
         const onScroll = () => {
@@ -78,12 +102,33 @@
 
         function goTo(i) {
             const cw = track.clientWidth;
-            track.scrollTo({ left: i * cw, behavior: 'smooth' });
-            setDotsActive(dotsWrap, i, slideCount, theme);
+            const idx = Math.min(slideCount - 1, Math.max(0, i));
+            track.scrollTo({ left: idx * cw, behavior: 'smooth' });
+            setDotsActive(dotsWrap, idx, slideCount, theme);
+            updateArrows(idx);
         }
 
         buildDots(dotsWrap, slideCount, goTo, theme, ariaPageLabel);
         syncFromScroll();
+
+        if (arrows && arrows.prev) {
+            arrows.prev.addEventListener(
+                'click',
+                () => {
+                    goTo(currentIndex() - 1);
+                },
+                { signal }
+            );
+        }
+        if (arrows && arrows.next) {
+            arrows.next.addEventListener(
+                'click',
+                () => {
+                    goTo(currentIndex() + 1);
+                },
+                { signal }
+            );
+        }
 
         const onResize = () => {
             const cw = track.clientWidth;

@@ -498,12 +498,12 @@ async function initCertificatesRender(containerId) {
                 : '<div class="absolute inset-0 flex items-center justify-center p-3"><span class="text-gray-400 text-xs text-center leading-normal">Нет изображения</span></div>';
         return (
             '<article class="certificate-card flex min-h-0 min-w-0 flex-col h-full">' +
-            '<div class="relative w-full shrink-0 overflow-hidden rounded-[8px] bg-[#F7F7F7] shadow-sm aspect-[3/4] max-h-[min(88vw,22rem)] sm:max-h-[min(72vw,24rem)] md:max-h-[28rem]">' +
+            '<div class="relative w-full shrink-0 overflow-hidden rounded-[8px] bg-[#F7F7F7] shadow-sm aspect-[210/297]">' +
             media +
             '</div>' +
             '<div class="flex min-h-0 flex-1 flex-col gap-3 pt-4 md:pt-5">' +
             `<h4 class="text-[17px] font-medium text-respo-dark leading-snug break-words sm:text-[18px]">${title}</h4>` +
-            `<div class="text-[12px] text-respo-blue font-sans leading-relaxed break-words [overflow-wrap:anywhere] sm:text-[13px] sm:leading-relaxed">${description}</div>` +
+            `<div class="certificate-card-desc text-[12px] text-respo-blue font-sans leading-relaxed break-words [overflow-wrap:anywhere] sm:text-[13px] sm:leading-relaxed flex-1">${description}</div>` +
             '</div>' +
             '</article>'
         );
@@ -522,6 +522,23 @@ async function initCertificatesRender(containerId) {
     const wrap = document.createElement('div');
     wrap.className = 'certificates-carousel';
 
+    const frame = document.createElement('div');
+    frame.className = 'relative px-10 sm:px-12 md:px-14';
+
+    const btnPrev = document.createElement('button');
+    btnPrev.type = 'button';
+    btnPrev.className =
+        'certificate-carousel-btn certificate-carousel-btn-prev flex absolute left-0 top-[40%] -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white border border-respo-blue/25 items-center justify-center shadow-md text-respo-blue text-lg leading-none hover:bg-respo-blue-light transition-colors disabled:opacity-35 disabled:cursor-not-allowed';
+    btnPrev.setAttribute('aria-label', 'Предыдущая страница сертификатов');
+    btnPrev.innerHTML = '&#8592;';
+
+    const btnNext = document.createElement('button');
+    btnNext.type = 'button';
+    btnNext.className =
+        'certificate-carousel-btn certificate-carousel-btn-next flex absolute right-0 top-[40%] -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white border border-respo-blue/25 items-center justify-center shadow-md text-respo-blue text-lg leading-none hover:bg-respo-blue-light transition-colors disabled:opacity-35 disabled:cursor-not-allowed';
+    btnNext.setAttribute('aria-label', 'Следующая страница сертификатов');
+    btnNext.innerHTML = '&#8594;';
+
     const viewport = document.createElement('div');
     viewport.className = 'overflow-hidden';
 
@@ -531,15 +548,16 @@ async function initCertificatesRender(containerId) {
     track.setAttribute('aria-label', 'Сертификаты, горизонтальная прокрутка');
     track.innerHTML = slidesHtml;
 
-    const dots = document.createElement('div');
-    dots.className = 'flex justify-center pt-6 pb-2 space-x-3';
-    dots.setAttribute('role', 'tablist');
-    dots.setAttribute('aria-label', 'Страницы сертификатов');
-
     viewport.appendChild(track);
-    wrap.appendChild(viewport);
-    if (slides.length > 1) {
-        wrap.appendChild(dots);
+    frame.appendChild(btnPrev);
+    frame.appendChild(btnNext);
+    frame.appendChild(viewport);
+    wrap.appendChild(frame);
+
+    if (slides.length <= 1) {
+        btnPrev.classList.add('hidden');
+        btnNext.classList.add('hidden');
+        frame.classList.remove('px-10', 'sm:px-12', 'md:px-14');
     }
 
     container.innerHTML = '';
@@ -547,9 +565,11 @@ async function initCertificatesRender(containerId) {
     container.setAttribute('aria-busy', 'false');
 
     const CS = window.RespoCarouselStrip;
-    if (slides.length > 1 && CS) {
-        CS.bind(track, dots, slides.length, 'light', 'Сертификаты, страница');
-    } else if (slides.length > 1 && !CS) {
+    if (CS) {
+        CS.bind(track, null, slides.length, 'light', 'Сертификаты', {
+            arrows: { prev: btnPrev, next: btnNext },
+        });
+    } else {
         console.error('RespoCarouselStrip not loaded (include js/carousel-strip.js before products.js)');
     }
 }
