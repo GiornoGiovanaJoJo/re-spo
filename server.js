@@ -330,9 +330,21 @@ app.get('/production.html', (req, res) => redirectToCanonicalPath(req, res, '/pr
 app.get('/product.html', (req, res) => redirectToCanonicalPath(req, res, '/product'));
 app.get('/privacy-policy.html', (req, res) => redirectToCanonicalPath(req, res, '/privacy-policy'));
 app.get('/favicon.ico', (req, res) => {
-    const faviconPath = path.join(assetsDir, 'logo.png');
-    if (fs.existsSync(faviconPath)) {
-        return res.sendFile(faviconPath);
+    const icoPath = path.join(assetsDir, 'favicon.ico');
+    const svgPath = path.join(assetsDir, 'favicon.svg');
+    if (fs.existsSync(icoPath)) {
+        res.setHeader('Content-Type', 'image/x-icon');
+        return res.sendFile(icoPath);
+    }
+    if (fs.existsSync(svgPath)) {
+        res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8');
+        res.setHeader('Cache-Control', 'public, max-age=86400');
+        return res.sendFile(svgPath);
+    }
+    const legacyPath = path.join(assetsDir, 'logo.png');
+    if (fs.existsSync(legacyPath)) {
+        res.setHeader('Content-Type', 'image/png');
+        return res.sendFile(legacyPath);
     }
     return res.status(204).end();
 });

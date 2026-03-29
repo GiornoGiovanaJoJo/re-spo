@@ -20,7 +20,8 @@
     <meta name="twitter:description" content="Технологический аудит, оптимизация и обслуживание молочных заводов.">
     <meta name="twitter:image" content="https://re-spo.com/assets/logo.png">
     <meta name="theme-color" content="#2584BE">
-    <link rel="icon" href="/favicon.ico">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
     <link rel="preload" as="image" href="assets/people.png">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -83,7 +84,7 @@
     <header class="fixed top-0 left-0 w-full z-50 bg-transparent">
         <div class="container-respo py-6 flex items-center justify-between">
             <a href="/" class="flex-shrink-0 lg:ml-[-10px]">
-                <img src="assets/logo.png" alt="RE-SPO Logo" class="h-10 lg:h-[54px] w-auto">
+                <img src="assets/logo.png" alt="RE-SPO Logo" class="h-12 lg:h-[72px] w-auto">
             </a>
 
             <nav class="hidden lg:flex items-center space-x-6 ml-auto mr-6">
@@ -127,7 +128,7 @@
     <main>
         <!-- Hero Section -->
         <section id="hero"
-            class="relative min-h-[560px] md:min-h-[620px] lg:min-h-[720px] pt-[108px] lg:pt-[140px] pb-10 lg:pb-12 flex items-stretch overflow-hidden">
+            class="relative min-h-[560px] md:min-h-[620px] lg:min-h-[720px] pt-[118px] lg:pt-[152px] pb-10 lg:pb-12 flex items-stretch overflow-hidden">
             <div class="absolute inset-0 z-[-1]">
                 <div class="hero-gradient absolute inset-0"></div>
                 <!-- People Image -->
@@ -326,12 +327,12 @@
                         </div>
                     </div>
 
-                    <!-- Images Grid (Right, 5 cols) -->
-                    <div class="lg:col-span-5 grid grid-cols-2 gap-4 h-full">
-                        <img src="assets/audit_worker.png" alt="Worker" class="w-full h-full object-cover rounded-[24px] shadow-sm">
-                        <div class="grid grid-rows-2 gap-4">
-                            <img src="assets/audit_mechanism.png" alt="Mechanism" class="w-full h-full object-cover rounded-[24px] shadow-sm">
-                            <img src="assets/audit_expert.png" alt="Expert" class="w-full h-full object-cover rounded-[24px] shadow-sm">
+                    <!-- Images Grid (Right, 5 cols) — items-start + h-auto on small screens avoids overlap with #optimization below -->
+                    <div class="lg:col-span-5 grid grid-cols-2 gap-3 sm:gap-4 items-start lg:items-stretch lg:h-full">
+                        <img src="assets/audit_worker.png" alt="Worker" class="w-full h-auto lg:h-full min-h-0 object-cover rounded-[24px] shadow-sm">
+                        <div class="grid grid-rows-2 gap-3 sm:gap-4 w-full min-h-0">
+                            <img src="assets/audit_mechanism.png" alt="Mechanism" class="w-full h-auto lg:h-full min-h-0 object-cover rounded-[24px] shadow-sm">
+                            <img src="assets/audit_expert.png" alt="Expert" class="w-full h-auto lg:h-full min-h-0 object-cover rounded-[24px] shadow-sm">
                         </div>
                     </div>
                 </div>
@@ -661,7 +662,7 @@
         <div class="container-respo">
             <!-- Branding Logo -->
             <div class="mb-12 lg:mb-24">
-                <img src="assets/logo.png" alt="RE-SPO Logo" class="h-[72px] w-auto">
+                <img src="assets/logo.png" alt="RE-SPO Logo" class="h-[96px] lg:h-[120px] w-auto">
             </div>
 
             <!-- Footer Main Area: 2-Column Grid -->

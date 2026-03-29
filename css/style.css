@@ -252,7 +252,7 @@
 
   #hero {
     min-height: 700px !important;
-    padding-top: 5.75rem !important;
+    padding-top: 6.25rem !important;
     padding-bottom: 7.25rem !important;
   }
 
@@ -270,7 +270,7 @@
     transform: translateY(4px);
   }
 
-  #optimization,
+  /* #optimization excluded: it follows the audit photo grid and needs mt-24 on mobile */
   #values,
   #projects,
   #catalog,
@@ -406,7 +406,7 @@
 
   #hero {
     min-height: 660px !important;
-    padding-top: 5.15rem !important;
+    padding-top: 5.6rem !important;
     padding-bottom: 7.75rem !important;
   }
 
