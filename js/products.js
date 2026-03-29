@@ -494,16 +494,17 @@ async function initCertificatesRender(containerId) {
         const imageSrc = imagePath || '';
         const media =
             imageSrc
-                ? `<img src="${escapeHtml(imageSrc)}" alt="${title}" class="max-h-full max-w-full object-contain" loading="lazy" decoding="async">`
-                : '<span class="text-gray-400 text-xs text-center leading-normal px-2">Нет изображения</span>';
+                ? `<img src="${escapeHtml(imageSrc)}" alt="${title}" class="block h-auto w-auto min-h-0 min-w-0 max-h-full max-w-full object-contain object-center" loading="lazy" decoding="async">`
+                : '<span class="text-gray-400 text-[11px] text-center leading-normal px-1">Нет изображения</span>';
         return (
-            '<article class="certificate-card flex min-h-0 min-w-0 flex-col h-full">' +
-            '<div class="certificate-card-thumb mx-auto flex h-[500px] w-[150px] max-w-full shrink-0 items-center justify-center overflow-hidden rounded-[8px] bg-[#F7F7F7] shadow-sm p-2 sm:p-3">' +
+            '<article class="certificate-card flex w-[150px] max-w-full shrink-0 flex-col items-stretch">' +
+            '<div class="certificate-card-thumb box-border flex h-[500px] w-full shrink-0 flex-col overflow-hidden rounded-[8px] bg-[#F7F7F7] shadow-sm p-2 sm:p-2.5">' +
+            '<div class="flex min-h-0 min-w-0 flex-1 items-center justify-center">' +
             media +
-            '</div>' +
-            '<div class="flex min-h-0 flex-1 flex-col gap-3 pt-4 md:pt-5">' +
-            `<h4 class="text-[17px] font-medium text-respo-dark leading-snug break-words sm:text-[18px]">${title}</h4>` +
-            `<div class="certificate-card-desc text-[12px] text-respo-blue font-sans leading-relaxed break-words [overflow-wrap:anywhere] sm:text-[13px] sm:leading-relaxed flex-1">${description}</div>` +
+            '</div></div>' +
+            '<div class="flex w-full flex-col gap-2 pt-3 text-center md:pt-4">' +
+            `<h4 class="text-[15px] font-medium text-respo-dark leading-snug break-words sm:text-[16px]">${title}</h4>` +
+            `<div class="certificate-card-desc text-[11px] text-respo-blue font-sans leading-relaxed break-words [overflow-wrap:anywhere] sm:text-[12px] sm:leading-relaxed">${description}</div>` +
             '</div>' +
             '</article>'
         );
@@ -513,7 +514,7 @@ async function initCertificatesRender(containerId) {
         .map(
             (cards) =>
                 '<div class="min-w-full shrink-0 snap-center snap-always px-1 sm:px-2">' +
-                '<div class="grid grid-cols-1 items-start gap-8 md:grid-cols-2 md:[grid-template-columns:minmax(0,1fr)_minmax(0,1fr)]">' +
+                '<div class="flex flex-row flex-wrap content-start justify-center gap-x-3 gap-y-8 sm:gap-x-4 md:gap-x-5">' +
                 cards.map(certCardInnerHtml).join('') +
                 '</div></div>'
         )
