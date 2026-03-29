@@ -497,14 +497,14 @@ async function initCertificatesRender(containerId) {
                 ? `<img src="${escapeHtml(imageSrc)}" alt="${title}" class="block h-auto w-auto min-h-0 min-w-0 max-h-full max-w-full object-contain object-center" loading="lazy" decoding="async">`
                 : '<span class="text-gray-400 text-[11px] text-center leading-normal px-1">Нет изображения</span>';
         return (
-            '<article class="certificate-card flex w-[150px] max-w-full shrink-0 flex-col items-stretch">' +
-            '<div class="certificate-card-thumb box-border flex h-[500px] w-full shrink-0 flex-col overflow-hidden rounded-[8px] bg-[#F7F7F7] shadow-sm p-2 sm:p-2.5">' +
+            '<article class="certificate-card mx-auto flex w-full max-w-[150px] min-w-0 shrink-0 flex-col items-stretch">' +
+            '<div class="certificate-card-thumb box-border mx-auto flex h-[500px] w-full max-w-[150px] shrink-0 flex-col overflow-hidden rounded-[8px] bg-[#F7F7F7] shadow-sm p-2 sm:p-2.5">' +
             '<div class="flex min-h-0 min-w-0 flex-1 items-center justify-center">' +
             media +
             '</div></div>' +
-            '<div class="flex w-full flex-col gap-2 pt-3 text-center md:pt-4">' +
-            `<h4 class="text-[15px] font-medium text-respo-dark leading-snug break-words sm:text-[16px]">${title}</h4>` +
-            `<div class="certificate-card-desc text-[11px] text-respo-blue font-sans leading-relaxed break-words [overflow-wrap:anywhere] sm:text-[12px] sm:leading-relaxed">${description}</div>` +
+            '<div class="certificate-card-text mx-auto flex w-full min-w-0 max-w-[150px] flex-col gap-2 pt-3 text-center md:pt-4">' +
+            `<h4 class="text-[15px] font-medium text-respo-dark leading-snug break-words [overflow-wrap:anywhere] sm:text-[16px]">${title}</h4>` +
+            `<div class="certificate-card-desc w-full min-w-0 text-[11px] text-respo-blue font-sans leading-relaxed break-words [overflow-wrap:anywhere] sm:text-[12px] sm:leading-relaxed">${description}</div>` +
             '</div>' +
             '</article>'
         );
@@ -514,7 +514,7 @@ async function initCertificatesRender(containerId) {
         .map(
             (cards) =>
                 '<div class="min-w-full shrink-0 snap-center snap-always px-1 sm:px-2">' +
-                '<div class="flex flex-row flex-wrap content-start justify-center gap-x-3 gap-y-8 sm:gap-x-4 md:gap-x-5">' +
+                '<div class="flex flex-row flex-wrap content-start justify-center gap-x-8 gap-y-10 sm:gap-x-10 sm:gap-y-10 md:gap-x-12">' +
                 cards.map(certCardInnerHtml).join('') +
                 '</div></div>'
         )
