@@ -498,7 +498,7 @@ async function initCertificatesRender(containerId) {
                 : '<span class="text-gray-400 text-[11px] text-center leading-normal px-1">Нет изображения</span>';
         return (
             '<article class="certificate-card mx-auto flex w-full max-w-[150px] min-w-0 shrink-0 flex-col items-stretch">' +
-            '<div class="certificate-card-thumb box-border mx-auto flex h-[500px] w-full max-w-[150px] shrink-0 flex-col overflow-hidden rounded-[8px] bg-[#F7F7F7] shadow-sm p-2 sm:p-2.5">' +
+            '<div class="certificate-card-thumb box-border mx-auto flex h-[300px] w-full max-w-[150px] shrink-0 flex-col overflow-hidden rounded-[8px] bg-[#F7F7F7] shadow-sm p-2 sm:p-2.5">' +
             '<div class="flex min-h-0 min-w-0 flex-1 items-center justify-center">' +
             media +
             '</div></div>' +
