@@ -36,13 +36,16 @@
         const t = escapeHtml(r.text || '').replace(/\n/g, '<br>');
         const a = escapeHtml(r.author || '');
         return (
-            '<div class="bg-white rounded-[10px] p-6 lg:p-6 flex flex-col min-h-[200px] md:min-h-[267px]">' +
-            '<p class="text-[16px] text-respo-dark/80 font-sans leading-[24px] mb-8 text-longform">"' +
+            '<article class="review-card flex h-full min-h-0 min-w-0 flex-col rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200/80 sm:p-6 md:ring-respo-blue/10">' +
+            '<p class="min-w-0 flex-1 text-left text-[15px] font-sans leading-[1.65] tracking-[-0.01em] text-respo-dark/85 sm:text-[16px] sm:leading-[1.7] break-words [overflow-wrap:anywhere] [text-wrap:pretty]">' +
+            '&laquo;' +
             t +
-            '"</p>' +
-            '<div class="mt-auto font-medium text-[18px] text-respo-dark">' +
+            '&raquo;' +
+            '</p>' +
+            '<div class="mt-4 border-t border-respo-blue/15 pt-3 text-[15px] font-medium text-respo-dark sm:mt-5 sm:text-[16px] md:mt-auto md:pt-4">' +
             a +
-            '</div></div>'
+            '</div>' +
+            '</article>'
         );
     }
 
@@ -50,8 +53,8 @@
         return slides
             .map(
                 (cards) =>
-                    '<div class="reviews-slide min-w-full shrink-0 snap-center snap-always px-2">' +
-                    '<div class="grid grid-cols-1 md:grid-cols-2 gap-6">' +
+                    '<div class="reviews-slide box-border min-w-full max-w-full shrink-0 snap-center snap-always px-2 sm:px-3">' +
+                    '<div class="grid min-w-0 w-full grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 md:items-stretch md:gap-6">' +
                     cards.map(cardHtml).join('') +
                     '</div></div>'
             )
