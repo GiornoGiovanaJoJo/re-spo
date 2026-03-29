@@ -631,6 +631,15 @@ app.get('/admin', (req, res) => {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
     res.sendFile(path.join(__dirname, 'admin.html'));
 });
+app.get('/admin-instructions.txt', (req, res) => {
+    const instructionPath = path.join(__dirname, 'admin-instructions.txt');
+    if (!fs.existsSync(instructionPath)) {
+        res.status(404).type('text/plain; charset=utf-8').send('Файл инструкции не найден на сервере.');
+        return;
+    }
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.sendFile(instructionPath);
+});
 app.get('/robots.txt', (req, res) => res.sendFile(path.join(__dirname, 'robots.txt')));
 app.get('/sitemap.xml', (req, res) => res.sendFile(path.join(__dirname, 'sitemap.xml')));
 app.get('/sitemap-static.xml', (req, res) => res.sendFile(path.join(__dirname, 'sitemap-static.xml')));

@@ -494,11 +494,11 @@ async function initCertificatesRender(containerId) {
         const imageSrc = imagePath || '';
         const media =
             imageSrc
-                ? `<img src="${escapeHtml(imageSrc)}" alt="${title}" class="absolute inset-0 w-full h-full object-contain p-2 sm:p-3" loading="lazy" decoding="async">`
-                : '<div class="absolute inset-0 flex items-center justify-center p-3"><span class="text-gray-400 text-xs text-center leading-normal">Нет изображения</span></div>';
+                ? `<img src="${escapeHtml(imageSrc)}" alt="${title}" class="max-h-full max-w-full object-contain" loading="lazy" decoding="async">`
+                : '<span class="text-gray-400 text-xs text-center leading-normal px-2">Нет изображения</span>';
         return (
             '<article class="certificate-card flex min-h-0 min-w-0 flex-col h-full">' +
-            '<div class="relative w-full shrink-0 overflow-hidden rounded-[8px] bg-[#F7F7F7] shadow-sm aspect-[210/297]">' +
+            '<div class="certificate-card-thumb flex h-[200px] w-full shrink-0 items-center justify-center overflow-hidden rounded-[8px] bg-[#F7F7F7] shadow-sm p-2 sm:h-[220px] sm:p-3 md:h-[240px]">' +
             media +
             '</div>' +
             '<div class="flex min-h-0 flex-1 flex-col gap-3 pt-4 md:pt-5">' +
@@ -513,7 +513,7 @@ async function initCertificatesRender(containerId) {
         .map(
             (cards) =>
                 '<div class="min-w-full shrink-0 snap-center snap-always px-1 sm:px-2">' +
-                '<div class="grid grid-cols-1 items-stretch gap-8 md:grid-cols-2">' +
+                '<div class="grid grid-cols-1 items-start gap-8 md:grid-cols-2 md:[grid-template-columns:minmax(0,1fr)_minmax(0,1fr)]">' +
                 cards.map(certCardInnerHtml).join('') +
                 '</div></div>'
         )
@@ -528,14 +528,14 @@ async function initCertificatesRender(containerId) {
     const btnPrev = document.createElement('button');
     btnPrev.type = 'button';
     btnPrev.className =
-        'certificate-carousel-btn certificate-carousel-btn-prev flex absolute left-0 top-[40%] -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white border border-respo-blue/25 items-center justify-center shadow-md text-respo-blue text-lg leading-none hover:bg-respo-blue-light transition-colors disabled:opacity-35 disabled:cursor-not-allowed';
+        'certificate-carousel-btn certificate-carousel-btn-prev flex absolute left-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white border border-respo-blue/25 items-center justify-center shadow-md text-respo-blue text-lg leading-none hover:bg-respo-blue-light transition-colors disabled:opacity-35 disabled:cursor-not-allowed';
     btnPrev.setAttribute('aria-label', 'Предыдущая страница сертификатов');
     btnPrev.innerHTML = '&#8592;';
 
     const btnNext = document.createElement('button');
     btnNext.type = 'button';
     btnNext.className =
-        'certificate-carousel-btn certificate-carousel-btn-next flex absolute right-0 top-[40%] -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white border border-respo-blue/25 items-center justify-center shadow-md text-respo-blue text-lg leading-none hover:bg-respo-blue-light transition-colors disabled:opacity-35 disabled:cursor-not-allowed';
+        'certificate-carousel-btn certificate-carousel-btn-next flex absolute right-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white border border-respo-blue/25 items-center justify-center shadow-md text-respo-blue text-lg leading-none hover:bg-respo-blue-light transition-colors disabled:opacity-35 disabled:cursor-not-allowed';
     btnNext.setAttribute('aria-label', 'Следующая страница сертификатов');
     btnNext.innerHTML = '&#8594;';
 

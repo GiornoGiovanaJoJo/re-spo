@@ -107,11 +107,14 @@
         </div>
 
         <section id="admin-instructions-panel" class="mb-6 rounded-xl border-2 border-amber-400/90 bg-gradient-to-br from-amber-50 to-orange-50/90 shadow-md ring-1 ring-amber-200/60" aria-labelledby="admin-instructions-heading">
-            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 px-4 py-3 border-b border-amber-200/80 bg-amber-100/50 rounded-t-xl">
-                <div>
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3 border-b border-amber-200/80 bg-amber-100/50 rounded-t-xl">
+                <div class="min-w-0">
                     <h2 id="admin-instructions-heading" class="text-lg font-bold text-amber-950 tracking-tight">Инструкция для администратора</h2>
-                    <p class="text-xs text-amber-900/80 mt-0.5">Кратко: как пользоваться панелью. Полный дубликат — в файле <code class="text-[11px] bg-white/80 px-1 rounded border border-amber-200">admin-instructions.txt</code> в корне проекта.</p>
+                    <p class="text-xs text-amber-900/80 mt-0.5">Ниже — краткая выжимка. Кнопка справа открывает <strong>полное пошаговое руководство</strong> (все вкладки, товары, параметры, категории).</p>
                 </div>
+                <button type="button" id="btn-admin-full-instructions" class="shrink-0 inline-flex items-center justify-center gap-2 bg-amber-700 text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-amber-800 transition-colors shadow-sm border border-amber-800/30">
+                    Полная инструкция
+                </button>
             </div>
             <div class="px-4 py-3 max-h-[min(52vh,420px)] overflow-y-auto soft-scroll text-sm text-amber-950/95 leading-relaxed space-y-3">
                 <p><strong>Вход.</strong> Секретный ключ на экране входа. Ключ можно сменить кнопкой «Сменить ключ»; он записывается в <code class="text-xs bg-white/70 px-1 rounded">admin-config.json</code> на сервере. Сессия — cookie на несколько дней.</p>
@@ -340,6 +343,17 @@
                     <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded-md font-medium hover:bg-blue-700">Сохранить ключ</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Полная инструкция (текст из admin-instructions.txt) -->
+    <div id="admin-full-instructions-modal" role="dialog" aria-modal="true" aria-labelledby="admin-full-instructions-title" class="fixed inset-0 z-[125] hidden flex-col justify-center bg-black/50 p-3 md:p-6">
+        <div class="mx-auto flex w-full max-w-4xl max-h-[min(92vh,900px)] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-slate-200">
+            <div class="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-amber-50/90 px-4 py-3 md:px-5">
+                <h2 id="admin-full-instructions-title" class="text-base md:text-lg font-bold text-amber-950 pr-2">Полное руководство по админке RE-SPO</h2>
+                <button type="button" id="btn-close-admin-full-instructions" class="shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-white hover:text-slate-900" aria-label="Закрыть">Закрыть</button>
+            </div>
+            <pre id="admin-full-instructions-body" class="soft-scroll min-h-0 flex-1 overflow-y-auto whitespace-pre-wrap break-words p-4 md:p-6 text-[13px] md:text-sm leading-relaxed text-slate-800 font-sans" tabindex="0"></pre>
         </div>
     </div>
 
@@ -2027,8 +2041,41 @@
             productsSearch?.addEventListener('input', renderProducts);
             certificatesSearch?.addEventListener('input', renderCertificates);
             reviewsSearch?.addEventListener('input', renderReviews);
+
+            const fullInstructionsModal = document.getElementById('admin-full-instructions-modal');
+            const fullInstructionsBody = document.getElementById('admin-full-instructions-body');
+            const btnFullInstructions = document.getElementById('btn-admin-full-instructions');
+            const btnCloseFullInstructions = document.getElementById('btn-close-admin-full-instructions');
+            function closeFullInstructionsModal() {
+                if (!fullInstructionsModal) return;
+                fullInstructionsModal.classList.add('hidden');
+                fullInstructionsModal.classList.remove('flex');
+            }
+            function openFullInstructionsModal() {
+                if (!fullInstructionsModal || !fullInstructionsBody) return;
+                fullInstructionsModal.classList.remove('hidden');
+                fullInstructionsModal.classList.add('flex');
+                fullInstructionsBody.textContent = 'Загрузка…';
+                fetch('/admin-instructions.txt', { credentials: 'same-origin' })
+                    .then((r) => (r.ok ? r.text() : Promise.reject(new Error(String(r.status)))))
+                    .then((t) => { fullInstructionsBody.textContent = t; })
+                    .catch(() => {
+                        fullInstructionsBody.textContent = 'Не удалось загрузить инструкцию. Проверьте подключение к серверу или обновите страницу.';
+                    });
+            }
+            btnFullInstructions?.addEventListener('click', openFullInstructionsModal);
+            btnCloseFullInstructions?.addEventListener('click', closeFullInstructionsModal);
+            fullInstructionsModal?.addEventListener('click', (e) => {
+                if (e.target === fullInstructionsModal) closeFullInstructionsModal();
+            });
+
             window.addEventListener('keydown', (e) => {
                 if (e.key !== 'Escape') return;
+                const fi = document.getElementById('admin-full-instructions-modal');
+                if (fi && !fi.classList.contains('hidden')) {
+                    closeFullInstructionsModal();
+                    return;
+                }
                 const ak = document.getElementById('admin-change-key-modal');
                 if (ak && !ak.classList.contains('hidden')) {
                     ak.classList.add('hidden');
