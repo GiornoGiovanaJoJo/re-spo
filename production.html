@@ -180,6 +180,14 @@
             </div>
         </section>
 
+    <div id="certificate-lightbox" class="fixed inset-0 z-[130] hidden p-4 sm:p-6" role="dialog" aria-modal="true" aria-label="Сертификат в полном размере">
+        <div class="absolute inset-0 bg-black/85" data-cert-lightbox-backdrop aria-hidden="true"></div>
+        <button type="button" data-cert-lightbox-close class="absolute top-3 right-3 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-2xl leading-none text-respo-dark shadow-md ring-1 ring-black/10 hover:bg-white sm:top-4 sm:right-4" aria-label="Закрыть">×</button>
+        <div class="relative z-10 flex max-h-full w-full max-w-[min(96vw,1200px)] items-center justify-center">
+            <img id="certificate-lightbox-img" src="" alt="" class="max-h-[min(92vh,900px)] w-auto max-w-full object-contain shadow-2xl" decoding="async">
+        </div>
+    </div>
+
     <div id="reviews-gallery-modal" class="fixed inset-0 z-[120] hidden p-4" role="dialog" aria-modal="true" aria-labelledby="reviews-modal-title">
         <div class="absolute inset-0 bg-black/50" data-reviews-modal-backdrop aria-hidden="true"></div>
         <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[min(92vh,720px)] flex flex-col overflow-hidden mx-auto">
@@ -373,7 +381,7 @@
     <script src="js/site-text.js?v=1"></script>
     <script src="js/contact-form.js?v=1"></script>
     <script src="js/carousel-strip.js?v=2"></script>
-    <script src="js/products.js?v=13"></script>
+    <script src="js/products.js?v=14"></script>
     <script src="js/reviews.js?v=2"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {

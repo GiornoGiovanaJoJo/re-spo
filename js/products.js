@@ -464,6 +464,46 @@ async function initProductionCatalogSections(rootId) {
 }
 
 /**
+ * Lightbox for certificate images (production page, #certificate-lightbox).
+ */
+function initCertificateLightbox(container) {
+    const lb = document.getElementById('certificate-lightbox');
+    const lbImg = document.getElementById('certificate-lightbox-img');
+    if (!lb || !lbImg || !container) return;
+
+    function closeLb() {
+        lb.classList.add('hidden');
+        lb.classList.remove('flex', 'items-center', 'justify-center');
+        document.body.style.removeProperty('overflow');
+    }
+
+    if (!lb.dataset.lightboxBound) {
+        lb.dataset.lightboxBound = '1';
+        lb.querySelector('[data-cert-lightbox-close]')?.addEventListener('click', closeLb);
+        lb.querySelector('[data-cert-lightbox-backdrop]')?.addEventListener('click', closeLb);
+        document.addEventListener('keydown', (e) => {
+            if (e.key !== 'Escape' || lb.classList.contains('hidden')) return;
+            closeLb();
+        });
+    }
+
+    if (container.dataset.certLbClick) return;
+    container.dataset.certLbClick = '1';
+    container.addEventListener('click', (e) => {
+        const trigger = e.target.closest('[data-cert-lightbox-src]');
+        if (!trigger || !container.contains(trigger)) return;
+        e.preventDefault();
+        const src = trigger.getAttribute('data-cert-lightbox-src');
+        if (!src) return;
+        lbImg.src = src;
+        lbImg.alt = trigger.getAttribute('data-cert-lightbox-alt') || 'Сертификат';
+        lb.classList.remove('hidden');
+        lb.classList.add('flex', 'items-center', 'justify-center');
+        document.body.style.overflow = 'hidden';
+    });
+}
+
+/**
  * Render certificates on Production page
  */
 async function initCertificatesRender(containerId) {
@@ -494,14 +534,21 @@ async function initCertificatesRender(containerId) {
         const imageSrc = imagePath || '';
         const media =
             imageSrc
-                ? `<img src="${escapeHtml(imageSrc)}" alt="${title}" class="block h-auto w-auto min-h-0 min-w-0 max-h-full max-w-full object-contain object-center" loading="lazy" decoding="async">`
+                ? `<img src="${escapeHtml(imageSrc)}" alt="${title}" class="pointer-events-none block h-auto w-auto min-h-0 min-w-0 max-h-full max-w-full object-contain object-center" loading="lazy" decoding="async">`
                 : '<span class="text-gray-400 text-[11px] text-center leading-normal px-1">Нет изображения</span>';
+        const thumbBase =
+            'certificate-card-thumb box-border mx-auto flex h-[300px] w-full max-w-[150px] shrink-0 flex-col overflow-hidden rounded-[8px] bg-[#F7F7F7] shadow-sm p-2 sm:p-2.5';
+        const thumbOpen = imageSrc
+            ? `<button type="button" class="${thumbBase} cursor-zoom-in border-0 text-left font-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-respo-blue focus-visible:ring-offset-2" data-cert-lightbox-src="${escapeHtml(imageSrc)}" data-cert-lightbox-alt="${escapeHtml(cert.title || '')}" aria-label="Открыть изображение сертификата в полный размер">`
+            : `<div class="${thumbBase}">`;
+        const thumbClose = imageSrc ? '</button>' : '</div>';
         return (
             '<article class="certificate-card mx-auto flex w-full max-w-[150px] min-w-0 shrink-0 flex-col items-stretch">' +
-            '<div class="certificate-card-thumb box-border mx-auto flex h-[300px] w-full max-w-[150px] shrink-0 flex-col overflow-hidden rounded-[8px] bg-[#F7F7F7] shadow-sm p-2 sm:p-2.5">' +
+            thumbOpen +
             '<div class="flex min-h-0 min-w-0 flex-1 items-center justify-center">' +
             media +
-            '</div></div>' +
+            '</div>' +
+            thumbClose +
             '<div class="certificate-card-text mx-auto flex w-full min-w-0 max-w-[150px] flex-col gap-2 pt-3 text-center md:pt-4">' +
             `<h4 class="text-[15px] font-medium text-respo-dark leading-snug break-words [overflow-wrap:anywhere] sm:text-[16px]">${title}</h4>` +
             `<div class="certificate-card-desc w-full min-w-0 text-[11px] text-respo-blue font-sans leading-relaxed break-words [overflow-wrap:anywhere] sm:text-[12px] sm:leading-relaxed">${description}</div>` +
@@ -573,4 +620,6 @@ async function initCertificatesRender(containerId) {
     } else {
         console.error('RespoCarouselStrip not loaded (include js/carousel-strip.js before products.js)');
     }
+
+    initCertificateLightbox(container);
 }
