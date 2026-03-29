@@ -382,29 +382,71 @@ async function initCertificatesRender(containerId) {
         return;
     }
 
-    const gridDiv = document.createElement('div');
-    gridDiv.className = 'grid grid-cols-1 md:grid-cols-3 gap-8';
+    const PER_SLIDE = 2;
+    const slides = [];
+    for (let i = 0; i < certificates.length; i += PER_SLIDE) {
+        slides.push(certificates.slice(i, i + PER_SLIDE));
+    }
 
-    certificates.forEach((cert) => {
+    function certCardInnerHtml(cert) {
         const title = escapeHtml(cert.title || '');
         const description = escapeHtml(cert.description || '').replace(/\n/g, '<br>');
         const imagePath = String(cert.image || '').trim();
         const imageSrc = imagePath || '';
+        return (
+            '<div>' +
+            '<div class="w-full aspect-[3/4] bg-[#F7F7F7] mb-6 shadow-sm overflow-hidden flex items-center justify-center rounded-[8px]">' +
+            (imageSrc
+                ? `<img src="${escapeHtml(imageSrc)}" alt="${title}" class="w-full h-full object-contain" loading="lazy" decoding="async">`
+                : '<span class="text-gray-400 text-xs">Нет изображения</span>') +
+            '</div>' +
+            `<h4 class="text-[18px] font-medium text-respo-dark mb-4 pr-4">${title}</h4>` +
+            `<p class="text-[12px] text-respo-blue font-sans leading-[1.6]">${description}</p>` +
+            '</div>'
+        );
+    }
 
-        const card = document.createElement('div');
-        card.innerHTML = `
-            <div class="w-full aspect-[3/4] bg-[#F7F7F7] mb-6 shadow-sm overflow-hidden flex items-center justify-center">
-                ${imageSrc
-                    ? `<img src="${escapeHtml(imageSrc)}" alt="${title}" class="w-full h-full object-contain">`
-                    : '<span class="text-gray-400 text-xs">Нет изображения</span>'}
-            </div>
-            <h4 class="text-[18px] font-medium text-respo-dark mb-4 pr-4">${title}</h4>
-            <p class="text-[12px] text-respo-blue font-sans leading-[1.6]">${description}</p>
-        `;
-        gridDiv.appendChild(card);
-    });
+    const slidesHtml = slides
+        .map(
+            (cards) =>
+                '<div class="min-w-full shrink-0 snap-center snap-always px-1 sm:px-2">' +
+                '<div class="grid grid-cols-1 md:grid-cols-2 gap-8">' +
+                cards.map(certCardInnerHtml).join('') +
+                '</div></div>'
+        )
+        .join('');
+
+    const wrap = document.createElement('div');
+    wrap.className = 'certificates-carousel';
+
+    const viewport = document.createElement('div');
+    viewport.className = 'overflow-hidden';
+
+    const track = document.createElement('div');
+    track.className =
+        'reviews-scrollbar flex w-full overflow-x-auto snap-x snap-mandatory scroll-smooth touch-pan-x';
+    track.setAttribute('aria-label', 'Сертификаты, горизонтальная прокрутка');
+    track.innerHTML = slidesHtml;
+
+    const dots = document.createElement('div');
+    dots.className = 'flex justify-center pt-6 pb-2 space-x-3';
+    dots.setAttribute('role', 'tablist');
+    dots.setAttribute('aria-label', 'Страницы сертификатов');
+
+    viewport.appendChild(track);
+    wrap.appendChild(viewport);
+    if (slides.length > 1) {
+        wrap.appendChild(dots);
+    }
 
     container.innerHTML = '';
-    container.appendChild(gridDiv);
+    container.appendChild(wrap);
     container.setAttribute('aria-busy', 'false');
+
+    const CS = window.RespoCarouselStrip;
+    if (slides.length > 1 && CS) {
+        CS.bind(track, dots, slides.length, 'light', 'Сертификаты, страница');
+    } else if (slides.length > 1 && !CS) {
+        console.error('RespoCarouselStrip not loaded (include js/carousel-strip.js before products.js)');
+    }
 }

@@ -65,6 +65,15 @@
     text-align: justify;
     text-justify: inter-word;
   }
+
+  .reviews-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .reviews-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* Custom Gradients and Effects */

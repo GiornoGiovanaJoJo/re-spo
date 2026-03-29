@@ -177,42 +177,24 @@
         <section class="pt-10 pb-24"
             style="background: linear-gradient(180deg, rgba(233,245,255,0.3) 0%, rgba(175,221,255,1) 100%);">
             <div class="container-respo">
-                <span class="text-respo-blue text-[18px] font-medium block leading-none mb-4">//</span>
-                <div class="flex justify-between items-end mb-12">
-                    <h2 class="text-[36px] lg:text-[48px] text-respo-blue font-medium leading-[40px]" data-site-text="production.reviews.title">Отзывы покупателей
-                    </h2>
-                    <a href="javascript:void(0)"
-                        class="hidden md:flex items-center space-x-3 text-respo-dark font-medium hover:text-respo-blue transition-colors group">
-                        <span class="text-[14px]" data-site-text="production.reviews.more">Смотреть больше</span>
-                        <img src="assets/arrow-right.svg" alt="Arrow"
-                            class="w-5 h-5 opacity-60 group-hover:opacity-100 invert"
-                            style="filter: brightness(0) saturate(100%);">
-                    </a>
+                <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
+                    <h2 class="text-[36px] lg:text-[48px] text-respo-blue font-medium leading-[40px]" data-site-text="production.reviews.title">Отзывы покупателей</h2>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white rounded-[10px] p-6 lg:p-6 flex flex-col min-h-[267px]">
-                        <p class="text-[16px] text-respo-dark/80 font-sans leading-[24px] mb-8 text-longform">
-                            "Очень довольна сотрудничеством с этой компанией. Всё делали аккуратно, в срок и с вниманием
-                            к нашим пожеланиям. Было приятно, что команда всегда на связи. Спасибо!"
-                        </p>
-                        <div class="mt-auto font-medium text-[18px] text-respo-dark">Анастасия С.</div>
+                <div data-reviews-section class="px-0 sm:px-1">
+                    <div class="flex justify-end mb-6 px-2">
+                        <button type="button" data-reviews-more
+                            class="inline-flex items-center space-x-3 text-respo-dark font-medium hover:text-respo-blue transition-colors group bg-transparent border-0 cursor-pointer p-0">
+                            <span class="text-[14px]" data-site-text="production.reviews.more">Смотреть больше</span>
+                            <img src="assets/arrow-right.svg" alt="" aria-hidden="true"
+                                class="w-5 h-5 opacity-60 group-hover:opacity-100 invert"
+                                style="filter: brightness(0) saturate(100%);">
+                        </button>
                     </div>
-                    <div class="bg-white rounded-[10px] p-6 lg:p-6 flex flex-col min-h-[267px]">
-                        <p class="text-[16px] text-respo-dark/80 font-sans leading-[24px] mb-8 text-longform">
-                            "Очень довольна сотрудничеством с этой компанией. Всё делали аккуратно, в срок и с вниманием
-                            к нашим пожеланиям. Было приятно, что команда всегда на связи и помогает даже после сдачи
-                            проекта. Спасибо!"
-                        </p>
-                        <div class="mt-auto font-medium text-[18px] text-respo-dark">Полина</div>
+                    <p class="hidden text-center text-respo-dark/60 py-8 px-4 text-[15px]" data-reviews-empty>Отзывов пока нет.</p>
+                    <div class="overflow-hidden px-2 pb-2">
+                        <div data-reviews-track class="reviews-scrollbar" aria-label="Отзывы, пролистывание"></div>
                     </div>
-                </div>
-
-                <div class="flex justify-center mt-12 space-x-3" role="tablist" aria-label="Отзывы">
-                    <button type="button" aria-label="Показать отзыв 1" class="w-2.5 h-2.5 rounded-full bg-respo-blue opacity-100"></button>
-                    <button type="button" aria-label="Показать отзыв 2" class="w-2.5 h-2.5 rounded-full bg-white opacity-60"></button>
-                    <button type="button" aria-label="Показать отзыв 3" class="w-2.5 h-2.5 rounded-full bg-white opacity-60"></button>
-                    <button type="button" aria-label="Показать отзыв 4" class="w-2.5 h-2.5 rounded-full bg-white opacity-60"></button>
+                    <div class="flex justify-center mt-8 pb-2 space-x-3" data-reviews-dots role="tablist" aria-label="Отзывы"></div>
                 </div>
             </div>
         </section>
@@ -260,6 +242,20 @@
             </div>
         </section>
     </main>
+
+    <div id="reviews-gallery-modal" class="fixed inset-0 z-[120] hidden p-4" role="dialog" aria-modal="true" aria-labelledby="reviews-modal-title">
+        <div class="absolute inset-0 bg-black/50" data-reviews-modal-backdrop aria-hidden="true"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[min(92vh,720px)] flex flex-col overflow-hidden mx-auto">
+            <div class="flex items-center justify-between gap-4 px-5 py-4 border-b border-respo-blue/10 shrink-0">
+                <h3 id="reviews-modal-title" class="text-xl md:text-2xl font-medium text-respo-blue font-heading" data-site-text="production.reviews.title">Отзывы покупателей</h3>
+                <button type="button" data-reviews-modal-close class="w-10 h-10 rounded-full flex items-center justify-center text-respo-blue text-2xl leading-none hover:bg-respo-blue-light transition-colors" aria-label="Закрыть">×</button>
+            </div>
+            <div class="px-4 py-4 overflow-hidden min-h-0 flex-1">
+                <div data-reviews-modal-track class="reviews-scrollbar" aria-label="Отзывы в окне"></div>
+            </div>
+            <div class="flex justify-center py-4 space-x-3 border-t border-respo-blue/10 shrink-0 bg-white" data-reviews-modal-dots role="tablist" aria-label="Страницы отзывов"></div>
+        </div>
+    </div>
 
     <footer class="pt-20 pb-10 relative" style="background: linear-gradient(to top, rgba(74, 174, 242, 0.15), white);">
         <div class="container-respo">
@@ -331,7 +327,9 @@
     </footer>
 
     <script src="js/site-text.js?v=1"></script>
+    <script src="js/carousel-strip.js?v=1"></script>
     <script src="js/product-page.js"></script>
+    <script src="js/reviews.js?v=2"></script>
     <script src="js/main.js?v=4"></script>
 </body>
 

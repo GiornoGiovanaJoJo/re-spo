@@ -16,6 +16,7 @@ const isAdminOpen = process.env.ADMIN_OPEN !== 'false';
 const assetsDir = path.join(__dirname, 'assets');
 const productsFile = path.join(__dirname, 'products.json');
 const certificatesFile = path.join(__dirname, 'certificates.json');
+const reviewsFile = path.join(__dirname, 'reviews.json');
 const homeContentFile = path.join(__dirname, 'home-content.json');
 const siteTextFile = path.join(__dirname, 'site-text.json');
 const IMAGE_EXT_RE = /\.(png|svg|jpe?g|gif|webp|tiff?)$/i;
@@ -91,6 +92,29 @@ function validateCertificatesPayload(payload) {
             const imageName = safeImageFilename(cert.image.replace(/^assets\//, ''));
             if (!imageName) return false;
         }
+    }
+    return true;
+}
+
+const REVIEW_TEXT_MAX = 8000;
+const REVIEW_AUTHOR_MAX = 200;
+const REVIEWS_MAX_COUNT = 8;
+
+function validateReviewsPayload(payload) {
+    if (!payload || typeof payload !== 'object') return false;
+    if (!Array.isArray(payload.reviews)) return false;
+    if (payload.reviews.length > REVIEWS_MAX_COUNT) return false;
+
+    const seen = new Set();
+    for (const r of payload.reviews) {
+        if (!r || typeof r !== 'object') return false;
+        if (typeof r.id !== 'string' || !r.id.trim()) return false;
+        if (seen.has(r.id)) return false;
+        seen.add(r.id);
+        if (typeof r.text !== 'string' || !r.text.trim()) return false;
+        if (typeof r.author !== 'string' || !r.author.trim()) return false;
+        if (r.text.length > REVIEW_TEXT_MAX) return false;
+        if (r.author.length > REVIEW_AUTHOR_MAX) return false;
     }
     return true;
 }
@@ -401,6 +425,37 @@ app.post('/api/certificates', adminAuth, (req, res) => {
         }
         const data = JSON.stringify(req.body, null, 2);
         fs.writeFileSync(certificatesFile, data, 'utf8');
+        res.json({ success: true });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+app.get('/api/reviews', (req, res) => {
+    try {
+        if (!fs.existsSync(reviewsFile)) {
+            return res.json({ reviews: [] });
+        }
+        const data = fs.readFileSync(reviewsFile, 'utf8');
+        const parsed = JSON.parse(data);
+        if (!validateReviewsPayload(parsed)) {
+            return res.status(500).json({ error: 'reviews.json has invalid structure' });
+        }
+        res.json(parsed);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+app.post('/api/reviews', adminAuth, (req, res) => {
+    try {
+        if (!validateReviewsPayload(req.body)) {
+            return res.status(400).json({
+                error: `Invalid reviews payload (max ${REVIEWS_MAX_COUNT} отзывов, текст до ${REVIEW_TEXT_MAX} символов).`,
+            });
+        }
+        const data = JSON.stringify(req.body, null, 2);
+        fs.writeFileSync(reviewsFile, data, 'utf8');
         res.json({ success: true });
     } catch (e) {
         res.status(500).json({ error: e.message });

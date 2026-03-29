@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-5">
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-2 mb-5">
             <div class="rounded-lg border border-blue-100 bg-white/90 p-3">
                 <p class="text-[11px] uppercase tracking-wide text-slate-500">Медиафайлы</p>
                 <p id="stats-images" class="text-xl font-bold text-slate-800 mt-1">0</p>
@@ -74,15 +74,20 @@
                 <p id="stats-certificates" class="text-xl font-bold text-slate-800 mt-1">0</p>
             </div>
             <div class="rounded-lg border border-blue-100 bg-white/90 p-3">
+                <p class="text-[11px] uppercase tracking-wide text-slate-500">Отзывы</p>
+                <p id="stats-reviews" class="text-xl font-bold text-slate-800 mt-1">0</p>
+            </div>
+            <div class="rounded-lg border border-blue-100 bg-white/90 p-3 col-span-2 md:col-span-1">
                 <p class="text-[11px] uppercase tracking-wide text-slate-500">Последнее действие</p>
                 <p id="stats-last-action" class="text-sm font-semibold text-slate-700 mt-1">—</p>
             </div>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6 bg-gray-100 p-1 rounded-lg">
+        <div class="flex flex-wrap gap-2 mb-6 bg-gray-100 p-1 rounded-lg">
             <button id="tab-media" data-tab="media" class="px-4 py-2 rounded-md text-sm font-medium transition-all bg-white shadow-sm text-blue-600">Медиафайлы</button>
             <button id="tab-products" data-tab="products" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Товары (Каталог)</button>
             <button id="tab-certificates" data-tab="certificates" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Сертификаты</button>
+            <button id="tab-reviews" data-tab="reviews" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Отзывы</button>
             <button id="tab-texts" data-tab="texts" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Тексты</button>
             <button id="tab-home" data-tab="home" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Главная</button>
         </div>
@@ -155,6 +160,35 @@
                     </thead>
                     <tbody id="certificates-table-body" class="bg-white divide-y divide-gray-200">
                         <!-- Loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Reviews tab -->
+        <div id="content-reviews" class="hidden">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">Отзывы (каталог)</h2>
+                    <p class="text-gray-600 text-sm mt-1">На странице <code class="text-xs bg-gray-100 px-1 rounded">/production</code> показываются до <strong>8</strong> отзывов — не более <strong>4</strong> страниц по 2 отзыва. Листание свайпом или точками; «Смотреть больше» открывает то же в окне.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <input id="reviews-search" type="search" placeholder="Поиск по тексту или автору..." class="w-full md:w-64 border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                    <button id="btn-add-review" class="bg-green-600 text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-green-700 transition-colors shadow-sm whitespace-nowrap">
+                        + Добавить отзыв
+                    </button>
+                </div>
+            </div>
+            <div class="overflow-x-auto soft-scroll border rounded-lg bg-white">
+                <table class="min-w-full divide-y divide-gray-200 responsive-table">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Текст</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Автор</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reviews-table-body" class="bg-white divide-y divide-gray-200">
                     </tbody>
                 </table>
             </div>
@@ -301,10 +335,33 @@
         </div>
     </div>
 
+    <!-- Review Modal -->
+    <div id="review-modal" role="dialog" aria-modal="true" aria-labelledby="review-modal-title" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[100] p-3 md:p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-xl w-full p-5 md:p-8 max-h-[90vh] overflow-y-auto soft-scroll">
+            <h3 id="review-modal-title" class="text-2xl font-bold mb-6">Добавить отзыв</h3>
+            <form id="review-form" class="space-y-4">
+                <input type="hidden" id="edit-review-id">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="review-text">Текст отзыва</label>
+                    <textarea id="review-text" rows="6" required maxlength="8000" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Текст отзыва покупателя"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="review-author">Подпись (имя)</label>
+                    <input type="text" id="review-author" required maxlength="200" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Например: Анна К.">
+                </div>
+                <div class="flex justify-end gap-3 pt-4 sticky bottom-0 bg-white/95 pb-1">
+                    <button type="button" id="btn-close-review-modal" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">Отмена</button>
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors shadow-sm">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         let requiredImages = [];
         let productData = { categories: [], products: [] };
         let certificateData = { certificates: [] };
+        let reviewData = { reviews: [] };
         let homeContentData = {
             technologyTiles: ['Молочные линии', 'Асептический разлив', 'СИП-станции', 'Модернизация цехов']
         };
@@ -514,17 +571,20 @@
             document.getElementById('content-media').classList.toggle('hidden', tab !== 'media');
             document.getElementById('content-products').classList.toggle('hidden', tab !== 'products');
             document.getElementById('content-certificates').classList.toggle('hidden', tab !== 'certificates');
+            document.getElementById('content-reviews').classList.toggle('hidden', tab !== 'reviews');
             document.getElementById('content-texts').classList.toggle('hidden', tab !== 'texts');
             document.getElementById('content-home').classList.toggle('hidden', tab !== 'home');
 
             document.getElementById('tab-media').className = tab === 'media' ? tabActiveClass : tabInactiveClass;
             document.getElementById('tab-products').className = tab === 'products' ? tabActiveClass : tabInactiveClass;
             document.getElementById('tab-certificates').className = tab === 'certificates' ? tabActiveClass : tabInactiveClass;
+            document.getElementById('tab-reviews').className = tab === 'reviews' ? tabActiveClass : tabInactiveClass;
             document.getElementById('tab-texts').className = tab === 'texts' ? tabActiveClass : tabInactiveClass;
             document.getElementById('tab-home').className = tab === 'home' ? tabActiveClass : tabInactiveClass;
 
             if (tab === 'products') loadProducts();
             else if (tab === 'certificates') loadCertificates();
+            else if (tab === 'reviews') loadReviews();
             else if (tab === 'texts') loadSiteTextEditor();
             else if (tab === 'home') loadHomeContent();
             else loadImages();
@@ -1055,6 +1115,148 @@
             }
         }
 
+        // --- Reviews (production page) ---
+        async function loadReviews() {
+            try {
+                const res = await authorizedFetch('/api/reviews');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                reviewData = await res.json();
+                if (!Array.isArray(reviewData.reviews)) reviewData.reviews = [];
+                renderReviews();
+                const stat = document.getElementById('stats-reviews');
+                if (stat) stat.textContent = String(reviewData.reviews.length);
+            } catch (err) {
+                console.error(err);
+                showToast('Не удалось загрузить отзывы.', 'error');
+            }
+        }
+
+        function renderReviews() {
+            const tbody = document.getElementById('reviews-table-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            const filter = String(document.getElementById('reviews-search')?.value || '').toLowerCase().trim();
+            reviewData.reviews
+                .filter((r) => {
+                    if (!filter) return true;
+                    return (
+                        String(r.text || '').toLowerCase().includes(filter) ||
+                        String(r.author || '').toLowerCase().includes(filter)
+                    );
+                })
+                .forEach((r) => {
+                    const tr = document.createElement('tr');
+                    const safeText = escapeHtml(r.text || '');
+                    const safeAuthor = escapeHtml(r.author || '');
+                    tr.innerHTML = `
+                        <td data-label="Текст" class="px-6 py-4">
+                            <div class="text-sm text-gray-800 max-w-xl whitespace-pre-line line-clamp-4">${safeText}</div>
+                        </td>
+                        <td data-label="Автор" class="px-6 py-4">
+                            <div class="text-sm font-medium text-gray-900">${safeAuthor}</div>
+                        </td>
+                        <td data-label="Действия" class="actions-cell px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button data-edit-review="${escapeHtml(r.id)}" class="text-indigo-600 hover:text-indigo-900 mr-4">Изменить</button>
+                            <button data-delete-review="${escapeHtml(r.id)}" class="text-red-600 hover:text-red-900">Удалить</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+        }
+
+        function openReviewModal(id = null) {
+            if (!id && reviewData.reviews.length >= 8) {
+                alert('Максимум 8 отзывов для страницы каталога (4 страницы по 2 отзыва). Удалите или отредактируйте существующие.');
+                return;
+            }
+            const modal = document.getElementById('review-modal');
+            const form = document.getElementById('review-form');
+            const title = document.getElementById('review-modal-title');
+            form.reset();
+            document.getElementById('edit-review-id').value = id || '';
+            if (id) {
+                const r = reviewData.reviews.find((x) => x.id === id);
+                if (r) {
+                    title.innerText = 'Изменить отзыв';
+                    document.getElementById('review-text').value = r.text || '';
+                    document.getElementById('review-author').value = r.author || '';
+                }
+            } else {
+                title.innerText = 'Добавить отзыв';
+            }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeReviewModal() {
+            const modal = document.getElementById('review-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        async function saveReview(e) {
+            e.preventDefault();
+            if (reviewData.reviews.length >= 8 && !document.getElementById('edit-review-id').value) {
+                alert('Максимум 8 отзывов для каталога. Удалите лишние или отредактируйте существующие.');
+                return;
+            }
+            const id = document.getElementById('edit-review-id').value;
+            const existing = id ? reviewData.reviews.find((x) => x.id === id) : null;
+            const newRev = {
+                ...(existing || {}),
+                id: id || `rev_${Date.now()}`,
+                text: document.getElementById('review-text').value.trim(),
+                author: document.getElementById('review-author').value.trim()
+            };
+            if (!newRev.text || !newRev.author) {
+                alert('Заполните текст и подпись.');
+                return;
+            }
+            if (id) {
+                const idx = reviewData.reviews.findIndex((x) => x.id === id);
+                reviewData.reviews[idx] = newRev;
+            } else {
+                reviewData.reviews.push(newRev);
+            }
+            try {
+                const res = await authorizedFetch('/api/reviews', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(reviewData)
+                });
+                if (res.ok) {
+                    closeReviewModal();
+                    showToast(id ? 'Отзыв обновлен' : 'Отзыв добавлен', 'success');
+                    markLastAction(id ? 'Обновлен отзыв' : 'Добавлен отзыв');
+                    loadReviews();
+                } else {
+                    const errBody = await res.json().catch(() => ({}));
+                    showToast(errBody.error || 'Ошибка сохранения', 'error');
+                }
+            } catch (err) {
+                showToast('Ошибка сохранения отзыва', 'error');
+            }
+        }
+
+        async function deleteReview(id) {
+            if (!confirm('Удалить этот отзыв?')) return;
+            reviewData.reviews = reviewData.reviews.filter((x) => x.id !== id);
+            try {
+                const res = await authorizedFetch('/api/reviews', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(reviewData)
+                });
+                if (res.ok) {
+                    showToast('Отзыв удален', 'warning');
+                    markLastAction('Удален отзыв');
+                    loadReviews();
+                }
+            } catch (err) {
+                showToast('Ошибка удаления', 'error');
+            }
+        }
+
         async function loadHomeContent() {
             try {
                 const res = await authorizedFetch('/api/home-content');
@@ -1117,6 +1319,7 @@
             const mediaTab = document.getElementById('tab-media');
             const productsTab = document.getElementById('tab-products');
             const certificatesTab = document.getElementById('tab-certificates');
+            const reviewsTab = document.getElementById('tab-reviews');
             const textsTab = document.getElementById('tab-texts');
             const homeTab = document.getElementById('tab-home');
             const saveHomeBtn = document.getElementById('btn-save-home-content');
@@ -1129,22 +1332,28 @@
             const deleteAllBtn = document.getElementById('btn-delete-all-images');
             const addProductBtn = document.getElementById('btn-add-product');
             const addCertificateBtn = document.getElementById('btn-add-certificate');
+            const addReviewBtn = document.getElementById('btn-add-review');
             const productForm = document.getElementById('product-form');
             const certificateForm = document.getElementById('certificate-form');
+            const reviewForm = document.getElementById('review-form');
             const uploadProductImageBtn = document.getElementById('btn-upload-product-image');
             const uploadCertificateImageBtn = document.getElementById('btn-upload-certificate-image');
             const closeModalBtn = document.getElementById('btn-close-product-modal');
             const closeCertificateModalBtn = document.getElementById('btn-close-certificate-modal');
+            const closeReviewModalBtn = document.getElementById('btn-close-review-modal');
             const imagesList = document.getElementById('images-list');
             const productsTableBody = document.getElementById('products-table-body');
             const certificatesTableBody = document.getElementById('certificates-table-body');
+            const reviewsTableBody = document.getElementById('reviews-table-body');
             const mediaSearch = document.getElementById('media-search');
             const productsSearch = document.getElementById('products-search');
             const certificatesSearch = document.getElementById('certificates-search');
+            const reviewsSearch = document.getElementById('reviews-search');
 
             mediaTab?.addEventListener('click', () => switchTab('media'));
             productsTab?.addEventListener('click', () => switchTab('products'));
             certificatesTab?.addEventListener('click', () => switchTab('certificates'));
+            reviewsTab?.addEventListener('click', () => switchTab('reviews'));
             textsTab?.addEventListener('click', () => switchTab('texts'));
             homeTab?.addEventListener('click', () => switchTab('home'));
             saveHomeBtn?.addEventListener('click', saveHomeContent);
@@ -1166,19 +1375,24 @@
             deleteAllBtn?.addEventListener('click', deleteAllImages);
             addProductBtn?.addEventListener('click', () => openProductModal());
             addCertificateBtn?.addEventListener('click', () => openCertificateModal());
+            addReviewBtn?.addEventListener('click', () => openReviewModal());
             productForm?.addEventListener('submit', saveProduct);
             certificateForm?.addEventListener('submit', saveCertificate);
+            reviewForm?.addEventListener('submit', saveReview);
             uploadProductImageBtn?.addEventListener('click', uploadProductImageFromModal);
             uploadCertificateImageBtn?.addEventListener('click', uploadCertificateImageFromModal);
             closeModalBtn?.addEventListener('click', closeProductModal);
             closeCertificateModalBtn?.addEventListener('click', closeCertificateModal);
+            closeReviewModalBtn?.addEventListener('click', closeReviewModal);
             mediaSearch?.addEventListener('input', renderImages);
             productsSearch?.addEventListener('input', renderProducts);
             certificatesSearch?.addEventListener('input', renderCertificates);
+            reviewsSearch?.addEventListener('input', renderReviews);
             window.addEventListener('keydown', (e) => {
                 if (e.key !== 'Escape') return;
                 closeProductModal();
                 closeCertificateModal();
+                closeReviewModal();
             });
 
             imagesList?.addEventListener('change', (event) => {
@@ -1227,6 +1441,21 @@
                 if (deleteBtn) {
                     const id = deleteBtn.getAttribute('data-delete-certificate');
                     if (id) deleteCertificate(id);
+                }
+            });
+
+            reviewsTableBody?.addEventListener('click', (event) => {
+                if (!(event.target instanceof Element)) return;
+                const editBtn = event.target.closest('[data-edit-review]');
+                if (editBtn) {
+                    const id = editBtn.getAttribute('data-edit-review');
+                    if (id) openReviewModal(id);
+                    return;
+                }
+                const deleteBtn = event.target.closest('[data-delete-review]');
+                if (deleteBtn) {
+                    const id = deleteBtn.getAttribute('data-delete-review');
+                    if (id) deleteReview(id);
                 }
             });
         }
