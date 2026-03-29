@@ -46,6 +46,23 @@
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/108262955" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
+
+    <div id="admin-login-gate" class="fixed inset-0 z-[200] flex items-center justify-center p-4 admin-shell">
+        <div class="w-full max-w-md rounded-2xl border border-blue-100 bg-white/95 p-6 md:p-8 shadow-xl backdrop-blur-sm">
+            <h1 class="text-2xl font-bold text-gray-800 mb-1">Вход в админку</h1>
+            <p class="text-sm text-gray-500 mb-6">Введите секретный ключ доступа (хранится в <code class="text-xs bg-slate-100 px-1 rounded">admin-config.json</code> на сервере).</p>
+            <form id="admin-login-form" class="space-y-4">
+                <div>
+                    <label for="admin-key-input" class="block text-sm font-medium text-gray-700 mb-1">Ключ</label>
+                    <input type="password" id="admin-key-input" name="admin-key" autocomplete="current-password" maxlength="400" class="w-full border border-slate-300 rounded-md px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Секретный ключ" required>
+                </div>
+                <p id="admin-login-error" class="text-sm text-red-600 hidden" role="alert"></p>
+                <button type="submit" id="admin-login-submit" class="w-full bg-blue-600 text-white py-2.5 rounded-md font-medium text-sm hover:bg-blue-700">Войти</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="admin-app" class="hidden">
     <div class="max-w-6xl mx-auto glass-panel border border-white/80 p-4 md:p-8 rounded-2xl shadow-xl">
         <div class="sticky top-2 z-20 glass-panel rounded-xl px-3 md:px-4 py-3 border border-blue-100 flex flex-col md:flex-row md:items-center justify-between mb-5 gap-3 md:gap-4">
             <div>
@@ -53,6 +70,12 @@
                 <p class="text-gray-500 text-sm mt-1">Управление контентом и медиафайлами</p>
             </div>
             <div class="flex flex-wrap items-center gap-2 md:gap-3">
+                <button type="button" id="btn-admin-change-key" class="bg-slate-100 text-slate-800 px-3.5 md:px-4 py-2 rounded-md font-medium text-sm hover:bg-slate-200 transition-colors border border-slate-200">
+                    Сменить ключ
+                </button>
+                <button type="button" id="btn-admin-logout" class="bg-white text-slate-700 px-3.5 md:px-4 py-2 rounded-md font-medium text-sm hover:bg-slate-50 transition-colors border border-slate-300">
+                    Выйти
+                </button>
                 <button id="btn-clear-cache" class="bg-amber-50 text-amber-700 px-3.5 md:px-4 py-2 rounded-md font-medium text-sm hover:bg-amber-100 transition-colors border border-amber-200">
                     Очистить кэш сайта
                 </button>
@@ -91,7 +114,7 @@
                 </div>
             </div>
             <div class="px-4 py-3 max-h-[min(52vh,420px)] overflow-y-auto soft-scroll text-sm text-amber-950/95 leading-relaxed space-y-3">
-                <p><strong>Вход.</strong> При сохранении или загрузке браузер может запросить логин и пароль; они запоминаются в этом браузере.</p>
+                <p><strong>Вход.</strong> Секретный ключ на экране входа. Ключ можно сменить кнопкой «Сменить ключ»; он записывается в <code class="text-xs bg-white/70 px-1 rounded">admin-config.json</code> на сервере. Сессия — cookie на несколько дней.</p>
                 <p><strong>Общее.</strong> «Очистить кэш сайта» — после крупных правок, если на сайте не видно изменений. «На сайт» — на главную. «Последнее действие» — что сделано последним.</p>
                 <p><strong>Медиафайлы.</strong> Слоты с фиксированными именами: новый файл подставляется под имя слота и заменяет старый. Есть поиск и очистка раздела.</p>
                 <p><strong>Товары и категории.</strong> Категории задают секции на <code class="text-xs bg-white/70 px-1 rounded">/production</code> и порядок. ID категории — латиница, цифры и «_», с буквы; после появления товаров ID не меняйте. «+ Категория» — настройки отображения и полей товара; «Сохранить на сервер» пишет категории и товары одним запросом. Категорию без товаров можно удалить; с товарами — сначала переназначьте категорию. В форме товара поля могут скрываться по настройке категории.</p>
@@ -293,6 +316,30 @@
                     Сохранить тексты
                 </button>
             </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Change admin key modal -->
+    <div id="admin-change-key-modal" role="dialog" aria-modal="true" aria-labelledby="admin-change-key-title" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[110] p-3 md:p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-5 md:p-8">
+            <h3 id="admin-change-key-title" class="text-xl font-bold mb-2">Новый ключ доступа</h3>
+            <p class="text-sm text-gray-500 mb-4">Файл на сервере: <code class="text-xs bg-gray-100 px-1 rounded">admin-config.json</code>. Минимум 6 символов.</p>
+            <form id="admin-change-key-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="admin-new-key">Новый ключ</label>
+                    <input type="password" id="admin-new-key" required minlength="6" maxlength="400" autocomplete="new-password" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="admin-new-key-repeat">Повторите ключ</label>
+                    <input type="password" id="admin-new-key-repeat" required minlength="6" maxlength="400" autocomplete="new-password" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <p id="admin-change-key-error" class="text-sm text-red-600 hidden"></p>
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" id="btn-close-admin-change-key" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">Отмена</button>
+                    <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded-md font-medium hover:bg-blue-700">Сохранить ключ</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -513,8 +560,13 @@
         const SITE_TEXT_KEY_RE = /^[a-z][a-z0-9_.-]{0,100}$/i;
         const FALLBACK_IMG = 'https://via.placeholder.com/40?text=?';
         const CATEGORY_ID_RE_ADMIN = /^[a-z][a-z0-9_]{0,63}$/;
-        const ADMIN_AUTH_STORAGE_KEY = 'respo_admin_basic_auth';
         let currentTab = 'media';
+        function bootstrapAdminUi() {
+            if (!window.__respoAdminHandlersOnce) {
+                initEventHandlers();
+            }
+            loadImages();
+        }
 
         function markLastAction(text) {
             const el = document.getElementById('stats-last-action');
@@ -557,42 +609,121 @@
             return v.startsWith('assets/') ? v : `assets/${v}`;
         }
 
-        function getStoredAdminAuth() {
-            return localStorage.getItem(ADMIN_AUTH_STORAGE_KEY) || '';
-        }
-
-        function setStoredAdminAuth(value) {
-            if (value) localStorage.setItem(ADMIN_AUTH_STORAGE_KEY, value);
-            else localStorage.removeItem(ADMIN_AUTH_STORAGE_KEY);
-        }
-
-        async function authorizedFetch(url, options = {}, allowRetry = true) {
+        async function authorizedFetch(url, options = {}) {
             const headers = new Headers(options.headers || {});
-            const storedAuth = getStoredAdminAuth();
-            if (storedAuth && !headers.has('Authorization')) {
-                headers.set('Authorization', storedAuth);
+            const response = await fetch(url, { ...options, headers, credentials: 'same-origin' });
+            if (response.status === 401) {
+                const app = document.getElementById('admin-app');
+                const gate = document.getElementById('admin-login-gate');
+                if (app && gate && !app.classList.contains('hidden')) {
+                    showToast('Сессия истекла или нет доступа. Войдите снова.', 'warning');
+                    app.classList.add('hidden');
+                    gate.classList.remove('hidden');
+                }
+            }
+            return response;
+        }
+
+        async function initAdminAccess() {
+            const gate = document.getElementById('admin-login-gate');
+            const app = document.getElementById('admin-app');
+            const errEl = document.getElementById('admin-login-error');
+            const form = document.getElementById('admin-login-form');
+
+            async function sessionOk() {
+                try {
+                    const r = await fetch('/api/admin/session', { credentials: 'same-origin' });
+                    const j = await r.json();
+                    return !!j.authenticated;
+                } catch (e) {
+                    return false;
+                }
             }
 
-            const response = await fetch(url, { ...options, headers });
-            if (response.status !== 401 || !allowRetry) return response;
-
-            const username = window.prompt('Введите логин администратора');
-            if (!username) return response;
-            const password = window.prompt('Введите пароль администратора');
-            if (password === null) return response;
-
-            const basic = `Basic ${btoa(`${username}:${password}`)}`;
-            setStoredAdminAuth(basic);
-
-            const retryHeaders = new Headers(options.headers || {});
-            retryHeaders.set('Authorization', basic);
-            const retryResponse = await fetch(url, { ...options, headers: retryHeaders });
-
-            if (retryResponse.status === 401) {
-                setStoredAdminAuth('');
-                alert('Неверные учетные данные администратора.');
+            if (await sessionOk()) {
+                gate.classList.add('hidden');
+                app.classList.remove('hidden');
+                bootstrapAdminUi();
             }
-            return retryResponse;
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                errEl.classList.add('hidden');
+                const keyInput = document.getElementById('admin-key-input');
+                const key = keyInput.value;
+                try {
+                    const r = await fetch('/api/admin/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'same-origin',
+                        body: JSON.stringify({ key })
+                    });
+                    const j = await r.json().catch(() => ({}));
+                    if (!r.ok) {
+                        errEl.textContent = j.error || 'Неверный ключ';
+                        errEl.classList.remove('hidden');
+                        return;
+                    }
+                    keyInput.value = '';
+                    gate.classList.add('hidden');
+                    app.classList.remove('hidden');
+                    bootstrapAdminUi();
+                } catch (ex) {
+                    errEl.textContent = 'Ошибка сети';
+                    errEl.classList.remove('hidden');
+                }
+            });
+
+            document.getElementById('btn-admin-logout')?.addEventListener('click', async () => {
+                await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' });
+                location.reload();
+            });
+
+            document.getElementById('btn-admin-change-key')?.addEventListener('click', () => {
+                const m = document.getElementById('admin-change-key-modal');
+                document.getElementById('admin-change-key-error').classList.add('hidden');
+                document.getElementById('admin-change-key-form').reset();
+                m.classList.remove('hidden');
+                m.classList.add('flex');
+            });
+            document.getElementById('btn-close-admin-change-key')?.addEventListener('click', () => {
+                const m = document.getElementById('admin-change-key-modal');
+                m.classList.add('hidden');
+                m.classList.remove('flex');
+            });
+
+            document.getElementById('admin-change-key-form')?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const err = document.getElementById('admin-change-key-error');
+                err.classList.add('hidden');
+                const a = document.getElementById('admin-new-key').value;
+                const b = document.getElementById('admin-new-key-repeat').value;
+                if (a !== b) {
+                    err.textContent = 'Ключи не совпадают';
+                    err.classList.remove('hidden');
+                    return;
+                }
+                try {
+                    const r = await authorizedFetch('/api/admin/change-key', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ newKey: a })
+                    });
+                    const j = await r.json().catch(() => ({}));
+                    if (!r.ok) {
+                        err.textContent = j.error || 'Ошибка';
+                        err.classList.remove('hidden');
+                        return;
+                    }
+                    const m = document.getElementById('admin-change-key-modal');
+                    m.classList.add('hidden');
+                    m.classList.remove('flex');
+                    showToast('Ключ обновлён. Сохранён в admin-config.json на сервере.', 'success');
+                } catch (ex) {
+                    err.textContent = 'Ошибка сети';
+                    err.classList.remove('hidden');
+                }
+            });
         }
 
         function parseParamsRows(raw) {
@@ -1800,6 +1931,9 @@
         }
         
         function initEventHandlers() {
+            if (window.__respoAdminHandlersOnce) return;
+            window.__respoAdminHandlersOnce = true;
+
             const mediaTab = document.getElementById('tab-media');
             const productsTab = document.getElementById('tab-products');
             const certificatesTab = document.getElementById('tab-certificates');
@@ -1895,6 +2029,12 @@
             reviewsSearch?.addEventListener('input', renderReviews);
             window.addEventListener('keydown', (e) => {
                 if (e.key !== 'Escape') return;
+                const ak = document.getElementById('admin-change-key-modal');
+                if (ak && !ak.classList.contains('hidden')) {
+                    ak.classList.add('hidden');
+                    ak.classList.remove('flex');
+                    return;
+                }
                 closeProductModal();
                 closeCategoryModal();
                 closeCertificateModal();
@@ -1981,8 +2121,7 @@
             });
         }
 
-        initEventHandlers();
-        loadImages();
+        initAdminAccess();
     </script>
 </body>
 </html>

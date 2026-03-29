@@ -4,6 +4,10 @@ node_modules/
 # Environment
 .env
 
+# Admin (секреты; на сервере создаются автоматически с ключом по умолчанию)
+admin-config.json
+.admin-session-secret
+
 # Logs
 logs/
 *.log

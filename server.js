@@ -7,6 +7,7 @@ const compression = require('compression');
 const helmet = require('helmet');
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
 const multer = require('multer');
 const nodemailer = require('nodemailer');
 
@@ -16,13 +17,18 @@ if (process.env.TRUST_PROXY === '1') {
 }
 const PORT = Number(process.env.PORT || 3000);
 const isProduction = process.env.NODE_ENV === 'production';
-const isAdminOpen = process.env.ADMIN_OPEN !== 'false';
 const assetsDir = path.join(__dirname, 'assets');
 const productsFile = path.join(__dirname, 'products.json');
 const certificatesFile = path.join(__dirname, 'certificates.json');
 const reviewsFile = path.join(__dirname, 'reviews.json');
 const homeContentFile = path.join(__dirname, 'home-content.json');
 const siteTextFile = path.join(__dirname, 'site-text.json');
+const adminConfigFile = path.join(__dirname, 'admin-config.json');
+const adminSessionSecretFile = path.join(__dirname, '.admin-session-secret');
+const DEFAULT_ADMIN_KEY = 'AlexErmakov2026';
+const ADMIN_COOKIE_NAME = 'respo_admin_sess';
+const ADMIN_SESSION_MS = 7 * 24 * 60 * 60 * 1000;
+const ADMIN_KEY_MAX_LEN = 400;
 const IMAGE_EXT_RE = /\.(png|svg|jpe?g|gif|webp|tiff?)$/i;
 const DEFAULT_SITE_URL = 'https://re-spo.com';
 
@@ -339,45 +345,138 @@ ${entries}
 </urlset>`;
 }
 
-function adminAuth(req, res, next) {
-    if (isAdminOpen) return next();
-    if (!isProduction) return next();
-
-    const configuredUser = process.env.ADMIN_USER;
-    const configuredPass = process.env.ADMIN_PASS;
-
-    if (!configuredUser || !configuredPass) {
-        return res.status(503).json({
-            error: 'Admin credentials are not configured. Set ADMIN_USER and ADMIN_PASS.'
-        });
-    }
-
-    const auth = req.headers.authorization || '';
-    if (!auth.startsWith('Basic ')) {
-        res.set('WWW-Authenticate', 'Basic realm="RE-SPO Admin"');
-        return res.status(401).send('Authentication required');
-    }
-
-    const encoded = auth.slice(6);
-    let decoded = '';
+function readAdminKey() {
     try {
-        decoded = Buffer.from(encoded, 'base64').toString('utf8');
+        if (!fs.existsSync(adminConfigFile)) {
+            fs.writeFileSync(
+                adminConfigFile,
+                JSON.stringify({ adminKey: DEFAULT_ADMIN_KEY }, null, 2),
+                'utf8'
+            );
+            return DEFAULT_ADMIN_KEY;
+        }
+        const raw = JSON.parse(fs.readFileSync(adminConfigFile, 'utf8'));
+        const k = typeof raw.adminKey === 'string' ? raw.adminKey : '';
+        if (!k || k.length > ADMIN_KEY_MAX_LEN) {
+            return DEFAULT_ADMIN_KEY;
+        }
+        return k;
     } catch (e) {
-        return res.status(401).send('Invalid auth header');
+        return DEFAULT_ADMIN_KEY;
     }
+}
 
-    const separatorIdx = decoded.indexOf(':');
-    if (separatorIdx === -1) {
-        return res.status(401).send('Invalid auth format');
+function writeAdminKeyFile(newKey) {
+    let base = {};
+    try {
+        if (fs.existsSync(adminConfigFile)) {
+            base = JSON.parse(fs.readFileSync(adminConfigFile, 'utf8'));
+        }
+    } catch (e) {
+        base = {};
     }
+    base.adminKey = newKey;
+    fs.writeFileSync(adminConfigFile, JSON.stringify(base, null, 2), 'utf8');
+}
 
-    const user = decoded.slice(0, separatorIdx);
-    const pass = decoded.slice(separatorIdx + 1);
-    if (user !== configuredUser || pass !== configuredPass) {
-        res.set('WWW-Authenticate', 'Basic realm="RE-SPO Admin"');
-        return res.status(401).send('Invalid credentials');
+function getAdminSessionSecret() {
+    const env = String(process.env.ADMIN_SESSION_SECRET || '').trim();
+    if (env) return env;
+    try {
+        if (fs.existsSync(adminSessionSecretFile)) {
+            return fs.readFileSync(adminSessionSecretFile, 'utf8').trim();
+        }
+        const s = crypto.randomBytes(32).toString('hex');
+        fs.writeFileSync(adminSessionSecretFile, s, 'utf8');
+        return s;
+    } catch (e) {
+        return 'insecure-dev-admin-session-secret-change-me';
     }
-    next();
+}
+
+function parseCookieHeader(req) {
+    const h = req.headers.cookie || '';
+    const out = {};
+    h.split(';').forEach((part) => {
+        const idx = part.indexOf('=');
+        if (idx === -1) return;
+        const name = part.slice(0, idx).trim();
+        let val = part.slice(idx + 1).trim();
+        try {
+            val = decodeURIComponent(val);
+        } catch (e) {
+            /* keep raw */
+        }
+        out[name] = val;
+    });
+    return out;
+}
+
+function signAdminSessionToken() {
+    const exp = Date.now() + ADMIN_SESSION_MS;
+    const payload = Buffer.from(JSON.stringify({ exp, v: 1 }), 'utf8').toString('base64url');
+    const sig = crypto.createHmac('sha256', getAdminSessionSecret()).update(payload).digest('base64url');
+    return `${payload}.${sig}`;
+}
+
+function verifyAdminSessionCookie(req) {
+    const raw = parseCookieHeader(req)[ADMIN_COOKIE_NAME];
+    if (!raw || typeof raw !== 'string') return false;
+    const dot = raw.lastIndexOf('.');
+    if (dot <= 0) return false;
+    const payloadB64 = raw.slice(0, dot);
+    const sig = raw.slice(dot + 1);
+    const expected = crypto.createHmac('sha256', getAdminSessionSecret()).update(payloadB64).digest('base64url');
+    const a = Buffer.from(sig, 'utf8');
+    const b = Buffer.from(expected, 'utf8');
+    if (a.length !== b.length) return false;
+    if (!crypto.timingSafeEqual(a, b)) return false;
+    try {
+        const json = JSON.parse(Buffer.from(payloadB64, 'base64url').toString('utf8'));
+        if (!json.exp || Date.now() > json.exp) return false;
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+function timingSafeAdminKeyEqual(input, stored) {
+    const a = Buffer.from(String(input), 'utf8');
+    const s = Buffer.from(String(stored), 'utf8');
+    if (a.length !== s.length) return false;
+    return crypto.timingSafeEqual(a, s);
+}
+
+function cookieSecureFlag(req) {
+    if (process.env.ADMIN_COOKIE_SECURE === '0') return false;
+    if (process.env.ADMIN_COOKIE_SECURE === '1') return true;
+    return Boolean(req.secure);
+}
+
+function buildAdminSessionSetCookie(token, req) {
+    const maxAge = Math.floor(ADMIN_SESSION_MS / 1000);
+    const parts = [
+        `${ADMIN_COOKIE_NAME}=${encodeURIComponent(token)}`,
+        'Path=/',
+        'HttpOnly',
+        'SameSite=Lax',
+        `Max-Age=${maxAge}`
+    ];
+    if (cookieSecureFlag(req)) parts.push('Secure');
+    return parts.join('; ');
+}
+
+function buildAdminSessionClearCookie(req) {
+    const parts = [`${ADMIN_COOKIE_NAME}=`, 'Path=/', 'HttpOnly', 'SameSite=Lax', 'Max-Age=0'];
+    if (cookieSecureFlag(req)) parts.push('Secure');
+    return parts.join('; ');
+}
+
+function adminAuth(req, res, next) {
+    if (verifyAdminSessionCookie(req)) {
+        return next();
+    }
+    return res.status(401).json({ error: 'Требуется вход в админку', code: 'ADMIN_AUTH_REQUIRED' });
 }
 
 const cspDirectives = {
@@ -421,6 +520,38 @@ app.use(express.json({ limit: '256kb' }));
 app.use('/api', (req, res, next) => {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
     next();
+});
+
+app.get('/api/admin/session', (req, res) => {
+    res.json({ authenticated: verifyAdminSessionCookie(req) });
+});
+
+app.post('/api/admin/login', (req, res) => {
+    const key = req.body && typeof req.body.key === 'string' ? req.body.key : '';
+    if (!timingSafeAdminKeyEqual(key, readAdminKey())) {
+        return res.status(401).json({ error: 'Неверный ключ' });
+    }
+    const token = signAdminSessionToken();
+    res.setHeader('Set-Cookie', buildAdminSessionSetCookie(token, req));
+    return res.json({ ok: true });
+});
+
+app.post('/api/admin/logout', (req, res) => {
+    res.setHeader('Set-Cookie', buildAdminSessionClearCookie(req));
+    res.json({ ok: true });
+});
+
+app.post('/api/admin/change-key', adminAuth, (req, res) => {
+    const newKey = req.body && typeof req.body.newKey === 'string' ? req.body.newKey.trim() : '';
+    if (newKey.length < 6 || newKey.length > ADMIN_KEY_MAX_LEN) {
+        return res.status(400).json({ error: 'Ключ: от 6 до 400 символов' });
+    }
+    try {
+        writeAdminKeyFile(newKey);
+        res.json({ ok: true });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
 });
 
 app.get('/assets/product_placeholder.png', (req, res, next) => {
@@ -496,7 +627,7 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/production', (req, res) => res.sendFile(path.join(__dirname, 'production.html')));
 app.get('/product', (req, res) => res.sendFile(path.join(__dirname, 'product.html')));
 app.get('/privacy-policy', (req, res) => res.sendFile(path.join(__dirname, 'privacy-policy.html')));
-app.get('/admin', adminAuth, (req, res) => {
+app.get('/admin', (req, res) => {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
     res.sendFile(path.join(__dirname, 'admin.html'));
 });
