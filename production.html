@@ -170,10 +170,19 @@
                                 </button>
                             </div>
                             <p class="hidden text-center text-respo-dark/60 py-8 px-4 text-[15px]" data-reviews-empty>Отзывов пока нет.</p>
-                            <div class="overflow-hidden px-2 pb-2">
-                                <div data-reviews-track class="reviews-scrollbar" aria-label="Отзывы, пролистывание"></div>
+                            <div class="relative px-1 pb-2 sm:px-2" data-reviews-inline-wrap>
+                                <button type="button" data-reviews-inline-prev
+                                    class="reviews-inline-arrow absolute left-0 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-respo-blue/20 bg-white text-xl leading-none text-respo-blue shadow-md transition hover:bg-respo-blue-light md:flex"
+                                    aria-label="Предыдущая страница отзывов">‹</button>
+                                <button type="button" data-reviews-inline-next
+                                    class="reviews-inline-arrow absolute right-0 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-respo-blue/20 bg-white text-xl leading-none text-respo-blue shadow-md transition hover:bg-respo-blue-light md:flex"
+                                    aria-label="Следующая страница отзывов">›</button>
+                                <div class="overflow-hidden px-1 md:px-11">
+                                    <div data-reviews-track class="reviews-scrollbar" aria-label="Отзывы, пролистывание"></div>
+                                </div>
                             </div>
-                            <div class="flex justify-center pt-8 pb-6 space-x-3" data-reviews-dots role="tablist" aria-label="Отзывы"></div>
+                            <p class="px-2 pt-2 text-center text-[12px] text-respo-dark/45 md:hidden">Свайпните, чтобы листать отзывы</p>
+                            <div class="flex justify-center gap-2 pt-6 pb-6 sm:pt-8" data-reviews-dots role="tablist" aria-label="Страницы отзывов"></div>
                         </div>
                     </div>
                 </div>
@@ -188,17 +197,35 @@
         </div>
     </div>
 
-    <div id="reviews-gallery-modal" class="fixed inset-0 z-[120] hidden p-4" role="dialog" aria-modal="true" aria-labelledby="reviews-modal-title">
-        <div class="absolute inset-0 bg-black/50" data-reviews-modal-backdrop aria-hidden="true"></div>
-        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[min(92vh,720px)] flex flex-col overflow-hidden mx-auto">
-            <div class="flex items-center justify-between gap-4 px-5 py-4 border-b border-respo-blue/10 shrink-0">
-                <h3 id="reviews-modal-title" class="text-xl md:text-2xl font-medium text-respo-blue font-heading" data-site-text="production.reviews.title">Отзывы покупателей</h3>
-                <button type="button" data-reviews-modal-close class="w-10 h-10 rounded-full flex items-center justify-center text-respo-blue text-2xl leading-none hover:bg-respo-blue-light transition-colors" aria-label="Закрыть">×</button>
+    <div id="reviews-gallery-modal" class="fixed inset-0 z-[120] hidden p-3 sm:p-5 md:p-6" role="dialog" aria-modal="true" aria-labelledby="reviews-modal-title" aria-describedby="reviews-modal-hint">
+        <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-md transition-opacity" data-reviews-modal-backdrop aria-hidden="true"></div>
+        <div class="relative mx-auto flex h-full max-h-[min(92vh,880px)] w-full max-w-5xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-white/60">
+            <header class="flex shrink-0 flex-col gap-3 border-b border-respo-blue/10 bg-gradient-to-r from-white to-respo-blue-light/40 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                <div class="min-w-0 pr-2">
+                    <h3 id="reviews-modal-title" class="font-heading text-lg font-medium text-respo-blue sm:text-xl md:text-2xl" data-site-text="production.reviews.title">Отзывы покупателей</h3>
+                    <p data-reviews-modal-progress class="mt-1 text-[13px] text-respo-dark/55 sm:text-sm">Отзыв 1 из 1</p>
+                </div>
+                <div class="flex shrink-0 items-center gap-2 sm:gap-3">
+                    <button type="button" data-reviews-modal-prev class="flex h-10 w-10 items-center justify-center rounded-full border border-respo-blue/20 bg-white text-xl leading-none text-respo-blue shadow-sm transition hover:bg-respo-blue-light disabled:cursor-not-allowed disabled:opacity-35" aria-label="Предыдущий отзыв">‹</button>
+                    <button type="button" data-reviews-modal-next class="flex h-10 w-10 items-center justify-center rounded-full border border-respo-blue/20 bg-white text-xl leading-none text-respo-blue shadow-sm transition hover:bg-respo-blue-light disabled:cursor-not-allowed disabled:opacity-35" aria-label="Следующий отзыв">›</button>
+                    <button type="button" data-reviews-modal-close class="ml-1 flex h-10 w-10 items-center justify-center rounded-full text-2xl leading-none text-respo-blue transition hover:bg-respo-blue-light" aria-label="Закрыть">×</button>
+                </div>
+            </header>
+            <div class="flex min-h-0 min-w-0 flex-1 flex-col md:flex-row">
+                <aside class="shrink-0 border-b border-respo-blue/10 bg-respo-blue-light/25 md:w-[220px] md:border-b-0 md:border-r md:overflow-y-auto" aria-label="Список отзывов">
+                    <p class="mb-0 px-3 pt-3 text-[11px] font-semibold uppercase tracking-wider text-respo-dark/45 md:mb-2 md:px-2 md:pt-0">Все отзывы</p>
+                    <nav class="flex flex-row gap-2 overflow-x-auto p-3 pt-2 [scrollbar-width:none] [-ms-overflow-style:none] md:flex-col md:gap-1 md:overflow-visible md:p-3 [&::-webkit-scrollbar]:hidden" data-reviews-modal-toc></nav>
+                </aside>
+                <div class="relative min-h-0 min-w-0 flex-1 bg-gradient-to-b from-white to-respo-blue-light/20">
+                    <div class="absolute inset-0 overflow-hidden px-0">
+                        <div data-reviews-modal-track class="reviews-scrollbar flex h-full w-full" aria-label="Текст отзыва, листание"></div>
+                    </div>
+                </div>
             </div>
-            <div class="px-4 py-4 overflow-hidden min-h-0 flex-1">
-                <div data-reviews-modal-track class="reviews-scrollbar" aria-label="Отзывы в окне"></div>
-            </div>
-            <div class="flex justify-center py-4 space-x-3 border-t border-respo-blue/10 shrink-0 bg-white" data-reviews-modal-dots role="tablist" aria-label="Страницы отзывов"></div>
+            <footer class="flex shrink-0 flex-col items-center gap-3 border-t border-respo-blue/10 bg-white px-4 py-3 sm:flex-row sm:justify-between sm:px-6">
+                <p id="reviews-modal-hint" class="order-2 text-center text-[12px] text-respo-dark/45 sm:order-1 sm:text-left">Свайп или стрелки · клавиши ← → · Esc — закрыть</p>
+                <div class="order-1 flex flex-wrap justify-center gap-2 sm:order-2" data-reviews-modal-dots role="tablist" aria-label="Номер отзыва"></div>
+            </footer>
         </div>
     </div>
 
@@ -380,9 +407,9 @@
 
     <script src="js/site-text.js?v=1"></script>
     <script src="js/contact-form.js?v=1"></script>
-    <script src="js/carousel-strip.js?v=2"></script>
+    <script src="js/carousel-strip.js?v=3"></script>
     <script src="js/products.js?v=14"></script>
-    <script src="js/reviews.js?v=3"></script>
+    <script src="js/reviews.js?v=4"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             function scrollOpenedCatalogIntoView(toggleButton, panel) {

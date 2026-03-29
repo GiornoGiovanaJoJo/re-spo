@@ -5,27 +5,34 @@
     const DOT_ATTR = 'data-carousel-dot';
 
     function inactiveDotClasses(theme) {
-        return theme === 'light'
-            ? 'bg-respo-blue/25 opacity-90 hover:opacity-100'
-            : 'bg-white opacity-60 hover:opacity-100';
+        if (theme === 'light') return 'bg-respo-blue/25 opacity-90 hover:opacity-100';
+        if (theme === 'pill') return 'bg-respo-blue/20 opacity-80 hover:opacity-100';
+        return 'bg-white opacity-60 hover:opacity-100';
+    }
+
+    function dotShape(theme) {
+        return theme === 'pill' ? 'h-2 w-8 rounded-full' : 'h-2.5 w-2.5 rounded-full';
     }
 
     function setDotsActive(dotsWrap, index, count, theme) {
         if (!dotsWrap) return;
         const t = theme || 'gradient';
+        const shape = dotShape(t);
         const buttons = dotsWrap.querySelectorAll('button[' + DOT_ATTR + ']');
         buttons.forEach((btn, i) => {
             const on = i === index;
             btn.setAttribute('aria-selected', on ? 'true' : 'false');
             btn.className =
-                'w-2.5 h-2.5 rounded-full transition-opacity cursor-pointer shrink-0 ' +
-                (on ? 'bg-respo-blue opacity-100' : inactiveDotClasses(t));
+                shape +
+                ' shrink-0 cursor-pointer transition-all duration-200 ' +
+                (on ? 'scale-100 bg-respo-blue opacity-100 shadow-sm' : inactiveDotClasses(t));
         });
     }
 
     function buildDots(dotsWrap, count, goTo, theme, ariaPageLabel) {
         if (!dotsWrap || count < 1) return;
         const t = theme || 'gradient';
+        const shape = dotShape(t);
         const label = ariaPageLabel || 'Страница';
         dotsWrap.innerHTML = '';
         for (let i = 0; i < count; i++) {
@@ -35,8 +42,9 @@
             btn.setAttribute('role', 'tab');
             btn.setAttribute('aria-label', label + ' ' + (i + 1));
             btn.className =
-                'w-2.5 h-2.5 rounded-full transition-opacity cursor-pointer shrink-0 ' +
-                (i === 0 ? 'bg-respo-blue opacity-100' : inactiveDotClasses(t));
+                shape +
+                ' shrink-0 cursor-pointer transition-all duration-200 ' +
+                (i === 0 ? 'scale-100 bg-respo-blue opacity-100 shadow-sm' : inactiveDotClasses(t));
             btn.addEventListener('click', () => goTo(i));
             dotsWrap.appendChild(btn);
         }
@@ -48,7 +56,7 @@
      * @param {number} slideCount
      * @param {'light'|'gradient'} [dotsTheme]
      * @param {string} [ariaPageLabel]
-     * @param {{ arrows?: { prev: HTMLElement, next: HTMLElement } }|null} [opts]
+     * @param {{ arrows?: { prev: HTMLElement, next: HTMLElement }, onIndexChange?: (i: number) => void }|null} [opts]
      */
     function bind(track, dotsWrap, slideCount, dotsTheme, ariaPageLabel, opts) {
         if (!track || slideCount < 1) {
@@ -64,6 +72,7 @@
         let scrollRaf = null;
         const theme = dotsTheme || 'gradient';
         const arrows = opts && opts.arrows;
+        const onIndexChange = opts && typeof opts.onIndexChange === 'function' ? opts.onIndexChange : null;
 
         function currentIndex() {
             const cw = track.clientWidth;
@@ -91,6 +100,7 @@
             const idx = Math.min(slideCount - 1, Math.max(0, Math.round(track.scrollLeft / cw)));
             setDotsActive(dotsWrap, idx, slideCount, theme);
             updateArrows(idx);
+            if (onIndexChange) onIndexChange(idx);
         };
 
         const onScroll = () => {
@@ -106,6 +116,7 @@
             track.scrollTo({ left: idx * cw, behavior: 'smooth' });
             setDotsActive(dotsWrap, idx, slideCount, theme);
             updateArrows(idx);
+            if (onIndexChange) onIndexChange(idx);
         }
 
         buildDots(dotsWrap, slideCount, goTo, theme, ariaPageLabel);
@@ -142,6 +153,7 @@
         return {
             goTo,
             syncFromScroll,
+            getIndex: currentIndex,
             destroy() {
                 ac.abort();
             },
