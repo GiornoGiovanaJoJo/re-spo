@@ -302,6 +302,19 @@ async function verifySmartCaptcha(token, ip) {
     }
 }
 
+function smtpTransportOptions(host, port, user, pass) {
+    const secure = process.env.CONTACT_SMTP_SECURE !== 'false' && port === 465;
+    return {
+        host,
+        port,
+        secure,
+        requireTLS: port === 587,
+        auth: { user, pass },
+        connectionTimeout: 20000,
+        greetingTimeout: 20000
+    };
+}
+
 async function sendContactEmail({ name, phone, email }) {
     const user = envOrHard('CONTACT_SMTP_USER');
     const pass = envOrHard('CONTACT_SMTP_PASS');
@@ -311,21 +324,15 @@ async function sendContactEmail({ name, phone, email }) {
     }
 
     const host = envOrHard('CONTACT_SMTP_HOST') || 'smtp.yandex.ru';
-    const port = Number(envOrHard('CONTACT_SMTP_PORT') || 465);
-    const secure = process.env.CONTACT_SMTP_SECURE !== 'false' && port === 465;
-
-    const transporter = nodemailer.createTransport({
-        host,
-        port,
-        secure,
-        auth: { user, pass }
-    });
+    const primaryPort = Number(envOrHard('CONTACT_SMTP_PORT') || 465);
+    const fallbackPort = primaryPort === 465 ? 587 : primaryPort === 587 ? 465 : null;
+    const portsToTry = fallbackPort ? [primaryPort, fallbackPort] : [primaryPort];
 
     const safeName = name.slice(0, CONTACT_NAME_MAX);
     const safePhone = phone.slice(0, CONTACT_PHONE_MAX);
     const safeEmail = email.slice(0, CONTACT_EMAIL_MAX);
 
-    await transporter.sendMail({
+    const mailPayload = {
         from: `"RE-SPO сайт" <${user}>`,
         to: toRaw,
         replyTo: safeEmail,
@@ -334,8 +341,22 @@ async function sendContactEmail({ name, phone, email }) {
         html: `<p><b>Имя:</b> ${escapeHtmlContact(safeName)}</p><p><b>Телефон:</b> ${escapeHtmlContact(
             safePhone
         )}</p><p><b>Email:</b> ${escapeHtmlContact(safeEmail)}</p>`
-    });
-    return { ok: true };
+    };
+
+    let lastErr = null;
+    for (const port of portsToTry) {
+        if (!Number.isFinite(port) || port < 1) continue;
+        try {
+            const transporter = nodemailer.createTransport(smtpTransportOptions(host, port, user, pass));
+            await transporter.sendMail(mailPayload);
+            return { ok: true };
+        } catch (e) {
+            lastErr = e;
+            console.error(`[contact-smtp] ${host}:${port}`, e && e.message ? e.message : e);
+        }
+    }
+
+    return { ok: false, error: lastErr && lastErr.message ? String(lastErr.message) : 'SMTP send failed' };
 }
 
 function getPublicSiteUrl(req) {
@@ -590,6 +611,21 @@ app.get('/assets/product_placeholder.png', (req, res, next) => {
     res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8');
     res.setHeader('Cache-Control', 'public, max-age=86400');
     res.status(200).send(svg);
+});
+
+app.get('/assets/favicon.svg', (req, res) => {
+    const svgPath = path.join(assetsDir, 'favicon.svg');
+    if (fs.existsSync(svgPath)) {
+        res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8');
+        res.setHeader('Cache-Control', 'public, max-age=604800, immutable');
+        return res.sendFile(svgPath);
+    }
+    const fallback =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">' +
+        '<rect width="32" height="32" rx="6" fill="#0f172a"/></svg>';
+    res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    res.status(200).send(fallback);
 });
 
 app.use('/assets', express.static(assetsDir, {
