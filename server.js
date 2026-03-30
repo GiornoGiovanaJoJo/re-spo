@@ -49,7 +49,7 @@ const DEFAULT_ADMIN_KEY = 'AlexErmakov2026';
 const ADMIN_COOKIE_NAME = 'respo_admin_sess';
 const ADMIN_SESSION_MS = 7 * 24 * 60 * 60 * 1000;
 const ADMIN_KEY_MAX_LEN = 400;
-const IMAGE_EXT_RE = /\.(png|svg|jpe?g|gif|webp|tiff?)$/i;
+const IMAGE_EXT_RE = /\.(png|svg|jpe?g|gif|webp|tiff?|pdf)$/i;
 const DEFAULT_SITE_URL = 'https://re-spo.com';
 
 if (!fs.existsSync(assetsDir)) {
@@ -664,7 +664,7 @@ app.use('/assets', express.static(assetsDir, {
     maxAge: '7d',
     etag: true,
     setHeaders: (res, filePath) => {
-        if (/\.(png|svg|jpe?g|gif|webp|tiff?)$/i.test(filePath)) {
+        if (/\.(png|svg|jpe?g|gif|webp|tiff?|pdf)$/i.test(filePath)) {
             res.setHeader('Cache-Control', 'public, max-age=604800, immutable');
         }
     }
@@ -702,9 +702,11 @@ const upload = multer({
             cb(null, requested);
         }
     }),
-    limits: { fileSize: 8 * 1024 * 1024, files: 1 },
+    limits: { fileSize: Infinity, files: 1 },
     fileFilter: (req, file, cb) => {
-        const byMime = /^image\/(png|jpeg|jpg|gif|svg\+xml|webp|tiff)$/i.test(file.mimetype);
+        const byMime =
+            /^image\/(png|jpeg|jpg|gif|svg\+xml|webp|tiff)$/i.test(file.mimetype) ||
+            file.mimetype === 'application/pdf';
         const byExt = IMAGE_EXT_RE.test(file.originalname);
         cb(null, byMime && byExt);
     }

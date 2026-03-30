@@ -40,8 +40,20 @@ jobs:
             fi
 
             cd re-spo
+
+            # Данные админки (товары, сертификаты, тексты и т.д.) — не затирать при деплое
+            PRESERVE_DIR=/var/www/re-spo-admin-preserve
+            mkdir -p "$PRESERVE_DIR"
+            for f in products.json certificates.json reviews.json home-content.json site-text.json; do
+              if [ -f "$f" ]; then cp -a "$f" "$PRESERVE_DIR/$f"; fi
+            done
+
             git fetch --all
             git reset --hard origin/main
+
+            for f in products.json certificates.json reviews.json home-content.json site-text.json; do
+              if [ -f "$PRESERVE_DIR/$f" ]; then cp -a "$PRESERVE_DIR/$f" "$f"; fi
+            done
 
             # Ensure assets directory exists for uploads
             mkdir -p assets

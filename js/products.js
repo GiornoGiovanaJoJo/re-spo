@@ -33,6 +33,29 @@ function escapeHtml(input) {
         .replace(/'/g, '&#39;');
 }
 
+function isPdfAssetPath(src) {
+    return /\.pdf(\?|#|$)/i.test(String(src || ''));
+}
+
+/**
+ * Primary catalog/list media: raster image or embedded PDF (iframe).
+ * @param {string} src
+ * @param {string} alt
+ * @param {string} imgClass tailwind classes for &lt;img&gt;; also applied to iframe where relevant
+ */
+function productCatalogMediaHtml(src, alt, imgClass) {
+    const raw = String(src || '').trim();
+    const safeAlt = escapeHtml(alt);
+    if (!raw) {
+        return `<img src="assets/product_placeholder.png" alt="${safeAlt}" class="${imgClass}">`;
+    }
+    const safeSrc = escapeHtml(raw);
+    if (isPdfAssetPath(raw)) {
+        return `<iframe src="${safeSrc}" title="${safeAlt}" class="border-0 bg-white ${imgClass}" loading="lazy"></iframe>`;
+    }
+    return `<img src="${safeSrc}" alt="${safeAlt}" class="${imgClass}">`;
+}
+
 /** Defaults for category-driven catalog / product UI (admin + site). */
 function mergeCategoryConfig(raw) {
     const defaults = {
@@ -129,16 +152,17 @@ function createProductCard(product, categoryConfig) {
     const safeDescription = escapeHtml(product.description || '');
     const showDescription = cfg.fields.description !== false && Boolean(String(product.description || '').trim());
 
-    // Use t parameter to bust cache if needed, or just standard path
     const imgSrc = product.image || 'assets/product_placeholder.png';
-    
+    const exchangerMediaClass = 'max-h-full max-w-[92%] w-full min-h-[160px] h-auto object-contain';
+    const defaultMediaClass = 'max-h-full max-w-[92%] w-auto h-auto object-contain group-hover:scale-105 transition-transform';
+
     const mediaAspectClass = 'aspect-[4/5]';
 
     if (isExchanger) {
         div.innerHTML = `
             <h3 class="text-[14px] text-respo-dark/80 font-medium mb-4 leading-[1.45] break-words line-clamp-5">${exchangerTitle}</h3>
             <div class="bg-white w-full ${mediaAspectClass} rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center p-4">
-                <img src="${imgSrc}" alt="${safeName}" class="max-h-full max-w-[92%] w-auto h-auto object-contain">
+                ${productCatalogMediaHtml(imgSrc, rawName, exchangerMediaClass)}
             </div>
             <div class="mt-auto w-full">
                 <a href="${safeHref}" class="bg-respo-cyan text-white py-2.5 px-5 rounded-full flex items-center justify-center space-x-2 hover:brightness-110 transition-all w-full text-[12px]">
@@ -154,7 +178,7 @@ function createProductCard(product, categoryConfig) {
         <h3 class="${isValve ? 'text-[14px]' : 'text-lg'} font-medium text-respo-dark mb-4 w-full min-w-0 break-words leading-snug line-clamp-4 lg:line-clamp-3">${safeName}</h3>
         ${showDescription ? `<p class="text-[12px] text-respo-dark/60 mb-4 w-full min-w-0 break-words leading-relaxed line-clamp-4 lg:line-clamp-2">${safeDescription}</p>` : ''}
         <div class="bg-white w-full ${mediaAspectClass} rounded-[16px] mb-6 shadow-sm overflow-hidden flex items-center justify-center p-4">
-            <img src="${imgSrc}" alt="${safeName}" class="max-h-full max-w-[92%] w-auto h-auto object-contain group-hover:scale-105 transition-transform">
+            ${productCatalogMediaHtml(imgSrc, rawName, defaultMediaClass)}
         </div>
         <div class="mt-auto w-full">
             <a href="${safeHref}" class="bg-respo-cyan text-white py-2.5 px-5 rounded-full flex items-center justify-center space-x-2 hover:brightness-110 transition-all w-full text-[12px]">
@@ -175,7 +199,10 @@ function createProductListItem(product, categoryConfig) {
     const safeName = escapeHtml(product.name);
     
     if (cfg.listStyle === 'accordion') {
-        const equipImg = escapeHtml(product.image || 'assets/product_placeholder.png');
+        const equipSrc = product.image || 'assets/product_placeholder.png';
+        const accordionMedia = isPdfAssetPath(equipSrc)
+            ? `<iframe src="${escapeHtml(equipSrc)}" title="${safeName}" class="h-full min-h-[280px] w-full border-0 bg-white" loading="lazy"></iframe>`
+            : `<img src="${escapeHtml(equipSrc)}" alt="${safeName}" class="w-full h-full object-cover">`;
         div.innerHTML = `
             <div class="py-8 flex items-center justify-between group cursor-pointer hover:bg-respo-blue-light/30 transition-colors px-4 -mx-4 rounded-xl accordion-header">
                 <h3 class="text-[20px] lg:text-[24px] text-respo-dark font-medium transition-colors group-hover:text-respo-cyan">${safeName}</h3>
@@ -187,7 +214,7 @@ function createProductListItem(product, categoryConfig) {
                 <div class="pb-10 pt-3">
                     <div class="rounded-[8px] overflow-hidden bg-[#F5F5F5] w-full max-w-[1322px] mx-auto">
                         <div class="w-full aspect-[4/3] sm:aspect-[12/5] max-h-[531px] flex items-center justify-center">
-                            <img src="${equipImg}" alt="${safeName}" class="w-full h-full object-cover">
+                            ${accordionMedia}
                         </div>
                     </div>
                     <div class="mt-6 flex justify-start">
@@ -469,12 +496,19 @@ async function initProductionCatalogSections(rootId) {
 function initCertificateLightbox(container) {
     const lb = document.getElementById('certificate-lightbox');
     const lbImg = document.getElementById('certificate-lightbox-img');
+    const lbPdf = document.getElementById('certificate-lightbox-pdf');
     if (!lb || !lbImg || !container) return;
 
     function closeLb() {
         lb.classList.add('hidden');
         lb.classList.remove('flex', 'items-center', 'justify-center');
         document.body.style.removeProperty('overflow');
+        if (lbPdf) {
+            lbPdf.classList.add('hidden');
+            lbPdf.removeAttribute('src');
+        }
+        lbImg.classList.remove('hidden');
+        lbImg.removeAttribute('src');
     }
 
     if (!lb.dataset.lightboxBound) {
@@ -495,8 +529,23 @@ function initCertificateLightbox(container) {
         e.preventDefault();
         const src = trigger.getAttribute('data-cert-lightbox-src');
         if (!src) return;
-        lbImg.src = src;
-        lbImg.alt = trigger.getAttribute('data-cert-lightbox-alt') || 'Сертификат';
+        const alt = trigger.getAttribute('data-cert-lightbox-alt') || 'Сертификат';
+        const isPdf = isPdfAssetPath(src);
+        if (isPdf && lbPdf) {
+            lbImg.classList.add('hidden');
+            lbImg.removeAttribute('src');
+            lbPdf.classList.remove('hidden');
+            lbPdf.src = src;
+            lbPdf.title = alt;
+        } else {
+            if (lbPdf) {
+                lbPdf.classList.add('hidden');
+                lbPdf.removeAttribute('src');
+            }
+            lbImg.classList.remove('hidden');
+            lbImg.src = src;
+            lbImg.alt = alt;
+        }
         lb.classList.remove('hidden');
         lb.classList.add('flex', 'items-center', 'justify-center');
         document.body.style.overflow = 'hidden';
@@ -534,12 +583,14 @@ async function initCertificatesRender(containerId) {
         const imageSrc = imagePath || '';
         const media =
             imageSrc
-                ? `<img src="${escapeHtml(imageSrc)}" alt="${title}" class="pointer-events-none block h-auto w-auto min-h-0 min-w-0 max-h-full max-w-full object-contain object-center" loading="lazy" decoding="async">`
+                ? isPdfAssetPath(imageSrc)
+                    ? `<iframe src="${escapeHtml(imageSrc)}" title="${title}" class="pointer-events-none block h-full min-h-[200px] w-full min-w-0 max-h-full max-w-full border-0 bg-white" loading="lazy"></iframe>`
+                    : `<img src="${escapeHtml(imageSrc)}" alt="${title}" class="pointer-events-none block h-auto w-auto min-h-0 min-w-0 max-h-full max-w-full object-contain object-center" loading="lazy" decoding="async">`
                 : '<span class="text-gray-400 text-[11px] text-center leading-normal px-1">Нет изображения</span>';
         const thumbBase =
             'certificate-card-thumb box-border mx-auto flex h-[300px] w-full max-w-[150px] shrink-0 flex-col overflow-hidden rounded-[8px] bg-[#F7F7F7] shadow-sm p-2 sm:p-2.5';
         const thumbOpen = imageSrc
-            ? `<button type="button" class="${thumbBase} cursor-zoom-in border-0 text-left font-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-respo-blue focus-visible:ring-offset-2" data-cert-lightbox-src="${escapeHtml(imageSrc)}" data-cert-lightbox-alt="${escapeHtml(cert.title || '')}" aria-label="Открыть изображение сертификата в полный размер">`
+            ? `<button type="button" class="${thumbBase} cursor-zoom-in border-0 text-left font-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-respo-blue focus-visible:ring-offset-2" data-cert-lightbox-src="${escapeHtml(imageSrc)}" data-cert-lightbox-alt="${escapeHtml(cert.title || '')}" aria-label="Открыть сертификат в полный размер">`
             : `<div class="${thumbBase}">`;
         const thumbClose = imageSrc ? '</button>' : '</div>';
         return (

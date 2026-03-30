@@ -4,6 +4,13 @@
 (function initProductPage() {
     const PLACEHOLDER = 'assets/product_placeholder.png';
 
+    /** Synced inside gallery `show()`; zoom/pan on stage must not steal events from embedded PDF. */
+    let productGalleryShowsPdf = false;
+
+    function isPdfAssetPath(url) {
+        return /\.pdf(\?|#|$)/i.test(String(url || ''));
+    }
+
     function getIdFromQuery() {
         const params = new URLSearchParams(window.location.search);
         return params.get('id');
@@ -98,11 +105,14 @@
 
     /**
      * @param {HTMLImageElement | null} imageEl
+     * @param {HTMLIFrameElement | null} pdfEl
      * @param {HTMLElement | null} dotsEl
      * @param {string[]} sources
      * @param {string} productName
+     * @param {HTMLElement | null} stageEl
+     * @param {HTMLElement | null} zoomToolbarEl
      */
-    function setupGallery(imageEl, dotsEl, sources, productName) {
+    function setupGallery(imageEl, pdfEl, dotsEl, sources, productName, stageEl, zoomToolbarEl) {
         if (!imageEl) return;
 
         const list = sources.length ? sources : [PLACEHOLDER];
@@ -122,11 +132,37 @@
         function show(i) {
             const next = Math.max(0, Math.min(i, list.length - 1));
             index = next;
-            imageEl.src = list[index];
-            imageEl.alt = productName || 'Product';
-            imageEl.onerror = () => {
-                imageEl.src = PLACEHOLDER;
-            };
+            const url = list[index];
+            const isPdf = isPdfAssetPath(url);
+            productGalleryShowsPdf = isPdf;
+
+            if (isPdf) {
+                imageEl.classList.add('hidden');
+                if (pdfEl) {
+                    pdfEl.classList.remove('hidden');
+                    pdfEl.src = url;
+                    pdfEl.title = productName || 'PDF';
+                }
+                if (zoomToolbarEl) zoomToolbarEl.classList.add('hidden');
+            } else {
+                if (pdfEl) {
+                    pdfEl.classList.add('hidden');
+                    pdfEl.removeAttribute('src');
+                }
+                imageEl.classList.remove('hidden');
+                imageEl.src = url;
+                imageEl.alt = productName || 'Product';
+                imageEl.onerror = () => {
+                    imageEl.src = PLACEHOLDER;
+                };
+                if (zoomToolbarEl) zoomToolbarEl.classList.remove('hidden');
+            }
+
+            if (stageEl) {
+                stageEl.classList.toggle('cursor-zoom-in', !isPdf);
+                stageEl.classList.toggle('touch-none', !isPdf);
+            }
+
             imageEl.dispatchEvent(new CustomEvent('product-image-changed'));
             applyDotStyles();
         }
@@ -148,7 +184,7 @@
             btn.dataset.galleryDot = '1';
             btn.className =
                 'w-[7px] h-[7px] rounded-full bg-RE-SPO-blue shrink-0 cursor-pointer hover:opacity-100 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-RE-SPO-blue/40';
-            btn.setAttribute('aria-label', `Фото ${i + 1} из ${list.length}`);
+            btn.setAttribute('aria-label', `Слайд ${i + 1} из ${list.length}`);
             btn.setAttribute('role', 'tab');
             btn.addEventListener('click', () => show(i));
             dotsEl.appendChild(btn);
@@ -251,12 +287,14 @@
         }
 
         stageEl.addEventListener('wheel', (event) => {
+            if (productGalleryShowsPdf) return;
             event.preventDefault();
             const delta = event.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP;
             setScale(scale + delta);
         }, { passive: false });
 
         stageEl.addEventListener('pointerdown', (event) => {
+            if (productGalleryShowsPdf) return;
             if (event.target instanceof Element && event.target.closest('button')) return;
             if (scale <= 1) return;
             isDragging = true;
@@ -269,6 +307,7 @@
         });
 
         stageEl.addEventListener('pointermove', (event) => {
+            if (productGalleryShowsPdf) return;
             if (!isDragging) return;
             tx = startTx + (event.clientX - dragStartX);
             ty = startTy + (event.clientY - dragStartY);
@@ -311,7 +350,9 @@
 
             const titleEl = document.getElementById('product-title');
             const imageEl = document.getElementById('product-main-image');
+            const pdfEl = document.getElementById('product-main-pdf');
             const stageEl = document.getElementById('product-image-stage');
+            const zoomToolbarEl = document.getElementById('product-zoom-toolbar');
             const dotsEl = document.getElementById('product-gallery-dots');
             const specsBlock = document.getElementById('product-specs-block');
             const specsTitle = document.getElementById('product-specs-title');
@@ -328,7 +369,7 @@
             if (titleEl) titleEl.textContent = name;
 
             const gallerySources = normalizeGallerySources(product, cfg);
-            setupGallery(imageEl, dotsEl, gallerySources, name);
+            setupGallery(imageEl, pdfEl, dotsEl, gallerySources, name, stageEl, zoomToolbarEl);
             setupImageZoom(stageEl, imageEl, zoomInBtn, zoomOutBtn, zoomResetBtn);
 
             if (cfg.fields.specs === false) {

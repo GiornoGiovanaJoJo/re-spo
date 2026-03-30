@@ -378,9 +378,9 @@
                     <p class="text-[10px] text-gray-400 mt-1">При нажатии «Загрузить» имя берётся из файла (кириллица и лишние символы заменяются). Файл с тем же именем на сервере будет заменён.</p>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Загрузить фото</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Загрузить фото или PDF</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="file" id="prod-image-file" accept="image/*,.tif,.tiff" class="flex-1 min-w-[140px] border rounded-md px-3 py-2 text-sm">
+                        <input type="file" id="prod-image-file" accept="image/*,.tif,.tiff,.pdf,application/pdf" class="flex-1 min-w-[140px] border rounded-md px-3 py-2 text-sm">
                         <button type="button" id="btn-upload-product-image" class="bg-blue-50 text-blue-700 px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-100 transition-colors">
                             Загрузить
                         </button>
@@ -515,9 +515,9 @@
                     <p class="text-[10px] text-gray-400 mt-1">Имя формируется из загружаемого файла; совпадение имени перезаписывает старый файл.</p>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Загрузить изображение</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Загрузить изображение или PDF</label>
                     <div class="flex flex-wrap gap-2">
-                        <input type="file" id="cert-image-file" accept="image/*,.tif,.tiff" class="flex-1 min-w-[140px] border rounded-md px-3 py-2 text-sm">
+                        <input type="file" id="cert-image-file" accept="image/*,.tif,.tiff,.pdf,application/pdf" class="flex-1 min-w-[140px] border rounded-md px-3 py-2 text-sm">
                         <button type="button" id="btn-upload-certificate-image" class="bg-blue-50 text-blue-700 px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-100 transition-colors">
                             Загрузить
                         </button>
@@ -1126,7 +1126,7 @@
                     <div class="flex items-center gap-2">
                         <label class="bg-blue-50 text-blue-700 px-3 py-1.5 rounded text-xs font-semibold cursor-pointer hover:bg-blue-100 transition-colors">
                             Выбрать
-                            <input type="file" id="file-${index}" data-upload-index="${index}" accept="image/*" class="hidden image-upload-input">
+                            <input type="file" id="file-${index}" data-upload-index="${index}" accept="image/*,.tif,.tiff,.pdf,application/pdf" class="hidden image-upload-input">
                         </label>
                         ${img.exists ? `
                             <button data-delete-image="${encodeURIComponent(img.filename)}" class="text-red-400 hover:text-red-600 p-1">

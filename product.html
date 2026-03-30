@@ -128,7 +128,8 @@
                     <div class="bg-[#F5F5F5] rounded-[8px] p-4 lg:p-6 w-full max-w-[min(100%,760px)]">
                         <div id="product-image-stage" class="bg-white rounded-[4px] w-full aspect-[4/3] sm:aspect-[12/5] max-h-[520px] flex items-center justify-center overflow-hidden relative cursor-zoom-in touch-none">
                             <img id="product-main-image" src="assets/product_placeholder.png" alt="Product" width="1200" height="750" decoding="async" class="w-full h-full object-contain select-none transition-transform duration-150 ease-out origin-center" draggable="false">
-                            <div class="absolute top-3 right-3 flex items-center gap-2 z-10">
+                            <iframe id="product-main-pdf" class="hidden absolute inset-0 z-0 h-full w-full border-0 bg-white" title="Документ PDF"></iframe>
+                            <div id="product-zoom-toolbar" class="absolute top-3 right-3 flex items-center gap-2 z-10">
                                 <button id="zoom-out-btn" type="button" aria-label="Уменьшить изображение" class="w-8 h-8 rounded-full bg-white/95 border border-respo-blue/20 text-respo-blue text-[20px] leading-none font-medium flex items-center justify-center hover:bg-respo-blue-light transition-colors">-</button>
                                 <button id="zoom-in-btn" type="button" aria-label="Увеличить изображение" class="w-8 h-8 rounded-full bg-white/95 border border-respo-blue/20 text-respo-blue text-[20px] leading-none font-medium flex items-center justify-center hover:bg-respo-blue-light transition-colors">+</button>
                                 <button id="zoom-reset-btn" type="button" aria-label="Сбросить масштаб" class="h-8 px-3 rounded-full bg-white/95 border border-respo-blue/20 text-respo-blue text-[11px] font-medium uppercase tracking-wide hover:bg-respo-blue-light transition-colors">100%</button>
@@ -372,7 +373,7 @@
     <script src="js/site-text.js?v=1"></script>
     <script src="js/contact-form.js?v=1"></script>
     <script src="js/carousel-strip.js?v=3"></script>
-    <script src="js/product-page.js"></script>
+    <script src="js/product-page.js?v=2"></script>
     <script src="js/reviews.js?v=4"></script>
     <script src="js/main.js?v=4"></script>
 </body>
