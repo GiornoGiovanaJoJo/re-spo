@@ -120,6 +120,22 @@ function normalizeUploadBasename(original) {
     return safeImageFilename(candidate);
 }
 
+/** Уникальное имя в assets/, чтобы одинаковые исходные имена файлов не перезаписывали друг друга между товарами. */
+function makeUniqueUploadBasename(safeBasename, dir) {
+    if (!safeBasename || !safeImageFilename(safeBasename)) return null;
+    const ext = path.extname(safeBasename);
+    let stem = path.basename(safeBasename, ext);
+    stem = stem.slice(0, 100) || 'image';
+    const id = crypto.randomBytes(4).toString('hex');
+    let candidate = `${stem}_${id}${ext}`;
+    if (!safeImageFilename(candidate)) return null;
+    while (fs.existsSync(path.join(dir, candidate))) {
+        candidate = `${stem}_${id}_${crypto.randomBytes(2).toString('hex')}${ext}`;
+        if (!safeImageFilename(candidate)) return null;
+    }
+    return candidate;
+}
+
 const PRODUCT_PLACEHOLDER_PATH = 'assets/product_placeholder.png';
 const PRODUCT_PLACEHOLDER_BASENAME = 'product_placeholder.png';
 
@@ -726,9 +742,11 @@ const upload = multer({
             const bodyTf = typeof req.body?.targetFilename === 'string' ? req.body.targetFilename.trim() : '';
             let requested = bodyTf ? safeImageFilename(bodyTf) : null;
             if (!requested) {
-                requested = normalizeUploadBasename(file.originalname);
+                const normalized = normalizeUploadBasename(file.originalname);
+                if (!normalized) return cb(new Error('Invalid target filename'));
+                requested = makeUniqueUploadBasename(normalized, assetsDir);
+                if (!requested) return cb(new Error('Invalid target filename'));
             }
-            if (!requested) return cb(new Error('Invalid target filename'));
             const fp = path.join(assetsDir, requested);
             try {
                 if (fs.existsSync(fp) && fs.lstatSync(fp).isFile()) {

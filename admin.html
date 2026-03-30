@@ -814,7 +814,7 @@
                 const finalName = data.filename;
                 if (!finalName) throw new Error('Сервер не вернул имя файла');
                 document.getElementById('prod-image').value = finalName;
-                status.textContent = `Сохранено как ${finalName} (имя из вашего файла)`;
+                status.textContent = `Сохранено как ${finalName} (уникальное имя на сервере)`;
                 status.className = 'text-[11px] text-green-600 mt-1';
                 fileInput.value = '';
             } catch (err) {
@@ -849,7 +849,7 @@
                 const finalName = data.filename;
                 if (!finalName) throw new Error('Сервер не вернул имя файла');
                 document.getElementById('cert-image').value = finalName;
-                status.textContent = `Сохранено как ${finalName} (имя из вашего файла)`;
+                status.textContent = `Сохранено как ${finalName} (уникальное имя на сервере)`;
                 status.className = 'text-[11px] text-green-600 mt-1';
                 fileInput.value = '';
             } catch (err) {
