@@ -65,16 +65,30 @@
         return [main];
     }
 
-    function renderSpecs(listEl, specs) {
+    const DEFAULT_SPEC_ITEMS = [
+        'Технические характеристики уточняются',
+        'Материалы и исполнение по запросу',
+        'Подбор под ваш технологический процесс'
+    ];
+
+    /** @returns {string[]} */
+    function normalizeSpecItems(specs) {
+        if (!Array.isArray(specs)) return [];
+        return specs.map((s) => String(s).trim()).filter(Boolean);
+    }
+
+    /** @returns {Array<{label: string, value: string}>} */
+    function normalizeParameterRows(parameters) {
+        if (!Array.isArray(parameters)) return [];
+        return parameters.filter(
+            (row) => row && String(row.label || '').trim() && String(row.value || '').trim()
+        );
+    }
+
+    function renderSpecList(listEl, items) {
         if (!listEl) return;
-        const items = Array.isArray(specs) && specs.length > 0
-            ? specs
-            : [
-                'Технические характеристики уточняются',
-                'Материалы и исполнение по запросу',
-                'Подбор под ваш технологический процесс'
-            ];
-        listEl.innerHTML = items.map((item) => `<li>${escapeHtml(item)}</li>`).join('');
+        const list = items.length ? items : DEFAULT_SPEC_ITEMS;
+        listEl.innerHTML = list.map((item) => `<li>${escapeHtml(item)}</li>`).join('');
     }
 
     /**
@@ -372,13 +386,36 @@
             setupGallery(imageEl, pdfEl, dotsEl, gallerySources, name, stageEl, zoomToolbarEl);
             setupImageZoom(stageEl, imageEl, zoomInBtn, zoomOutBtn, zoomResetBtn);
 
-            if (cfg.fields.specs === false) {
+            const specItems = normalizeSpecItems(product.specs);
+            const paramRows = normalizeParameterRows(product.parameters);
+            const specsFieldOn = cfg.fields.specs !== false;
+            const paramsFieldOn = cfg.fields.parameters !== false;
+            const hasParamsContent = paramsFieldOn && paramRows.length > 0;
+            const hasSpecsContent = specItems.length > 0;
+
+            const plc = String(cfg.labels.paramLabelCol || '').trim();
+            const pvc = String(cfg.labels.paramValueCol || '').trim();
+            if (paramLabelTh && plc) paramLabelTh.textContent = plc;
+            if (paramValueTh && pvc) paramValueTh.textContent = pvc;
+
+            if (!paramsFieldOn) {
+                if (paramsWrapEl) paramsWrapEl.classList.add('hidden');
+            } else {
+                renderParametersTable(paramsBodyEl, paramsWrapEl, product.parameters);
+            }
+
+            if (!specsFieldOn) {
                 if (specsBlock) specsBlock.classList.add('hidden');
             } else {
-                if (specsBlock) specsBlock.classList.remove('hidden');
+                const showSpecsDefaults = !hasSpecsContent && !hasParamsContent;
+                const hideSpecsBlock = !hasSpecsContent && hasParamsContent;
+
                 const sh = String(cfg.labels.specsHeading || '').trim();
                 if (specsTitle) {
-                    if (sh) {
+                    if (hideSpecsBlock) {
+                        specsTitle.textContent = '';
+                        specsTitle.classList.add('hidden');
+                    } else if (sh) {
                         specsTitle.textContent = sh;
                         specsTitle.classList.remove('hidden');
                     } else {
@@ -386,18 +423,14 @@
                         specsTitle.classList.add('hidden');
                     }
                 }
-                renderSpecs(specsEl, product.specs);
-            }
 
-            const plc = String(cfg.labels.paramLabelCol || '').trim();
-            const pvc = String(cfg.labels.paramValueCol || '').trim();
-            if (paramLabelTh && plc) paramLabelTh.textContent = plc;
-            if (paramValueTh && pvc) paramValueTh.textContent = pvc;
-
-            if (cfg.fields.parameters === false) {
-                if (paramsWrapEl) paramsWrapEl.classList.add('hidden');
-            } else {
-                renderParametersTable(paramsBodyEl, paramsWrapEl, product.parameters);
+                if (hideSpecsBlock) {
+                    if (specsBlock) specsBlock.classList.add('hidden');
+                    if (specsEl) specsEl.innerHTML = '';
+                } else {
+                    if (specsBlock) specsBlock.classList.remove('hidden');
+                    renderSpecList(specsEl, showSpecsDefaults ? [] : specItems);
+                }
             }
 
             document.title = `${name} - RE-SPO`;
