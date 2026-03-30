@@ -50,7 +50,11 @@
         <div class="w-full max-w-md rounded-2xl border border-blue-100 bg-white/95 p-6 md:p-8 shadow-xl backdrop-blur-sm">
             <h1 class="text-2xl font-bold text-gray-800 mb-1">Вход в админку</h1>
             <p class="text-sm text-gray-500 mb-6">Введите секретный ключ доступа (хранится в <code class="text-xs bg-slate-100 px-1 rounded">admin-config.json</code> на сервере).</p>
-            <form id="admin-login-form" class="space-y-4">
+            <form id="admin-login-form" class="space-y-4" autocomplete="on">
+                <div class="sr-only">
+                    <label for="admin-login-username">Имя пользователя</label>
+                    <input type="text" id="admin-login-username" name="username" autocomplete="username" value="re-spo-admin" readonly tabindex="-1">
+                </div>
                 <div>
                     <label for="admin-key-input" class="block text-sm font-medium text-gray-700 mb-1">Ключ</label>
                     <input type="password" id="admin-key-input" name="admin-key" autocomplete="current-password" maxlength="400" class="w-full border border-slate-300 rounded-md px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Секретный ключ" required>
@@ -327,7 +331,11 @@
         <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-5 md:p-8">
             <h3 id="admin-change-key-title" class="text-xl font-bold mb-2">Новый ключ доступа</h3>
             <p class="text-sm text-gray-500 mb-4">Файл на сервере: <code class="text-xs bg-gray-100 px-1 rounded">admin-config.json</code>. Минимум 6 символов.</p>
-            <form id="admin-change-key-form" class="space-y-4">
+            <form id="admin-change-key-form" class="space-y-4" autocomplete="on">
+                <div class="sr-only">
+                    <label for="admin-change-key-username">Имя пользователя</label>
+                    <input type="text" id="admin-change-key-username" name="username" autocomplete="username" value="re-spo-admin" readonly tabindex="-1">
+                </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="admin-new-key">Новый ключ</label>
                     <input type="password" id="admin-new-key" required minlength="6" maxlength="400" autocomplete="new-password" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
@@ -571,7 +579,19 @@
         };
         let siteTextStrings = {};
         const SITE_TEXT_KEY_RE = /^[a-z][a-z0-9_.-]{0,100}$/i;
-        const FALLBACK_IMG = 'https://via.placeholder.com/40?text=?';
+        const FALLBACK_IMG = '/assets/product_placeholder.png';
+
+        function wireAdminImageFallbacks(container) {
+            if (!container) return;
+            container.querySelectorAll('img[data-admin-img-fallback]').forEach((img) => {
+                if (img.dataset.fallbackWired) return;
+                img.dataset.fallbackWired = '1';
+                img.addEventListener('error', () => {
+                    if (img.getAttribute('src') === FALLBACK_IMG) return;
+                    img.src = FALLBACK_IMG;
+                });
+            });
+        }
         const CATEGORY_ID_RE_ADMIN = /^[a-z][a-z0-9_]{0,63}$/;
         let currentTab = 'media';
         function bootstrapAdminUi() {
@@ -1210,7 +1230,7 @@
                 tr.innerHTML = `
                     <td data-label="Фото" class="px-6 py-4 whitespace-nowrap">
                         <div class="w-10 h-10 bg-gray-100 rounded overflow-hidden border">
-                            <img src="${safeImage}?t=${new Date().getTime()}" onerror="this.src='${FALLBACK_IMG}'" class="w-full h-full object-cover">
+                            <img src="${safeImage}?t=${new Date().getTime()}" data-admin-img-fallback class="w-full h-full object-cover" alt="">
                         </div>
                     </td>
                     <td data-label="Название" class="px-6 py-4">
@@ -1229,6 +1249,7 @@
                 `;
                 tbody.appendChild(tr);
             });
+            wireAdminImageFallbacks(tbody);
         }
 
         function populateCategorySelect() {
@@ -1637,7 +1658,7 @@
                     <td data-label="Превью" class="px-6 py-4 whitespace-nowrap">
                         <div class="w-10 h-10 bg-gray-100 rounded overflow-hidden border flex items-center justify-center">
                             ${safeImage
-                                ? `<img src="${safeImage}?t=${new Date().getTime()}" onerror="this.src='${FALLBACK_IMG}'" class="w-full h-full object-cover">`
+                                ? `<img src="${safeImage}?t=${new Date().getTime()}" data-admin-img-fallback class="w-full h-full object-cover" alt="">`
                                 : '<span class="text-[9px] text-gray-400">Нет</span>'}
                         </div>
                     </td>
@@ -1654,6 +1675,7 @@
                 `;
                 tbody.appendChild(tr);
             });
+            wireAdminImageFallbacks(tbody);
         }
 
         function openCertificateModal(id = null) {

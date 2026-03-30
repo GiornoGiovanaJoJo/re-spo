@@ -30,6 +30,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const multer = require('multer');
 const nodemailer = require('nodemailer');
+const sharp = require('sharp');
 
 const app = express();
 if (envOrHard('TRUST_PROXY') === '1') {
@@ -54,6 +55,42 @@ const DEFAULT_SITE_URL = 'https://re-spo.com';
 
 if (!fs.existsSync(assetsDir)) {
     fs.mkdirSync(assetsDir, { recursive: true });
+}
+
+/** Browsers rarely decode TIFF in &lt;img&gt;; on request we serve PNG bytes (URL may still end in .tif). */
+function serveTiffAsPng(req, res, next) {
+    if (req.method !== 'GET') return next();
+    const base = path.basename(req.path || '');
+    if (!/\.tiff?$/i.test(base)) return next();
+    const safe = safeImageFilename(base);
+    if (!safe) return next();
+    const fp = path.join(assetsDir, safe);
+    if (!fs.existsSync(fp) || !fs.lstatSync(fp).isFile()) return next();
+    sharp(fp)
+        .png()
+        .toBuffer()
+        .then((buf) => {
+            res.setHeader('Content-Type', 'image/png');
+            res.setHeader('Cache-Control', 'public, max-age=86400');
+            res.send(buf);
+        })
+        .catch(() => next());
+}
+
+/** After multer: replace .tif/.tiff on disk with .png so JSON and URLs use a web-safe name. */
+async function convertTiffUploadToPngIfNeeded(file) {
+    if (!file || !file.path || !file.filename) return file.filename;
+    if (!/\.tiff?$/i.test(path.extname(file.filename))) return file.filename;
+    const pngName = file.filename.replace(/\.tiff?$/i, '.png');
+    if (!safeImageFilename(pngName)) return file.filename;
+    const dest = path.join(assetsDir, pngName);
+    await sharp(file.path).png().toFile(dest);
+    try {
+        fs.unlinkSync(file.path);
+    } catch (e) {
+        /* ignore */
+    }
+    return pngName;
 }
 
 function safeImageFilename(input) {
@@ -660,6 +697,7 @@ app.get('/assets/favicon.svg', (req, res) => {
     res.status(200).send(fallback);
 });
 
+app.use('/assets', serveTiffAsPng);
 app.use('/assets', express.static(assetsDir, {
     maxAge: '7d',
     etag: true,
@@ -969,9 +1007,14 @@ app.post('/api/upload', adminAuth, (req, res, next) => {
         if (err) return res.status(400).json({ error: err.message });
         next();
     });
-}, (req, res) => {
+}, async (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'Failed to upload' });
-    res.json({ success: true, filename: req.file.filename });
+    try {
+        const filename = await convertTiffUploadToPngIfNeeded(req.file);
+        res.json({ success: true, filename });
+    } catch (e) {
+        res.status(500).json({ error: e.message || 'Не удалось обработать изображение (TIFF)' });
+    }
 });
 
 app.post('/api/clear-section-images', adminAuth, (req, res) => {
