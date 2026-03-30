@@ -302,6 +302,17 @@ async function verifySmartCaptcha(token, ip) {
     }
 }
 
+function logSmtpFailure(label, err) {
+    const o = err && typeof err === 'object' ? err : {};
+    console.error('[contact-smtp]', label, {
+        message: o.message || String(err),
+        code: o.code,
+        responseCode: o.responseCode,
+        response: typeof o.response === 'string' ? o.response.slice(0, 500) : o.response,
+        command: o.command
+    });
+}
+
 function smtpTransportOptions(host, port, user, pass) {
     const secure = process.env.CONTACT_SMTP_SECURE !== 'false' && port === 465;
     return {
@@ -310,8 +321,9 @@ function smtpTransportOptions(host, port, user, pass) {
         secure,
         requireTLS: port === 587,
         auth: { user, pass },
-        connectionTimeout: 20000,
-        greetingTimeout: 20000
+        connectionTimeout: 30000,
+        greetingTimeout: 30000,
+        tls: { minVersion: 'TLSv1.2' }
     };
 }
 
@@ -327,6 +339,7 @@ async function sendContactEmail({ name, phone, email }) {
     const primaryPort = Number(envOrHard('CONTACT_SMTP_PORT') || 465);
     const fallbackPort = primaryPort === 465 ? 587 : primaryPort === 587 ? 465 : null;
     const portsToTry = fallbackPort ? [primaryPort, fallbackPort] : [primaryPort];
+    const isYandexSmtp = /\byandex\b/i.test(host);
 
     const safeName = name.slice(0, CONTACT_NAME_MAX);
     const safePhone = phone.slice(0, CONTACT_PHONE_MAX);
@@ -343,16 +356,35 @@ async function sendContactEmail({ name, phone, email }) {
         )}</p><p><b>Email:</b> ${escapeHtmlContact(safeEmail)}</p>`
     };
 
+    const attempts = [];
+    if (isYandexSmtp) {
+        attempts.push({
+            service: 'Yandex',
+            auth: { user, pass },
+            connectionTimeout: 30000,
+            greetingTimeout: 30000,
+            tls: { minVersion: 'TLSv1.2' }
+        });
+        attempts.push(smtpTransportOptions(host, 587, user, pass));
+    } else {
+        for (const port of portsToTry) {
+            if (Number.isFinite(port) && port >= 1) attempts.push(smtpTransportOptions(host, port, user, pass));
+        }
+    }
+
     let lastErr = null;
-    for (const port of portsToTry) {
-        if (!Number.isFinite(port) || port < 1) continue;
+    let attemptIdx = 0;
+    for (const opts of attempts) {
+        const label =
+            opts.service || `${opts.host || host}:${opts.port != null ? opts.port : '?'}` || `attempt-${attemptIdx}`;
+        attemptIdx += 1;
         try {
-            const transporter = nodemailer.createTransport(smtpTransportOptions(host, port, user, pass));
+            const transporter = nodemailer.createTransport(opts);
             await transporter.sendMail(mailPayload);
             return { ok: true };
         } catch (e) {
             lastErr = e;
-            console.error(`[contact-smtp] ${host}:${port}`, e && e.message ? e.message : e);
+            logSmtpFailure(String(label), e);
         }
     }
 
