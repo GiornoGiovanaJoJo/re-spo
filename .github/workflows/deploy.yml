@@ -38,11 +38,11 @@ jobs:
               rm -rf re-spo
               git clone https://github.com/GiornoGiovanaJoJo/re-spo.git
             fi
-            
+
             cd re-spo
             git fetch --all
             git reset --hard origin/main
-            
+
             # Ensure assets directory exists for uploads
             mkdir -p assets
 

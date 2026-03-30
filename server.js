@@ -2,6 +2,26 @@
 // RE-SPO — Express Server (production hardened)
 // =====================================================
 
+require('dotenv').config();
+
+/** Значения по умолчанию; непустой process.env переопределяет. */
+const HARDCODED_ENV = {
+    CONTACT_SMTP_HOST: 'smtp.yandex.ru',
+    CONTACT_SMTP_PORT: '465',
+    CONTACT_SMTP_USER: 'granpainside@yandex.ru',
+    CONTACT_SMTP_PASS: 'yfqzvubjdmlnigan',
+    CONTACT_MAIL_TO: 'info@re-spo.com',
+    YANDEX_SMARTCAPTCHA_SECRET: '',
+    TRUST_PROXY: '1',
+};
+
+function envOrHard(key) {
+    const fromEnv = process.env[key];
+    if (fromEnv !== undefined && String(fromEnv).trim() !== '') return String(fromEnv);
+    const h = HARDCODED_ENV[key];
+    return h !== undefined && h !== null ? String(h) : '';
+}
+
 const express = require('express');
 const compression = require('compression');
 const helmet = require('helmet');
@@ -12,7 +32,7 @@ const multer = require('multer');
 const nodemailer = require('nodemailer');
 
 const app = express();
-if (process.env.TRUST_PROXY === '1') {
+if (envOrHard('TRUST_PROXY') === '1') {
     app.set('trust proxy', 1);
 }
 const PORT = Number(process.env.PORT || 3000);
@@ -218,7 +238,6 @@ function validateSiteTextPayload(payload) {
     return true;
 }
 
-const CONTACT_MAIL_TO_DEFAULT = 'info@re-spo.com';
 const CONTACT_NAME_MAX = 200;
 const CONTACT_PHONE_MAX = 80;
 const CONTACT_EMAIL_MAX = 200;
@@ -257,7 +276,7 @@ function escapeHtmlContact(s) {
 }
 
 async function verifySmartCaptcha(token, ip) {
-    const secret = process.env.YANDEX_SMARTCAPTCHA_SECRET;
+    const secret = envOrHard('YANDEX_SMARTCAPTCHA_SECRET');
     if (!secret || !String(secret).trim()) {
         return { ok: true };
     }
@@ -284,15 +303,15 @@ async function verifySmartCaptcha(token, ip) {
 }
 
 async function sendContactEmail({ name, phone, email }) {
-    const user = process.env.CONTACT_SMTP_USER;
-    const pass = process.env.CONTACT_SMTP_PASS;
-    const toRaw = (process.env.CONTACT_MAIL_TO || CONTACT_MAIL_TO_DEFAULT).trim();
+    const user = envOrHard('CONTACT_SMTP_USER');
+    const pass = envOrHard('CONTACT_SMTP_PASS');
+    const toRaw = envOrHard('CONTACT_MAIL_TO').trim() || 'info@re-spo.com';
     if (!user || !pass) {
         return { ok: false, error: 'CONTACT_SMTP_USER / CONTACT_SMTP_PASS not set' };
     }
 
-    const host = process.env.CONTACT_SMTP_HOST || 'smtp.yandex.ru';
-    const port = Number(process.env.CONTACT_SMTP_PORT || 465);
+    const host = envOrHard('CONTACT_SMTP_HOST') || 'smtp.yandex.ru';
+    const port = Number(envOrHard('CONTACT_SMTP_PORT') || 465);
     const secure = process.env.CONTACT_SMTP_SECURE !== 'false' && port === 465;
 
     const transporter = nodemailer.createTransport({
