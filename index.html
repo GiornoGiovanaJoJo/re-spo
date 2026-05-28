@@ -25,7 +25,8 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/creato-display" rel="stylesheet">
     <link href="https://db.onlinewebfonts.com/c/7cd33d2df7fd0d91e9d90395806eb8ff?family=Averta+CY+W10+Light" rel="stylesheet" type="text/css">
     <script type="application/ld+json">
@@ -77,7 +78,7 @@
 
         ym(108262955, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
     </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/108262955" style="position:absolute; left:-9999px;" alt="Счетчик Яндекс.Метрика" /></div></noscript>
+    <noscript><div><img src="https://mc.yandex.ru/watch/108262955" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
     <header class="fixed top-0 left-0 w-full z-50 bg-transparent">
         <div class="container-respo py-6 flex items-center justify-between">
@@ -108,3 +109,675 @@
                 </button>
             </div>
         </div>
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu"
+            class="hidden lg:hidden bg-white border-t border-respo-blue/10 p-6 shadow-2xl space-y-4 flex flex-col items-center">
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-5 mb-4 pb-4 border-b border-respo-blue/5 w-full">
+                <a href="mailto:INFO@RE-SPO.COM" class="text-respo-dark font-medium leading-tight text-sm hover:text-respo-blue transition-colors">INFO@RE-SPO.COM</a>
+                <a href="tel:+74959616215" class="text-respo-dark font-medium leading-tight text-sm hover:text-respo-blue transition-colors">+7 (495) 961 62 15</a>
+            </div>
+            <a href="#hero" class="nav-link font-medium py-2" data-site-text="nav.home">Главная</a>
+            <a href="#about" class="nav-link font-medium py-2" data-site-text="nav.about">О компании</a>
+            <a href="#values" class="nav-link font-medium py-2" data-site-text="nav.values">Наши ценности</a>
+            <a href="#services" class="nav-link font-medium py-2" data-site-text="nav.services">Услуги</a>
+            <a href="/production" class="nav-link font-medium py-2" data-site-text="nav.catalog">Каталог товаров</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero"
+            class="relative min-h-[560px] md:min-h-[620px] lg:min-h-[720px] pt-[118px] lg:pt-[152px] pb-10 lg:pb-12 flex items-stretch overflow-hidden">
+            <div class="absolute inset-0 z-[-1]">
+                <div class="hero-gradient absolute inset-0"></div>
+                <!-- People Image -->
+                <div class="hero-people-wrap absolute left-1/2 -translate-x-1/2 md:-translate-x-[calc(50%+30px)] lg:-translate-x-[calc(50%+50px)] bottom-0 w-[130%] sm:w-full md:w-4/5 lg:w-[68%] max-w-[1240px] h-full pointer-events-none">
+                    <img src="assets/people.png" alt="Experts" width="1200" height="900" fetchpriority="high" decoding="async"
+                        class="w-full h-full object-contain object-right-bottom mix-blend-multiply opacity-100 transform translate-y-0">
+                </div>
+            </div>
+
+            <div class="container-respo w-full relative z-10 flex flex-col justify-between py-10 lg:py-14 lg:pr-[40%]">
+                <div class="flex flex-col lg:flex-row lg:justify-between items-start w-full relative gap-10 mb-8 lg:mb-14">
+                    <div class="max-w-[950px] text-left">
+                        <span class="text-[18px] lg:text-[24px] text-respo-dark font-medium block mb-2" data-site-text="hero.brand">Группа компаний
+                            «РЕ-СПО»</span>
+                        <h1
+                            class="text-[30px] sm:text-[36px] md:text-[52px] lg:text-[60px] leading-[1.15] lg:leading-[1.2] text-respo-blue font-heading font-medium tracking-tight">
+                            <span class="block md:whitespace-nowrap" data-site-text="hero.title_line1">Надежные эксперты —</span>
+                            <span class="block md:whitespace-nowrap" data-site-text="hero.title_line2">отличная работа завода</span>
+                        </h1>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-start mt-auto">
+                    <!-- Services list moved here, above buttons -->
+                    <div class="w-full max-w-[520px] mb-10 lg:mb-12 pt-2 lg:pt-4">
+                        <ul class="space-y-1.5 text-[13px] md:text-[14px] text-respo-dark/70 leading-[1.45] font-light font-sans list-none whitespace-normal md:whitespace-nowrap">
+                            <li data-site-text="hero.bullet1">Изготовление пищевого оборудования</li>
+                            <li data-site-text="hero.bullet2">Технологический аудит</li>
+                            <li data-site-text="hero.bullet3">Модернизация оборудования «под ключ»</li>
+                            <li data-site-text="hero.bullet4">Оптимизация технологических процессов</li>
+                            <li data-site-text="hero.bullet5">Обслуживание заводов пищевого производства</li>
+                        </ul>
+                    </div>
+
+                    <div
+                        class="flex flex-col gap-5 items-start animate-fade-in-up">
+                        <a href="#about"
+                            class="bg-respo-cyan text-white px-10 py-3.5 rounded-full hover:brightness-105 transition-all text-[16px] font-medium" data-site-text="hero.cta_learn">Узнать
+                            больше</a>
+                        <a href="/production" class="group flex items-center space-x-4">
+                            <span
+                                class="text-[18px] font-medium text-respo-dark group-hover:text-respo-blue transition-all" data-site-text="hero.cta_catalog">Перейти
+                                в каталог</span>
+                            <div
+                                class="w-12 h-12 bg-respo-green rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm">
+                                <img src="assets/arrow-right.svg" alt="Arrow" class="w-6 h-6">
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- About Section -->
+        <section class="py-20 lg:py-24 bg-white" id="about">
+            <div class="container-respo text-respo-dark">
+                <div class="lg:flex lg:gap-32 mb-16 lg:mb-24 items-start">
+                    <div class="lg:w-[40%] flex flex-col items-start space-y-4">
+                        <span
+                            class="text-[18px] text-respo-green font-medium leading-none tracking-tighter">//</span>
+                        <h2
+                            class="text-[40px] lg:text-[48px] text-respo-green font-medium leading-[1.2] tracking-tight lg:indent-[48px]" data-site-text="about.heading">
+                            О компании</h2>
+                    </div>
+                    <div
+                        class="about-text-card lg:w-[60%] text-[18px] text-respo-dark font-sans leading-[1.5] mt-8 lg:mt-0 lg:pr-12 text-longform">
+                        <p class="mb-4" data-site-text="about.p1">Компания РЕ-СПО была основана в 2010 году, собрав экспертов молочной индустрии с
+                            многолетним опытом.</p>
+                        <p class="mb-4" data-site-text="about.p2">Наши клиенты — Лидеры рынка и ведущие производители молочных продуктов питания в
+                            России, Европе и Америке.</p>
+                        <p class="mb-4" data-site-text="about.p3">Для каждого из них мы находим различные способы повысить качество продукции,
+                            оптимизировать производственные процессы и обеспечить надежность завода, в том числе за счет
+                            импортозамещения - собственного производства оборудования наивысшего качества.</p>
+                        <p data-site-text="about.p4">Специалисты нашей команды постоянно обучаются и способны обеспечить безопасную, качественную
+                            и эффективную работу молочного пищевого производства по всем направлениям.</p>
+                    </div>
+                </div>
+
+                <div class="mb-16 lg:mb-24 text-center">
+                    <p
+                        class="text-[28px] lg:text-[36px] text-respo-blue font-medium leading-[1.2] mx-auto max-w-[1240px] tracking-tight lg:indent-[48px] text-longform lg:text-left whitespace-pre-line"
+                        style="white-space: pre-line"
+                        data-site-text="about.quote">
+                        RE-SPO — сокращение от «Reliable Experts —<br class="hidden lg:block">
+                        Successful Plant Operation», переводится как<br class="hidden lg:block">
+                        «Надёжные Эксперты — Успешная Работа Завода»
+                    </p>
+                </div>
+
+                <div class="flex items-start">
+                    <div class="max-w-[700px]">
+                        <p class="text-sm lg:text-base text-respo-dark/60 font-sans leading-relaxed whitespace-pre-line" style="white-space: pre-line" data-site-text="about.mission">
+                            Наша миссия — обеспечивать надёжную работу заводов —<br class="hidden lg:block">
+                            вынесена в название компании.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Categories Section -->
+        <section class="py-20 lg:py-24 bg-white" id="services">
+            <div class="container-respo">
+                <div class="text-center mb-16">
+                    <h2 class="text-[32px] lg:text-[48px] leading-[1.1] text-respo-blue font-medium mb-5 tracking-[-0.48px]" data-site-text="services.heading">Основные направления нашей работы</h2>
+                    <a href="/production"
+                        class="inline-flex items-center space-x-6 font-heading text-xl font-medium text-respo-dark hover:text-respo-blue transition-all group">
+                        <span data-site-text="services.cta_catalog">Перейти в каталог</span>
+                        <div
+                            class="w-14 h-14 bg-respo-green rounded-full flex items-center justify-center transition-transform group-hover:scale-110">
+                            <img src="assets/arrow-right.svg" alt="Arrow" class="w-6 h-6">
+                        </div>
+                    </a>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <a href="#audit" class="group bg-[#E4F6FF] rounded-[12px] h-[176px] p-6 flex items-center justify-center">
+                        <div class="backdrop-blur-[2px] bg-white/0 rounded-[4px] px-3 py-2 w-full">
+                            <h3 class="text-[#0C0A08] text-[16px] leading-[24px] font-normal uppercase text-center" data-site-text="services.card.audit">
+                                аудит технологического оборудования
+                            </h3>
+                        </div>
+                    </a>
+                    <a href="#competencies" class="group bg-[#E4F6FF] rounded-[12px] h-[176px] p-6 flex items-center justify-center">
+                        <div class="backdrop-blur-[2px] bg-white/0 rounded-[4px] px-3 py-2 w-full">
+                            <h3 class="text-[#0C0A08] text-[16px] leading-[24px] font-normal uppercase text-center" data-site-text="services.card.design">
+                                комплексное проектирование и реализация проектов технологических линий
+                            </h3>
+                        </div>
+                    </a>
+                    <a href="#projects" class="group bg-[#E4F6FF] rounded-[12px] h-[176px] p-6 flex items-center justify-center">
+                        <div class="backdrop-blur-[2px] bg-white/0 rounded-[4px] px-3 py-2 w-full">
+                            <h3 class="text-[#0C0A08] text-[16px] leading-[24px] font-normal uppercase text-center" data-site-text="services.card.import">
+                                импортозамещение: собственный завод по производству оборудования для пищевой промышленности
+                            </h3>
+                        </div>
+                    </a>
+                    <a href="#optimization" class="group bg-[#E4F6FF] rounded-[12px] h-[176px] p-6 flex items-center justify-center">
+                        <div class="backdrop-blur-[2px] bg-white/0 rounded-[4px] px-3 py-2 w-full">
+                            <h3 class="text-[#0C0A08] text-[16px] leading-[24px] font-normal uppercase text-center" data-site-text="services.card.service">
+                                сервисное обслуживание завода
+                            </h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team/Reduce Section / Audit & Optimization -->
+        <section class="py-24 lg:py-32 bg-white">
+            <div class="container-respo" id="audit">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                    <!-- Left Text Area (7 cols) -->
+                    <div class="lg:col-span-7">
+                        <div class="mb-16">
+                            <span class="text-respo-green text-sm mb-4 block font-medium uppercase tracking-widest" data-site-text="audit.kicker">//
+                                шаги</span>
+                            <h2 class="text-[32px] lg:text-[40px] text-respo-dark font-medium leading-[1.1] tracking-tight whitespace-pre-line" style="white-space: pre-line" data-site-text="audit.title">
+                                Технологический аудит производства:<br>от причин к решениям</h2>
+                        </div>
+
+                        <!-- Text Steps -->
+                        <div class="audit-steps-wrap flex flex-col md:flex-row relative">
+                            <!-- Column 1 -->
+                            <div class="audit-step-col flex-1 pr-6 pb-6 md:pb-0">
+                                <h3 class="text-respo-blue font-medium text-[15px] mb-8 uppercase tracking-wide md:whitespace-nowrap" data-site-text="audit.c1h">
+                                    Определение причин</h3>
+                                <ul class="text-respo-dark/50 text-[14px] space-y-3 font-sans list-none leading-relaxed">
+                                    <li class="flex items-start"><span class="mr-2">•</span><span data-site-text="audit.c1i1">брака готовой продукции;</span></li>
+                                    <li class="flex items-start"><span class="mr-2">•</span><span data-site-text="audit.c1i2">брака полуфабрикатов;</span></li>
+                                    <li class="flex items-start"><span class="mr-2">•</span><span data-site-text="audit.c1i3">потерь сырья;</span></li>
+                                    <li class="flex items-start"><span class="mr-2">•</span><span data-site-text="audit.c1i4">потерь топливно-энергетических ресурсов.</span></li>
+                                </ul>
+                            </div>
+                            <!-- Column 2 (Ladder) -->
+                            <div class="audit-step-col audit-step-divider flex-1 px-4 lg:px-6 border-l border-dotted border-respo-blue pb-6 md:pb-0">
+                                <h3 class="text-respo-blue font-medium text-[15px] mb-8 uppercase tracking-wide md:whitespace-nowrap" data-site-text="audit.c2h">
+                                    Проведение оценки</h3>
+                                <ul class="text-respo-dark/50 text-[14px] space-y-3 font-sans list-none leading-relaxed">
+                                    <li class="flex items-start"><span class="mr-2">•</span><span data-site-text="audit.c2i1">технологических процессов;</span></li>
+                                    <li class="flex items-start"><span class="mr-2">•</span><span data-site-text="audit.c2i2">работы оборудования;</span></li>
+                                    <li class="flex items-start"><span class="mr-2">•</span><span data-site-text="audit.c2i3">персонала.</span></li>
+                                </ul>
+                            </div>
+                            <!-- Column 3 (Ladder) -->
+                            <div class="audit-step-col audit-step-divider flex-1 pl-4 lg:pl-6 border-l border-dotted border-respo-blue">
+                                <h3 class="text-respo-blue font-medium text-[15px] mb-8 uppercase tracking-wide" data-site-text="audit.c3h">
+                                    Разработка решений</h3>
+                                <ul class="text-respo-dark/50 text-[14px] space-y-3 font-sans list-none leading-relaxed">
+                                    <li class="flex items-start"><span class="mr-2">•</span><span data-site-text="audit.c3i1">по модернизации технологического оборудования;</span></li>
+                                    <li class="flex items-start"><span class="mr-2">•</span><span data-site-text="audit.c3i2">по обучению персонала;</span></li>
+                                    <li class="flex items-start"><span class="mr-2">•</span><span data-site-text="audit.c3i3">по устранению проблем Заказчика.</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Images Grid (Right, 5 cols) — items-start + h-auto on small screens avoids overlap with #optimization below -->
+                    <div class="lg:col-span-5 grid grid-cols-2 gap-3 sm:gap-4 items-start lg:items-stretch lg:h-full">
+                        <img src="assets/audit_worker.png" alt="Worker" class="w-full h-auto lg:h-full min-h-0 object-cover rounded-[24px] shadow-sm">
+                        <div class="grid grid-rows-2 gap-3 sm:gap-4 w-full min-h-0">
+                            <img src="assets/audit_mechanism.png" alt="Mechanism" class="w-full h-auto lg:h-full min-h-0 object-cover rounded-[24px] shadow-sm">
+                            <img src="assets/audit_expert.png" alt="Expert" class="w-full h-auto lg:h-full min-h-0 object-cover rounded-[24px] shadow-sm">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Optimization Area inside the same layout section -->
+            <div id="optimization" class="mt-24 lg:mt-40 container-respo">
+                <div class="text-center mb-20">
+                    <h2 class="text-[36px] lg:text-[48px] font-medium leading-[1.1] mb-4 text-respo-cyan tracking-tight whitespace-pre-line" style="white-space: pre-line" data-site-text="opt.title">
+                        Оптимизация производства:<br>от профилактики к мониторингу</h2>
+                    <p class="text-[14px] lg:text-[16px] text-respo-green font-medium uppercase tracking-widest" data-site-text="opt.subtitle">
+                        // Аудит + Профилактика + Модернизация = Рентабельность</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
+                    <!-- Item 1 -->
+                    <div class="flex flex-col items-start">
+                        <div class="w-14 h-14 mb-8">
+                            <img src="assets/tg_image_2183396692%201.png" alt="Icon" class="w-full h-full object-contain">
+                        </div>
+                        <h3 class="text-[20px] font-medium text-respo-dark mb-6 leading-tight whitespace-pre-line" style="white-space: pre-line" data-site-text="opt.b1t">Организация системы<br>превентивного обслуживания</h3>
+                        <ul class="text-[14px] text-respo-cyan space-y-2 font-sans list-none">
+                            <li class="flex items-start"><span class="mr-2">•</span><span data-site-text="opt.b1i1">создание исчерпывающей базы данных;</span></li>
+                            <li class="flex items-start"><span class="mr-2">•</span><span data-site-text="opt.b1i2">внедрение в SAP-системы;</span></li>
+                            <li class="flex items-start"><span class="mr-2">•</span><span data-site-text="opt.b1i3">систематизация обслуживания;</span></li>
+                            <li class="flex items-start"><span class="mr-2">•</span><span data-site-text="opt.b1i4">корректировка несоответствий.</span></li>
+                        </ul>
+                    </div>
+                    <!-- Item 2 -->
+                    <div class="flex flex-col items-start">
+                        <div class="w-14 h-14 mb-8">
+                            <img src="assets/tg_image_1124993710%201.png" alt="Icon" class="w-full h-full object-contain">
+                        </div>
+                        <h3 class="text-[20px] font-medium text-respo-dark mb-6 leading-tight whitespace-pre-line" style="white-space: pre-line" data-site-text="opt.b2t">Обслуживание<br>технологического оборудования</h3>
+                        <ul class="text-[14px] text-respo-cyan space-y-2 font-sans list-none">
+                            <li class="flex items-start"><span class="mr-2">•</span><span data-site-text="opt.b2i1">переборка оборудования;</span></li>
+                            <li class="flex items-start"><span class="mr-2">•</span><span data-site-text="opt.b2i2">проверка герметичности.</span></li>
+                        </ul>
+                    </div>
+                    <!-- Item 3 -->
+                    <div class="flex flex-col items-start">
+                        <div class="w-14 h-14 mb-8">
+                            <img src="assets/tg_image_3790285792%201.png" alt="Icon" class="w-full h-full object-contain">
+                        </div>
+                        <h3 class="text-[20px] font-medium text-respo-dark mb-6 leading-tight whitespace-pre-line" style="white-space: pre-line" data-site-text="opt.b3t">Анализ вероятных<br>поломок</h3>
+                        <ul class="text-[14px] text-respo-cyan space-y-2 font-sans list-none">
+                            <li class="flex items-start"><span class="mr-2">•</span><span data-site-text="opt.b3i1">на основании показателей;</span></li>
+                            <li class="flex items-start"><span class="mr-2">•</span><span data-site-text="opt.b3i2">на основании опыта.</span></li>
+                        </ul>
+                    </div>
+                    <!-- Item 4-6 (Omitted for brevity in instruction, but kept in full replacement if I can) -->
+                    <!-- Item 4 -->
+                    <div class="flex flex-col items-start">
+                        <div class="w-14 h-14 mb-8">
+                            <img src="assets/tg_image_1324548173%201.png" alt="Icon" class="w-full h-full object-contain">
+                        </div>
+                        <h3 class="text-[20px] font-medium text-respo-dark mb-6 leading-tight whitespace-pre-line" style="white-space: pre-line" data-site-text="opt.b4t">Устранение обнаруженных<br>несоответствий</h3>
+                    </div>
+                    <!-- Item 5 -->
+                    <div class="flex flex-col items-start">
+                        <div class="w-14 h-14 mb-8">
+                            <img src="assets/tg_image_1187247503%201.png" alt="Icon" class="w-full h-full object-contain">
+                        </div>
+                        <h3 class="text-[20px] font-medium text-respo-dark mb-6 leading-tight whitespace-pre-line" style="white-space: pre-line" data-site-text="opt.b5t">Системная модернизация<br>оборудования</h3>
+                        <ul class="text-[14px] text-respo-cyan space-y-2 font-sans list-none">
+                            <li class="flex items-start"><span class="mr-2">•</span><span data-site-text="opt.b5i1">дизайн, монтаж, программа, ПНР.</span></li>
+                        </ul>
+                    </div>
+                    <!-- Item 6 -->
+                    <div class="flex flex-col items-start">
+                        <div class="w-14 h-14 mb-8">
+                            <img src="assets/tg_image_1803807990%201.png" alt="Icon" class="w-full h-full object-contain">
+                        </div>
+                        <h3 class="text-[20px] font-medium text-respo-dark mb-6 leading-tight whitespace-pre-line" style="white-space: pre-line" data-site-text="opt.b6t">Регулярная инспекция<br>всего завода</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Principles Section -->
+        <section class="py-8 mt-12 lg:mt-20 bg-white" id="values">
+            <div class="container-respo">
+                <div class="mb-16">
+                    <span
+                        class="text-respo-cyan text-[14px] lg:text-[16px] font-medium uppercase tracking-widest block mb-4" data-site-text="values.kicker">//
+                        ОТВЕТСТВЕННАЯ РАБОТА — ДОВОЛЬНЫЕ КЛИЕНТЫ</span>
+                    <h2 class="text-[32px] lg:text-[40px] font-medium text-respo-dark leading-tight" data-site-text="values.heading">Наши принципы
+                    </h2>
+                </div>
+
+                <!-- Principles Grid -->
+                <div class="space-y-12">
+                    <!-- Row 1: 3 items -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
+                        <!-- Principle 1 -->
+                        <div class="flex items-start gap-6">
+                            <div
+                                class="flex-shrink-0 w-[80px] h-[80px] bg-[#EBF6FE] rounded-[24px] flex items-center justify-center">
+                                <img src="assets/principle_focus.png" alt="Focus" class="w-10 h-10 object-contain">
+                            </div>
+                            <div class="pt-1">
+                                <h3 class="text-[15px] font-medium text-respo-dark mb-1 md:whitespace-nowrap whitespace-pre-line" style="white-space: pre-line" data-site-text="values.p1t">Внимание
+                                    к деталям</h3>
+                                <p class="text-[13px] text-respo-dark/60 font-sans leading-relaxed" data-site-text="values.p1d">Мы ориентируемся
+                                    на постоянное улучшение пищевой безопасности, качества продукции и окружающей
+                                    среды</p>
+                            </div>
+                        </div>
+                        <!-- Principle 2 -->
+                        <div class="flex items-start gap-6">
+                            <div
+                                class="flex-shrink-0 w-[80px] h-[80px] bg-[#EBF6FE] rounded-[24px] flex items-center justify-center">
+                                <img src="assets/principle_rules.png" alt="Rules" class="w-10 h-10 object-contain">
+                            </div>
+                            <div class="pt-1">
+                                <h3 class="text-[15px] font-medium text-respo-dark mb-1 md:whitespace-nowrap whitespace-pre-line" style="white-space: pre-line" data-site-text="values.p2t">Строго по
+                                    правилам</h3>
+                                <p class="text-[13px] text-respo-dark/60 font-sans leading-relaxed" data-site-text="values.p2d">Мы действуем в
+                                    соответствии с Уставом Компании, Корпоративной политикой Клиента и
+                                    законодательством РФ</p>
+                            </div>
+                        </div>
+                        <!-- Principle 3 -->
+                        <div class="flex items-start gap-6">
+                            <div
+                                class="flex-shrink-0 w-[80px] h-[80px] bg-[#EBF6FE] rounded-[24px] flex items-center justify-center">
+                                <img src="assets/principle_health.png" alt="Health"
+                                    class="w-10 h-10 object-contain">
+                            </div>
+                            <div class="pt-1">
+                                <h3 class="text-[15px] font-medium text-respo-dark mb-1 md:whitespace-nowrap whitespace-pre-line" style="white-space: pre-line" data-site-text="values.p3t">Забота о
+                                    здоровье</h3>
+                                <p class="text-[13px] text-respo-dark/60 font-sans leading-relaxed" data-site-text="values.p3d">Мы стремимся
+                                    создавать благоприятные условия труда как своим сотрудникам, так и сотрудникам
+                                    наших клиентов</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: 2 items (staggered/centered) -->
+                    <div class="flex flex-col md:flex-row justify-center gap-12 lg:gap-16 mt-16 lg:mt-24">
+                        <!-- Principle 4 -->
+                        <div class="flex items-start gap-6 max-w-[480px]">
+                            <div
+                                class="flex-shrink-0 w-[80px] h-[80px] bg-[#EBF6FE] rounded-[24px] flex items-center justify-center">
+                                <img src="assets/principle_quality.png" alt="Quality"
+                                    class="w-10 h-10 object-contain">
+                            </div>
+                            <div class="pt-1">
+                                <h3 class="text-[15px] font-medium text-respo-dark mb-1 whitespace-pre-line" style="white-space: pre-line" data-site-text="values.p4t">Высококачественная
+                                    продукция</h3>
+                                <p class="text-[13px] text-respo-dark/60 font-sans leading-relaxed" data-site-text="values.p4d">Мы используем
+                                    международные стандарты качества. Наша главная цель — предотвращение угроз
+                                    здоровью людей</p>
+                            </div>
+                        </div>
+                        <!-- Principle 5 -->
+                        <div class="flex items-start gap-6 max-w-[480px]">
+                            <div
+                                class="flex-shrink-0 w-[80px] h-[80px] bg-[#EBF6FE] rounded-[24px] flex items-center justify-center">
+                                <img src="assets/principle_profit.png" alt="Profit"
+                                    class="w-10 h-10 object-contain">
+                            </div>
+                            <div class="pt-1">
+                                <h3 class="text-[15px] font-medium text-respo-dark mb-1 whitespace-pre-line" style="white-space: pre-line" data-site-text="values.p5t">Оптимизация рентабельности
+                                </h3>
+                                <p class="text-[13px] text-respo-dark/60 font-sans leading-relaxed" data-site-text="values.p5d">Мы стремимся к
+                                    максимально эффективному использованию ресурсов. Наша задача — увеличить прибыль
+                                    наших клиентов</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ключевые компетенции (Full-width BG) -->
+        <section class="py-24 lg:py-32 w-full" id="competencies"
+            style="background: linear-gradient(to top, rgba(74, 174, 242, 0.15), white); scroll-margin-top: 7rem;">
+            <div class="container-respo">
+                <div class="mb-16 text-center">
+                    <h2 class="text-[32px] lg:text-[48px] text-respo-blue font-medium mb-4" data-site-text="comp.heading">Ключевые компетенции</h2>
+                    <p class="text-respo-green max-w-[800px] mx-auto" data-site-text="comp.sub">Мы обладаем глубокой экспертизой в реализации сложных технологических решений</p>
+                </div>
+                <!-- Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Card 1 -->
+                    <div class="competency-card bg-white p-8 rounded-[24px] shadow-sm border border-respo-blue/5 flex flex-col items-center text-center transition-shadow hover:shadow-md">
+                        <div class="w-12 h-12 mb-6 bg-[#EBF6FE] rounded-xl flex items-center justify-center">
+                            <img src="assets/principle_focus.png" alt="Icon" class="w-6 h-6 opacity-60">
+                        </div>
+                        <h3 class="text-lg font-medium text-respo-dark mb-3" data-site-text="comp.c1t">Технологический инжиниринг</h3>
+                        <p class="text-sm text-respo-dark/60 leading-relaxed" data-site-text="comp.c1d">Разработка и внедрение инновационных технологических схем производства.</p>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="competency-card bg-white p-8 rounded-[24px] shadow-sm border border-respo-blue/5 flex flex-col items-center text-center transition-shadow hover:shadow-md">
+                        <div class="w-12 h-12 mb-6 bg-[#EBF6FE] rounded-xl flex items-center justify-center">
+                            <img src="assets/principle_quality.png" alt="Icon" class="w-6 h-6 opacity-60">
+                        </div>
+                        <h3 class="text-lg font-medium text-respo-dark mb-3" data-site-text="comp.c2t">Проектирование «под ключ»</h3>
+                        <p class="text-sm text-respo-dark/60 leading-relaxed" data-site-text="comp.c2d">Полный цикл реализации проектов от идеи до запуска готовой линии.</p>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="competency-card bg-white p-8 rounded-[24px] shadow-sm border border-respo-blue/5 flex flex-col items-center text-center transition-shadow hover:shadow-md">
+                        <div class="w-12 h-12 mb-6 bg-[#EBF6FE] rounded-xl flex items-center justify-center">
+                            <img src="assets/principle_rules.png" alt="Icon" class="w-6 h-6 opacity-60">
+                        </div>
+                        <h3 class="text-lg font-medium text-respo-dark mb-3" data-site-text="comp.c3t">Автоматизация процессов</h3>
+                        <p class="text-sm text-respo-dark/60 leading-relaxed" data-site-text="comp.c3d">Внедрение систем мониторинга и управления производством в реальном времени.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Реализованные проекты (Full-width BG) -->
+        <section class="py-12 lg:py-24 w-full" id="projects" style="background: linear-gradient(to top, rgba(74, 174, 242, 0.15), white); scroll-margin-top: 7rem;">
+            <div class="container-respo">
+                <div class="mb-16 text-center">
+                    <h2 class="text-[32px] lg:text-[48px] text-respo-blue font-medium mb-4" data-site-text="proj.heading">Реализованы проекты по следующим технологиям</h2>
+                    <p class="text-respo-green max-w-[800px] mx-auto" data-site-text="proj.sub">Наш опыт охватывает широкий спектр отраслевых задач и технических решений</p>
+                </div>
+                <div id="home-technology-tiles" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="group relative aspect-[320/176] overflow-hidden rounded-[24px]">
+                        <div class="absolute inset-0 bg-respo-blue/10 transition-colors group-hover:bg-respo-blue/20"></div>
+                        <div class="absolute inset-0 p-4 sm:p-6 flex items-center justify-center text-center">
+                            <p class="text-respo-dark font-medium text-base sm:text-lg lg:text-[19px] leading-tight">Молочные линии</p>
+                        </div>
+                    </div>
+                    <div class="group relative aspect-[320/176] overflow-hidden rounded-[24px]">
+                        <div class="absolute inset-0 bg-respo-blue/10 transition-colors group-hover:bg-respo-blue/20"></div>
+                        <div class="absolute inset-0 p-4 sm:p-6 flex items-center justify-center text-center">
+                            <p class="text-respo-dark font-medium text-base sm:text-lg lg:text-[19px] leading-tight">Асептический разлив</p>
+                        </div>
+                    </div>
+                    <div class="group relative aspect-[320/176] overflow-hidden rounded-[24px]">
+                        <div class="absolute inset-0 bg-respo-blue/10 transition-colors group-hover:bg-respo-blue/20"></div>
+                        <div class="absolute inset-0 p-4 sm:p-6 flex items-center justify-center text-center">
+                            <p class="text-respo-dark font-medium text-base sm:text-lg lg:text-[19px] leading-tight">СИП-станции</p>
+                        </div>
+                    </div>
+                    <div class="group relative aspect-[320/176] overflow-hidden rounded-[24px]">
+                        <div class="absolute inset-0 bg-respo-blue/10 transition-colors group-hover:bg-respo-blue/20"></div>
+                        <div class="absolute inset-0 p-4 sm:p-6 flex items-center justify-center text-center">
+                            <p class="text-respo-dark font-medium text-base sm:text-lg lg:text-[19px] leading-tight">Модернизация цехов</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Catalog Preview Section -->
+        <section class="py-24 lg:py-32 bg-white" id="catalog">
+            <div class="container-respo">
+                <div class="mb-16">
+                    <span class="text-respo-cyan text-[32px] lg:text-[48px] font-medium leading-none" data-site-text="cat.kicker">//</span>
+                    <h2 class="text-[40px] lg:text-[56px] text-respo-cyan font-medium leading-tight mb-8" data-site-text="cat.heading">
+                        Собственное производство оборудования</h2>
+                    <a href="/production" class="group flex items-center space-x-4">
+                        <span class="text-xl font-medium text-respo-dark group-hover:text-respo-cyan transition-all" data-site-text="cat.cta">Перейти в каталог</span>
+                        <div class="w-12 h-12 bg-respo-green rounded-full flex items-center justify-center transition-transform group-hover:scale-110">
+                            <img src="assets/arrow-right.svg" alt="Arrow" class="w-6 h-6">
+                        </div>
+                    </a>
+                </div>
+                <div id="catalog-preview-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Dynamic products -->
+                </div>
+            </div>
+        </section>
+
+        <script src="js/products.js?v=5"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                initCatalogPreview('catalog-preview-container', 4);
+            });
+        </script>
+
+        <!-- Contact Form Section (Full-width BG) -->
+        <section class="py-24 lg:py-32 w-full" id="contacts" style="background: linear-gradient(to top, rgba(74, 174, 242, 0.15), white);">
+            <div class="container-respo">
+                <div class="grid lg:grid-cols-2 gap-20 items-center">
+                    <div>
+                        <span class="text-respo-cyan text-[14px] lg:text-[16px] font-medium uppercase tracking-widest block mb-4" data-site-text="contact.kicker">// СВЯЖИТЕСЬ С НАМИ</span>
+                        <h2 class="text-[32px] sm:text-[36px] lg:text-[48px] font-medium text-respo-dark leading-tight" data-site-text="contact.heading">Остались вопросы?</h2>
+                    </div>
+                    <div class="flex flex-col">
+                        <form id="contact-form" class="relative space-y-8" data-contact-form data-yandex-smartcaptcha-sitekey="" action="#" method="post" novalidate>
+                            <div class="space-y-3 pb-2">
+                                <a href="mailto:INFO@RE-SPO.COM"
+                                    class="inline-flex items-center justify-center bg-respo-cyan text-white h-11 px-6 rounded-full text-[14px] font-medium hover:brightness-105 transition-all" data-site-text="contact.btn_email">
+                                    INFO@RE-SPO.COM
+                                </a>
+                                <a href="tel:+74959616215"
+                                    class="block text-[18px] text-respo-dark font-medium hover:text-respo-blue transition-colors" data-site-text="contact.phone">
+                                    +7 (495) 961 62 15
+                                </a>
+                            </div>
+                            <div class="absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0" style="clip: rect(0,0,0,0)" aria-hidden="true">
+                                <label>Leave blank <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[14px] text-respo-dark/50 block" data-site-text="contact.label_name">Ваше имя</label>
+                                <input id="contact-name" name="name" type="text" required autocomplete="name" data-site-text-placeholder="contact.ph_name" placeholder="Введите свое имя" maxlength="200" class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-dark/50 focus:border-respo-cyan outline-none transition-all">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[14px] text-respo-dark/50 block" data-site-text="contact.label_phone">Номер телефона</label>
+                                <input id="contact-phone" name="phone" type="tel" required autocomplete="tel" data-site-text-placeholder="contact.ph_phone" placeholder="Введите свой номер телефона" maxlength="80" class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-dark/50 focus:border-respo-cyan outline-none transition-all">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[14px] text-respo-dark/50 block" data-site-text="contact.label_email">Электронная почта</label>
+                                <input id="contact-email" name="email" type="email" required autocomplete="email" data-site-text-placeholder="contact.ph_email" placeholder="your@mail.ru" maxlength="200" class="w-full bg-transparent border-b border-respo-cyan/30 py-4 text-[18px] text-respo-cyan placeholder:text-respo-dark/50 focus:border-respo-cyan outline-none transition-all">
+                            </div>
+                            <div data-contact-captcha-host class="hidden min-h-[100px]"></div>
+                            <p data-contact-status class="hidden text-[14px] text-center" role="status" aria-live="polite"></p>
+                            <div class="pt-8">
+                                <button type="submit" data-contact-submit class="w-full bg-respo-green text-white py-5 rounded-full text-[18px] font-medium hover:brightness-105 transition-all shadow-lg shadow-respo-green/20" data-site-text="contact.submit">
+                                    Отправить
+                                </button>
+                            </div>
+                            <p class="text-[12px] text-respo-dark/40 text-center">
+                                <span data-site-text="contact.consent_prefix">Заполняя форму, вы даете</span> <a href="/privacy-policy" class="underline"><span data-site-text="contact.consent_link">согласие на обработку персональных данных</span></a>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="pt-20 pb-10 relative" style="background: linear-gradient(to top, rgba(74, 174, 242, 0.15), white);">
+        <div class="container-respo">
+            <!-- Branding Logo -->
+            <div class="mb-12 lg:mb-24">
+                <img src="assets/logo.png" alt="RE-SPO Logo" class="h-[96px] lg:h-[120px] w-auto">
+            </div>
+
+            <!-- Footer Main Area: 2-Column Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-12 mb-16 lg:mb-32 relative">
+                <!-- Left Main Column (Phone + Addresses) -->
+                <div class="space-y-12 lg:space-y-32">
+                    <!-- Phone Section -->
+                    <div class="flex flex-col">
+                        <h4 class="text-respo-cyan font-sans text-base font-medium mb-6" data-site-text="footer.phone_label">Контактный телефон</h4>
+                        <a href="tel:+74959616215"
+                            class="text-respo-lime text-[28px] sm:text-[32px] lg:text-[40px] font-medium leading-none tabular-nums hover:text-respo-green transition-colors break-words" data-site-text="contact.phone">
+                            +7 (495) 961 62 15</a>
+                    </div>
+
+                    <!-- Addresses Section -->
+                    <div class="flex flex-col">
+                        <h4 class="text-respo-cyan font-sans text-base font-medium mb-8" data-site-text="footer.addr_label">Адреса</h4>
+                        <div class="text-[14px] text-respo-dark font-sans leading-[1.8] space-y-6">
+                            <p class="whitespace-pre-line" style="white-space: pre-line" data-site-text="footer.addr1">
+                                ООО «РЕ-СПО»: 142001, Московская область, г. Домодедово,<br>
+                                мкр. Северный, Каширское шоссе, д. 7, офис 43
+                            </p>
+                            <p class="whitespace-pre-line" style="white-space: pre-line" data-site-text="footer.addr2">
+                                ООО «РЕ-СПО Проект»: 142846, Московская область,<br>
+                                Ступинский район, с. Татариново, ул. Барыбинская, 26
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Main Column (Navigation + Email) -->
+                <div class="space-y-12 lg:space-y-32 relative">
+                    <!-- Navigation Section -->
+                    <div class="flex flex-col">
+                        <h4 class="text-respo-cyan font-sans text-base font-medium mb-6" data-site-text="footer.nav_heading">Навигация</h4>
+                        <ul class="space-y-3 text-[14px] text-respo-dark font-sans font-medium">
+                            <li><a href="#hero" class="hover:text-respo-blue transition-colors" data-site-text="nav.home">Главная</a></li>
+                            <li><a href="#about" class="hover:text-respo-blue transition-colors" data-site-text="nav.about">О компании</a></li>
+                            <li><a href="#values" class="hover:text-respo-blue transition-colors" data-site-text="nav.values">Наши ценности</a></li>
+                            <li><a href="#services" class="hover:text-respo-blue transition-colors" data-site-text="nav.services">Услуги</a></li>
+                            <li><a href="/production" class="hover:text-respo-blue transition-colors" data-site-text="nav.catalog">Каталог товаров</a>
+                            </li>
+                            <li><a href="#contacts" class="hover:text-respo-blue transition-colors" data-site-text="nav.contacts">Связаться с нами</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Email Section -->
+                    <div class="flex flex-col min-h-[160px] relative">
+                        <h4 class="text-respo-cyan font-sans text-base font-medium mb-6" data-site-text="footer.email_heading">Электронная почта</h4>
+                        <a href="mailto:INFO@RE-SPO.COM"
+                            class="text-[14px] text-respo-dark font-sans hover:text-respo-blue transition-colors underline decoration-respo-dark/30 underline-offset-4" data-site-text="footer.email">INFO@RE-SPO.COM</a>
+
+                    </div>
+                </div>
+            </div>
+
+            </div>
+        </div>
+
+        <!-- Interactive Cow Container (Moved to footer level for proper width) -->
+        <div id="interactive-cow-area" class="hidden lg:block absolute bottom-0 left-0 w-full h-40 pointer-events-none mb-4 lg:mb-10 z-[9999]">
+            <div id="interactive-cow" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 md:w-60 pointer-events-auto cursor-help ease-out z-[9999]">
+                <div class="cow-container relative w-full aspect-[282/238]">
+                    <svg class="cow-svg" viewBox="0 0 282 238" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g class="cow-waddle-group" transform="translate(0,238) scale(0.1,-0.1)">
+                            <!-- Main Cow Body (White with Black Outline) -->
+                            <path class="cow-main-path" fill="#FFFFFF" stroke="#000000" stroke-width="20" d="M732 2108 c-11 -13 -35 -54 -53 -91 -27 -58 -31 -76 -26 -117 3 -27 15 -67 27 -90 20 -39 20 -60 -1 -60 -5 0 -33 18 -62 39 -104 79 -191 99 -273 65 -107 -44 -100 -93 24 -158 48 -25 64 -28 153 -28 54 0 99 -1 99 -2 0 -2 -9 -38 -20 -80 -11 -43 -26 -146 -35 -229 -8 -84 -22 -199 -30 -256 -24 -181 5 -261 96 -261 18 0 72 -18 120 -41 85 -39 89 -40 118 -24 17 8 41 29 53 45 12 17 25 30 29 30 3 0 9 -39 11 -87 4 -63 16 -123 42 -208 37 -119 40 -143 33 -290 -2 -37 0 -40 27 -43 18 -2 30 -11 33 -23 6 -22 59 -26 111 -8 27 9 31 16 34 57 3 26 21 92 41 148 26 72 39 126 43 187 4 48 11 87 15 87 5 0 24 -8 44 -17 37 -18 42 -33 25 -78 -10 -26 -6 -32 44 -68 18 -13 18 -15 3 -38 -24 -33 -21 -54 10 -79 27 -21 28 -21 43 -2 8 11 20 27 25 37 9 15 15 16 54 4 52 -15 58 -27 38 -77 -8 -21 -18 -59 -22 -85 -6 -40 -5 -46 8 -41 8 3 18 1 22 -5 8 -13 74 -14 94 -2 12 8 13 16 3 49 -7 22 -12 41 -12 43 0 3 17 3 38 1 57 -4 68 7 55 63 -11 47 -11 47 28 86 22 22 39 34 39 28 0 -6 -11 -50 -25 -98 -48 -160 -57 -193 -53 -195 2 -1 34 0 71 2 l68 4 -6 39 c-13 76 36 196 115 284 48 53 64 95 40 110 -15 9 -12 45 4 51 24 9 84 106 98 157 7 26 15 47 19 47 4 0 10 -26 13 -57 4 -32 12 -84 18 -116 10 -51 9 -59 -7 -71 -15 -11 -16 -18 -7 -47 6 -19 14 -52 17 -74 4 -22 10 -33 12 -25 14 45 14 45 23 31 6 -11 12 -6 24 18 20 38 12 97 -14 111 -21 11 -33 64 -50 206 -5 51 -16 109 -24 130 -7 22 -26 93 -41 159 -34 150 -45 170 -100 197 l-43 21 -34 -34 c-32 -34 -37 -36 -165 -54 -206 -28 -334 -11 -583 78 l-95 33 3 35 c4 43 42 178 53 185 4 2 29 -7 55 -21 80 -43 202 -31 277 27 18 13 16 17 -27 65 -62 69 -127 97 -204 87 -31 -3 -70 -13 -85 -21 -23 -12 -33 -12 -56 -2 -25 11 -29 19 -35 72 -3 33 -6 81 -6 106 0 54 -17 121 -30 121 -17 0 -37 -53 -55 -140 -9 -47 -21 -92 -25 -101 -7 -13 -29 -15 -122 -15 l-113 1 -22 55 c-26 63 -28 127 -9 218 7 34 10 62 7 62 -4 0 -17 -10 -29 -22z"/>
+                            <!-- Eye/Snout features -->
+                            <path class="cow-eye-pixel" fill="#000000" d="M767 1554 c-10 -10 -9 -42 2 -48 18 -11 42 6 39 28 -3 21 -28 33 -41 20z"/>
+                            <path class="cow-udder-area" fill="#FFC0CB" stroke="#000" stroke-width="10" d="M955 1444 c-25 -26 -14 -57 28 -79 l38 -20 20 24 c25 30 24 37 -6 66 -28 29 -57 32 -80 9z"/>
+                        </g>
+                    </svg>
+                    <!-- Speech Bubble -->
+                    <div class="cow-speech hidden absolute -top-24 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-2xl shadow-xl transition-opacity duration-300 pointer-events-none whitespace-nowrap border-2 border-respo-blue/10">
+                        <span class="text-respo-dark font-medium flex items-center gap-2" data-site-text="footer.cow_bubble">
+                             Мням-мням... 🌿
+                        </span>
+                        <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45 border-r-2 border-b-2 border-respo-blue/10"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Grass patches -->
+            <div class="grass-patch absolute bottom-0 left-[10%] w-4 h-2 bg-respo-green/20 rounded-full"></div>
+            <div class="grass-patch absolute bottom-0 left-[30%] w-6 h-3 bg-respo-green/20 rounded-full"></div>
+            <div class="grass-patch absolute bottom-0 left-[60%] w-5 h-2.5 bg-respo-green/20 rounded-full"></div>
+            <div class="grass-patch absolute bottom-0 left-[85%] w-7 h-3.5 bg-respo-green/20 rounded-full"></div>
+        </div>
+
+            <!-- Footer Bottom Bar -->
+            <div
+                class="mt-8 pt-10 pb-6 border-t border-respo-cyan/10 px-4 lg:px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-[13px] text-respo-cyan font-medium" data-site-text="footer.copyright">© РЕ-СПО Группа компаний 2025</p>
+                <div class="flex items-center">
+                    <a href="/privacy-policy"
+                        class="text-[13px] text-respo-cyan hover:text-respo-blue transition-colors font-medium" data-site-text="footer.privacy">Политика
+                        конфиденциальности</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+
+
+
+
+    <script src="js/site-text.js?v=1"></script>
+    <script src="js/contact-form.js?v=1"></script>
+    <script src="js/home-content.js?v=1"></script>
+    <script src="js/main.js?v=4"></script>
+</body>
+
+</html>

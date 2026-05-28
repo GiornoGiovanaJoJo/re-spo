@@ -30,7 +30,6 @@
             .responsive-table td.actions-cell::before { display: none; }
         }
     </style>
-    <meta name="description" content="Панель управления RE-SPO позволяет эффективно управлять контентом и медиафайлами на сайте.">
 </head>
 <body class="admin-shell min-h-screen py-4 md:py-8">
     <!-- Yandex.Metrika counter -->
@@ -44,18 +43,14 @@
 
         ym(108262955, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
     </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/108262955" style="position:absolute; left:-9999px;" alt="Яндекс.Метрика" /></div></noscript>
+    <noscript><div><img src="https://mc.yandex.ru/watch/108262955" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
 
     <div id="admin-login-gate" class="fixed inset-0 z-[200] flex items-center justify-center p-4 admin-shell">
         <div class="w-full max-w-md rounded-2xl border border-blue-100 bg-white/95 p-6 md:p-8 shadow-xl backdrop-blur-sm">
             <h1 class="text-2xl font-bold text-gray-800 mb-1">Вход в админку</h1>
             <p class="text-sm text-gray-500 mb-6">Введите секретный ключ доступа (хранится в <code class="text-xs bg-slate-100 px-1 rounded">admin-config.json</code> на сервере).</p>
-            <form id="admin-login-form" class="space-y-4" autocomplete="on">
-                <div class="sr-only">
-                    <label for="admin-login-username">Имя пользователя</label>
-                    <input type="text" id="admin-login-username" name="username" autocomplete="username" value="re-spo-admin" readonly tabindex="-1">
-                </div>
+            <form id="admin-login-form" class="space-y-4">
                 <div>
                     <label for="admin-key-input" class="block text-sm font-medium text-gray-700 mb-1">Ключ</label>
                     <input type="password" id="admin-key-input" name="admin-key" autocomplete="current-password" maxlength="400" class="w-full border border-slate-300 rounded-md px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Секретный ключ" required>
@@ -83,4 +78,2096 @@
                 <button id="btn-clear-cache" class="bg-amber-50 text-amber-700 px-3.5 md:px-4 py-2 rounded-md font-medium text-sm hover:bg-amber-100 transition-colors border border-amber-200">
                     Очистить кэш сайта
                 </button>
-                <a href="/" class="bg-blue-600 text-white px-4 md:px-6 py-2 rounded-md font-medium text-sm hover:bg-blue-700
+                <a href="/" class="bg-blue-600 text-white px-4 md:px-6 py-2 rounded-md font-medium text-sm hover:bg-blue-700 transition-colors shadow-sm">На сайт &rarr;</a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-2 mb-5">
+            <div class="rounded-lg border border-blue-100 bg-white/90 p-3">
+                <p class="text-[11px] uppercase tracking-wide text-slate-500">Медиафайлы</p>
+                <p id="stats-images" class="text-xl font-bold text-slate-800 mt-1">0</p>
+            </div>
+            <div class="rounded-lg border border-blue-100 bg-white/90 p-3">
+                <p class="text-[11px] uppercase tracking-wide text-slate-500">Товары</p>
+                <p id="stats-products" class="text-xl font-bold text-slate-800 mt-1">0</p>
+            </div>
+            <div class="rounded-lg border border-blue-100 bg-white/90 p-3">
+                <p class="text-[11px] uppercase tracking-wide text-slate-500">Сертификаты</p>
+                <p id="stats-certificates" class="text-xl font-bold text-slate-800 mt-1">0</p>
+            </div>
+            <div class="rounded-lg border border-blue-100 bg-white/90 p-3">
+                <p class="text-[11px] uppercase tracking-wide text-slate-500">Отзывы</p>
+                <p id="stats-reviews" class="text-xl font-bold text-slate-800 mt-1">0</p>
+            </div>
+            <div class="rounded-lg border border-blue-100 bg-white/90 p-3 col-span-2 md:col-span-1">
+                <p class="text-[11px] uppercase tracking-wide text-slate-500">Последнее действие</p>
+                <p id="stats-last-action" class="text-sm font-semibold text-slate-700 mt-1">—</p>
+            </div>
+        </div>
+
+        <section id="admin-instructions-panel" class="mb-6 rounded-xl border-2 border-amber-400/90 bg-gradient-to-br from-amber-50 to-orange-50/90 shadow-md ring-1 ring-amber-200/60" aria-labelledby="admin-instructions-heading">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3 border-b border-amber-200/80 bg-amber-100/50 rounded-t-xl">
+                <div class="min-w-0">
+                    <h2 id="admin-instructions-heading" class="text-lg font-bold text-amber-950 tracking-tight">Инструкция для администратора</h2>
+                    <p class="text-xs text-amber-900/80 mt-0.5">Ниже — краткая выжимка. Кнопка справа открывает <strong>полное пошаговое руководство</strong> (все вкладки, товары, параметры, категории).</p>
+                </div>
+                <button type="button" id="btn-admin-full-instructions" class="shrink-0 inline-flex items-center justify-center gap-2 border-2 border-respo-lime/70 bg-amber-900 px-4 py-2.5 rounded-lg text-sm font-bold text-respo-lime shadow-md transition-colors hover:border-respo-lime hover:bg-amber-950 hover:brightness-105">
+                    Полная инструкция
+                </button>
+            </div>
+            <div class="px-4 py-3 max-h-[min(52vh,420px)] overflow-y-auto soft-scroll text-sm text-amber-950/95 leading-relaxed space-y-3">
+                <p><strong>Вход.</strong> Секретный ключ на экране входа. Ключ можно сменить кнопкой «Сменить ключ»; он записывается в <code class="text-xs bg-white/70 px-1 rounded">admin-config.json</code> на сервере. Сессия — cookie на несколько дней.</p>
+                <p><strong>Общее.</strong> «Очистить кэш сайта» — после крупных правок, если на сайте не видно изменений. «На сайт» — на главную. «Последнее действие» — что сделано последним.</p>
+                <p><strong>Медиафайлы.</strong> Слоты с фиксированными именами: новый файл подставляется под имя слота и заменяет старый. Есть поиск и очистка раздела.</p>
+                <p><strong>Товары и категории.</strong> Категории задают секции на <code class="text-xs bg-white/70 px-1 rounded">/production</code> и порядок. ID категории — латиница, цифры и «_», с буквы; после появления товаров ID не меняйте. «+ Категория» — настройки отображения и полей товара; «Сохранить на сервер» пишет категории и товары одним запросом. Категорию без товаров можно удалить; с товарами — сначала переназначьте категорию. В форме товара поля могут скрываться по настройке категории.</p>
+                <p><strong>Сертификаты и отзывы.</strong> Редактирование списков; отзывы на сайте ограничены по количеству на странице производства.</p>
+                <p><strong>Тексты.</strong> Редактор <code class="text-xs bg-white/70 px-1 rounded">site-text.json</code>: ключи, фильтр, сохранение на сервер. На сайте — атрибуты <code class="text-xs bg-white/70 px-1 rounded">data-site-text</code>.</p>
+                <p><strong>Главная.</strong> Четыре подписи плиток «Технологии».</p>
+                <p><strong>Если не сохраняется:</strong> проверьте авторизацию, текст ошибки во всплывающем уведомлении, затем попробуйте очистить кэш.</p>
+            </div>
+        </section>
+
+        <div class="flex flex-wrap gap-2 mb-6 bg-gray-100 p-1 rounded-lg">
+            <button id="tab-media" data-tab="media" class="px-4 py-2 rounded-md text-sm font-medium transition-all bg-white shadow-sm text-blue-600">Медиафайлы</button>
+            <button id="tab-products" data-tab="products" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Товары (Каталог)</button>
+            <button id="tab-certificates" data-tab="certificates" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Сертификаты</button>
+            <button id="tab-reviews" data-tab="reviews" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Отзывы</button>
+            <button id="tab-texts" data-tab="texts" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Тексты</button>
+            <button id="tab-home" data-tab="home" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800">Главная</button>
+        </div>
+        
+        <!-- Media Tab -->
+        <div id="content-media">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
+                <h2 class="text-xl font-bold text-gray-800">Менеджер изображений</h2>
+                <div class="flex items-center gap-2">
+                    <input id="media-search" type="search" placeholder="Поиск по имени файла..." class="w-full md:w-72 border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                    <button id="btn-delete-all-images" type="button" class="text-red-600 hover:text-red-700 text-sm font-medium whitespace-nowrap">Очистить все фото раздела</button>
+                </div>
+            </div>
+            <p class="text-gray-600 mb-6 bg-blue-50 p-4 rounded-lg text-sm">Слоты с фиксированными именами (как в вёрстке сайта): файл сохраняется под именем слота и <strong>перезаписывает</strong> предыдущий. В товарах и сертификатах имя файла на диске берётся из <strong>имени загружаемого файла</strong> (латиница и безопасные символы).</p>
+            <div id="images-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 soft-scroll">
+                <!-- Loaded via JS -->
+            </div>
+        </div>
+
+        <!-- Products Tab -->
+        <div id="content-products" class="hidden">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
+                <h2 class="text-xl font-bold text-gray-800">Управление товарами</h2>
+                <div class="flex flex-wrap items-center gap-2">
+                    <input id="products-search" type="search" placeholder="Поиск товара..." class="w-full md:w-64 border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                    <button id="btn-clear-section-products" type="button" class="text-red-600 hover:text-red-800 text-sm font-medium whitespace-nowrap border border-red-200 rounded-md px-3 py-2 bg-red-50/80">
+                        Очистить фото раздела
+                    </button>
+                    <button id="btn-add-product" class="bg-green-600 text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-green-700 transition-colors shadow-sm whitespace-nowrap">
+                        + Добавить товар
+                    </button>
+                </div>
+            </div>
+
+            <div class="mb-6 border border-slate-200 rounded-xl p-4 bg-slate-50/80">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Категории каталога</h3>
+                        <p class="text-xs text-gray-600 mt-1 max-w-3xl">Секции на странице <code class="bg-white px-1 rounded border">/production</code> и порядок блоков берутся из этого списка. ID — латиница и <code class="bg-white px-1 rounded border">_</code>, без пробелов.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 shrink-0">
+                        <button type="button" id="btn-save-categories-disk" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 shadow-sm">Сохранить на сервер</button>
+                        <button type="button" id="btn-add-category" class="bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-700 shadow-sm">+ Категория</button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto border border-slate-200 rounded-lg bg-white">
+                    <table class="min-w-full text-sm">
+                        <thead>
+                            <tr class="text-left text-slate-500 border-b border-slate-200 bg-slate-50">
+                                <th class="py-2.5 px-3 font-medium">Порядок</th>
+                                <th class="py-2.5 px-3 font-medium">ID</th>
+                                <th class="py-2.5 px-3 font-medium">Название</th>
+                                <th class="py-2.5 px-3 font-medium">В каталоге</th>
+                                <th class="py-2.5 px-3 font-medium">Карточка</th>
+                                <th class="py-2.5 px-3 font-medium text-right">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categories-table-body" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto soft-scroll border rounded-lg bg-white">
+                <table class="min-w-full divide-y divide-gray-200 responsive-table">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Фото</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Название</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Категория</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-table-body" class="bg-white divide-y divide-gray-200">
+                        <!-- Loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Certificates Tab -->
+        <div id="content-certificates" class="hidden">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
+                <h2 class="text-xl font-bold text-gray-800">Управление сертификатами</h2>
+                <div class="flex flex-wrap items-center gap-2">
+                    <input id="certificates-search" type="search" placeholder="Поиск сертификата..." class="w-full md:w-64 border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                    <button id="btn-clear-section-certificates" type="button" class="text-red-600 hover:text-red-800 text-sm font-medium whitespace-nowrap border border-red-200 rounded-md px-3 py-2 bg-red-50/80">
+                        Очистить фото раздела
+                    </button>
+                    <button id="btn-add-certificate" class="bg-green-600 text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-green-700 transition-colors shadow-sm whitespace-nowrap">
+                        + Добавить сертификат
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto soft-scroll border rounded-lg bg-white">
+                <table class="min-w-full divide-y divide-gray-200 responsive-table">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Превью</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Название</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Описание</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="certificates-table-body" class="bg-white divide-y divide-gray-200">
+                        <!-- Loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Reviews tab -->
+        <div id="content-reviews" class="hidden">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">Отзывы (каталог)</h2>
+                    <p class="text-gray-600 text-sm mt-1">На странице <code class="text-xs bg-gray-100 px-1 rounded">/production</code> показываются до <strong>8</strong> отзывов — не более <strong>4</strong> страниц по 2 отзыва. Листание свайпом или точками; «Смотреть больше» открывает то же в окне.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <input id="reviews-search" type="search" placeholder="Поиск по тексту или автору..." class="w-full md:w-64 border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                    <button id="btn-add-review" class="bg-green-600 text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-green-700 transition-colors shadow-sm whitespace-nowrap">
+                        + Добавить отзыв
+                    </button>
+                </div>
+            </div>
+            <div class="overflow-x-auto soft-scroll border rounded-lg bg-white">
+                <table class="min-w-full divide-y divide-gray-200 responsive-table">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Текст</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Автор</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reviews-table-body" class="bg-white divide-y divide-gray-200">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Site texts (CMS) tab -->
+        <div id="content-texts" class="hidden">
+            <h2 class="text-xl font-bold text-gray-800 mb-2">Тексты сайта</h2>
+            <p class="text-gray-600 text-sm mb-4">
+                Редактирование <code class="text-xs bg-gray-100 px-1 rounded">site-text.json</code> через API.
+                В HTML для подстановки используйте атрибут <code class="text-xs bg-gray-100 px-1 rounded">data-site-text="ключ"</code>
+                или <code class="text-xs bg-gray-100 px-1 rounded">data-site-text-placeholder</code> для полей ввода.
+                Четыре подписи плиток «Технологии» на главной по-прежнему задаются во вкладке «Главная».
+            </p>
+            <div class="flex flex-col sm:flex-row flex-wrap gap-2 mb-4">
+                <input type="search" id="site-text-filter" placeholder="Фильтр по ключу..." class="flex-1 min-w-[160px] border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                <div class="flex flex-wrap gap-2 items-center">
+                    <input type="text" id="site-text-new-key" placeholder="новый.ключ" maxlength="120" class="w-40 sm:w-48 border border-slate-300 rounded-md px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                    <button type="button" id="btn-site-text-add" class="bg-slate-100 text-slate-800 px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-200">Добавить ключ</button>
+                    <button type="button" id="btn-site-text-reload" class="bg-white border border-slate-300 text-slate-700 px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-50">С сервера</button>
+                    <button type="button" id="btn-site-text-save" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 shadow-sm">Сохранить все</button>
+                </div>
+            </div>
+            <div id="site-text-editor" class="space-y-3 max-h-[min(70vh,720px)] overflow-y-auto soft-scroll border border-slate-200 rounded-lg p-3 bg-white"></div>
+        </div>
+
+        <!-- Home page content tab -->
+        <div id="content-home" class="hidden">
+            <h2 class="text-xl font-bold text-gray-800 mb-2">Блоки «Технологии» на главной</h2>
+            <p class="text-gray-600 text-sm mb-6">Четыре подписи в секции «Реализованы проекты по следующим технологиям». Отображаются на главной странице (<code class="text-xs bg-gray-100 px-1 rounded">/</code>) после сохранения.</p>
+            <div class="space-y-4 max-w-2xl">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="home-tile-0">Плитка 1</label>
+                    <input type="text" id="home-tile-0" maxlength="400" class="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="home-tile-1">Плитка 2</label>
+                    <input type="text" id="home-tile-1" maxlength="400" class="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="home-tile-2">Плитка 3</label>
+                    <input type="text" id="home-tile-2" maxlength="400" class="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="home-tile-3">Плитка 4</label>
+                    <input type="text" id="home-tile-3" maxlength="400" class="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                </div>
+                <button type="button" id="btn-save-home-content" class="bg-blue-600 text-white px-5 py-2.5 rounded-md font-medium text-sm hover:bg-blue-700 transition-colors shadow-sm">
+                    Сохранить тексты
+                </button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Change admin key modal -->
+    <div id="admin-change-key-modal" role="dialog" aria-modal="true" aria-labelledby="admin-change-key-title" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[110] p-3 md:p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-5 md:p-8">
+            <h3 id="admin-change-key-title" class="text-xl font-bold mb-2">Новый ключ доступа</h3>
+            <p class="text-sm text-gray-500 mb-4">Файл на сервере: <code class="text-xs bg-gray-100 px-1 rounded">admin-config.json</code>. Минимум 6 символов.</p>
+            <form id="admin-change-key-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="admin-new-key">Новый ключ</label>
+                    <input type="password" id="admin-new-key" required minlength="6" maxlength="400" autocomplete="new-password" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="admin-new-key-repeat">Повторите ключ</label>
+                    <input type="password" id="admin-new-key-repeat" required minlength="6" maxlength="400" autocomplete="new-password" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <p id="admin-change-key-error" class="text-sm text-red-600 hidden"></p>
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" id="btn-close-admin-change-key" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">Отмена</button>
+                    <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded-md font-medium hover:bg-blue-700">Сохранить ключ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Полная инструкция (текст из admin-instructions.txt) -->
+    <div id="admin-full-instructions-modal" role="dialog" aria-modal="true" aria-labelledby="admin-full-instructions-title" class="fixed inset-0 z-[125] hidden flex-col justify-center bg-black/50 p-3 md:p-6">
+        <div class="mx-auto flex w-full max-w-4xl max-h-[min(92vh,900px)] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-slate-200">
+            <div class="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-amber-50/90 px-4 py-3 md:px-5">
+                <h2 id="admin-full-instructions-title" class="text-base md:text-lg font-bold text-amber-950 pr-2">Полное руководство по админке RE-SPO</h2>
+                <button type="button" id="btn-close-admin-full-instructions" class="shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-white hover:text-slate-900" aria-label="Закрыть">Закрыть</button>
+            </div>
+            <pre id="admin-full-instructions-body" class="soft-scroll min-h-0 flex-1 overflow-y-auto whitespace-pre-wrap break-words p-4 md:p-6 text-[13px] md:text-sm leading-relaxed text-slate-800 font-sans" tabindex="0"></pre>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[100] p-3 md:p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-xl w-full p-5 md:p-8 max-h-[90vh] overflow-y-auto soft-scroll">
+            <h3 id="modal-title" class="text-2xl font-bold mb-6">Добавить товар</h3>
+            <form id="product-form" class="space-y-4">
+                <input type="hidden" id="edit-id">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Название товара</label>
+                    <input type="text" id="prod-name" required class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Категория</label>
+                    <select id="prod-category" required class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <!-- Loaded via JS -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Имя файла в assets/ (подставляется при загрузке)</label>
+                    <input type="text" id="prod-image" placeholder="product_placeholder.png" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                    <p class="text-[10px] text-gray-400 mt-1">При нажатии «Загрузить» имя берётся из файла (кириллица и лишние символы заменяются). Файл с тем же именем на сервере будет заменён.</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Загрузить фото или PDF</label>
+                    <div class="flex flex-wrap gap-2">
+                        <input type="file" id="prod-image-file" accept="image/*,.tif,.tiff,.pdf,application/pdf" class="flex-1 min-w-[140px] border rounded-md px-3 py-2 text-sm">
+                        <button type="button" id="btn-upload-product-image" class="bg-blue-50 text-blue-700 px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-100 transition-colors">
+                            Загрузить
+                        </button>
+                        <button type="button" id="btn-clear-product-modal-image" class="border border-red-200 text-red-700 bg-red-50 px-4 py-2 rounded-md text-sm font-semibold hover:bg-red-100 transition-colors">
+                            Очистить фото
+                        </button>
+                    </div>
+                    <p id="prod-image-upload-status" class="text-[11px] text-gray-500 mt-1"></p>
+                </div>
+                <div id="product-field-description">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Краткое описание (для карточки)</label>
+                    <textarea id="prod-description" rows="2" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Короткое описание товара"></textarea>
+                </div>
+                <div id="product-field-specs">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Характеристики (по одной в строке)</label>
+                    <textarea id="prod-specs" rows="5" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Параметр 1&#10;Параметр 2&#10;Параметр 3"></textarea>
+                </div>
+                <div id="product-field-params">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Таблица параметров (для теплообменников)</label>
+                    <textarea id="prod-params" rows="5" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="длина|974мм&#10;ширина|300мм&#10;высота|150мм"></textarea>
+                    <p class="text-[10px] text-gray-400 mt-1">Формат: одна строка = "Показатель|Значение". Если заполнено, на странице товара показывается таблица параметров.</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Ссылка на страницу</label>
+                    <input type="text" id="prod-link" value="/product" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div class="flex justify-end gap-3 pt-4 sticky bottom-0 bg-white/95 pb-1">
+                    <button type="button" id="btn-close-product-modal" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">Отмена</button>
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors shadow-sm">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Category Modal -->
+    <div id="category-modal" role="dialog" aria-modal="true" aria-labelledby="category-modal-title" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[100] p-3 md:p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-5 md:p-8 max-h-[90vh] overflow-y-auto soft-scroll">
+            <h3 id="category-modal-title" class="text-2xl font-bold mb-6">Категория</h3>
+            <form id="category-form" class="space-y-4">
+                <input type="hidden" id="cat-edit-original-id" value="">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-id">ID (латиница, _)</label>
+                    <input type="text" id="cat-id" required maxlength="64" pattern="[a-z][a-z0-9_]{0,63}" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none font-mono text-sm" placeholder="my_category">
+                    <p class="text-[10px] text-gray-400 mt-1">После создания товаров с этой категорией ID лучше не менять.</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-name">Название на сайте</label>
+                    <input type="text" id="cat-name" required maxlength="200" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Заголовок секции в каталоге">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-sort-order">Порядок (меньше — выше)</label>
+                    <input type="number" id="cat-sort-order" step="1" value="0" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-catalog-mode">Отображение в каталоге</label>
+                    <select id="cat-catalog-mode" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="carousel">Карусель</option>
+                        <option value="grid">Сетка</option>
+                        <option value="list">Список</option>
+                    </select>
+                </div>
+                <div id="cat-list-style-wrap">
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-list-style">Стиль списка</label>
+                    <select id="cat-list-style" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="simple">Обычный</option>
+                        <option value="accordion">Аккордеон (как «Оборудование»)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-card-style">Вид карточки (сетка / карусель)</label>
+                    <select id="cat-card-style" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="default">Стандарт</option>
+                        <option value="valve">Компактный (клапана)</option>
+                        <option value="exchanger">Теплообменник</option>
+                    </select>
+                </div>
+                <div id="cat-grid-cols-wrap">
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-grid-cols">Колонки сетки (только режим «Сетка»)</label>
+                    <select id="cat-grid-cols" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="cat-show-counter" class="rounded border-gray-300">
+                    <label for="cat-show-counter" class="text-sm text-gray-700">Показывать блок «Счётчик» под категорией</label>
+                </div>
+                <fieldset class="border border-slate-200 rounded-lg p-3 space-y-2">
+                    <legend class="text-sm font-medium text-gray-800 px-1">Поля товара</legend>
+                    <p class="text-[10px] text-gray-500 mb-2">Галерея — несколько фото на странице товара (массив <code class="text-[10px]">images</code> в JSON).</p>
+                    <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="cat-f-desc" class="rounded border-gray-300" checked> Описание в карточке и в форме</label>
+                    <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="cat-f-specs" class="rounded border-gray-300" checked> Характеристики (список)</label>
+                    <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="cat-f-params" class="rounded border-gray-300" checked> Таблица параметров</label>
+                    <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="cat-f-gallery" class="rounded border-gray-300" checked> Галерея на странице товара</label>
+                </fieldset>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-l-specs">Заголовок над характеристиками (страница товара, необязательно)</label>
+                    <input type="text" id="cat-l-specs" maxlength="200" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Пусто — без заголовка">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-l-pl">Таблица: колонка показателей</label>
+                        <input type="text" id="cat-l-pl" maxlength="200" class="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="По умолчанию из текстов сайта">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="cat-l-pv">Таблица: колонка значений</label>
+                        <input type="text" id="cat-l-pv" maxlength="200" class="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="По умолчанию из текстов сайта">
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-4 sticky bottom-0 bg-white/95 pb-1">
+                    <button type="button" id="btn-close-category-modal" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">Отмена</button>
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors shadow-sm">Сохранить категорию</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Certificate Modal -->
+    <div id="certificate-modal" role="dialog" aria-modal="true" aria-labelledby="certificate-modal-title" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[100] p-3 md:p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-xl w-full p-5 md:p-8 max-h-[90vh] overflow-y-auto soft-scroll">
+            <h3 id="certificate-modal-title" class="text-2xl font-bold mb-6">Добавить сертификат</h3>
+            <form id="certificate-form" class="space-y-4">
+                <input type="hidden" id="edit-certificate-id">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Название сертификата</label>
+                    <input type="text" id="cert-title" required class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Имя файла в assets/ (подставляется при загрузке)</label>
+                    <input type="text" id="cert-image" placeholder="пусто — без картинки" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                    <p class="text-[10px] text-gray-400 mt-1">Имя формируется из загружаемого файла; совпадение имени перезаписывает старый файл.</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Загрузить изображение или PDF</label>
+                    <div class="flex flex-wrap gap-2">
+                        <input type="file" id="cert-image-file" accept="image/*,.tif,.tiff,.pdf,application/pdf" class="flex-1 min-w-[140px] border rounded-md px-3 py-2 text-sm">
+                        <button type="button" id="btn-upload-certificate-image" class="bg-blue-50 text-blue-700 px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-100 transition-colors">
+                            Загрузить
+                        </button>
+                        <button type="button" id="btn-clear-cert-modal-image" class="border border-red-200 text-red-700 bg-red-50 px-4 py-2 rounded-md text-sm font-semibold hover:bg-red-100 transition-colors">
+                            Очистить фото
+                        </button>
+                    </div>
+                    <p id="cert-image-upload-status" class="text-[11px] text-gray-500 mt-1"></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Описание</label>
+                    <textarea id="cert-description" rows="5" required class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Текст сертификата. Можно переносить строки."></textarea>
+                </div>
+                <div class="flex justify-end gap-3 pt-4 sticky bottom-0 bg-white/95 pb-1">
+                    <button type="button" id="btn-close-certificate-modal" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">Отмена</button>
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors shadow-sm">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="review-modal" role="dialog" aria-modal="true" aria-labelledby="review-modal-title" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[100] p-3 md:p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-xl w-full p-5 md:p-8 max-h-[90vh] overflow-y-auto soft-scroll">
+            <h3 id="review-modal-title" class="text-2xl font-bold mb-6">Добавить отзыв</h3>
+            <form id="review-form" class="space-y-4">
+                <input type="hidden" id="edit-review-id">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="review-text">Текст отзыва</label>
+                    <textarea id="review-text" rows="6" required maxlength="8000" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Текст отзыва покупателя"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="review-author">Подпись (имя)</label>
+                    <input type="text" id="review-author" required maxlength="200" class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Например: Анна К.">
+                </div>
+                <div class="flex justify-end gap-3 pt-4 sticky bottom-0 bg-white/95 pb-1">
+                    <button type="button" id="btn-close-review-modal" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">Отмена</button>
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors shadow-sm">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let requiredImages = [];
+        let productData = { categories: [], products: [] };
+        let certificateData = { certificates: [] };
+        let reviewData = { reviews: [] };
+        let homeContentData = {
+            technologyTiles: ['Молочные линии', 'Асептический разлив', 'СИП-станции', 'Модернизация цехов']
+        };
+        let siteTextStrings = {};
+        const SITE_TEXT_KEY_RE = /^[a-z][a-z0-9_.-]{0,100}$/i;
+        const FALLBACK_IMG = 'https://via.placeholder.com/40?text=?';
+        const CATEGORY_ID_RE_ADMIN = /^[a-z][a-z0-9_]{0,63}$/;
+        let currentTab = 'media';
+        function bootstrapAdminUi() {
+            if (!window.__respoAdminHandlersOnce) {
+                initEventHandlers();
+            }
+            loadImages();
+        }
+
+        function markLastAction(text) {
+            const el = document.getElementById('stats-last-action');
+            if (el) el.textContent = text;
+        }
+
+        function showToast(message, type = 'info') {
+            const host = document.getElementById('admin-toast-host') || (() => {
+                const node = document.createElement('div');
+                node.id = 'admin-toast-host';
+                node.className = 'fixed right-3 md:right-5 bottom-3 md:bottom-5 z-[120] space-y-2';
+                document.body.appendChild(node);
+                return node;
+            })();
+            const palette = {
+                info: 'bg-blue-600',
+                success: 'bg-emerald-600',
+                warning: 'bg-amber-600',
+                error: 'bg-rose-600'
+            };
+            const toast = document.createElement('div');
+            toast.className = `${palette[type] || palette.info} text-white text-sm font-medium px-4 py-2 rounded-lg shadow-lg`;
+            toast.textContent = message;
+            host.appendChild(toast);
+            setTimeout(() => toast.remove(), 2800);
+        }
+
+        function escapeHtml(input) {
+            return String(input ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function normalizeImagePath(value) {
+            const v = String(value || '').trim();
+            if (!v) return '';
+            return v.startsWith('assets/') ? v : `assets/${v}`;
+        }
+
+        async function authorizedFetch(url, options = {}) {
+            const headers = new Headers(options.headers || {});
+            const response = await fetch(url, { ...options, headers, credentials: 'same-origin' });
+            if (response.status === 401) {
+                const app = document.getElementById('admin-app');
+                const gate = document.getElementById('admin-login-gate');
+                if (app && gate && !app.classList.contains('hidden')) {
+                    showToast('Сессия истекла или нет доступа. Войдите снова.', 'warning');
+                    app.classList.add('hidden');
+                    gate.classList.remove('hidden');
+                }
+            }
+            return response;
+        }
+
+        async function initAdminAccess() {
+            const gate = document.getElementById('admin-login-gate');
+            const app = document.getElementById('admin-app');
+            const errEl = document.getElementById('admin-login-error');
+            const form = document.getElementById('admin-login-form');
+
+            async function sessionOk() {
+                try {
+                    const r = await fetch('/api/admin/session', { credentials: 'same-origin' });
+                    const j = await r.json();
+                    return !!j.authenticated;
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            if (await sessionOk()) {
+                gate.classList.add('hidden');
+                app.classList.remove('hidden');
+                bootstrapAdminUi();
+            }
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                errEl.classList.add('hidden');
+                const keyInput = document.getElementById('admin-key-input');
+                const key = keyInput.value;
+                try {
+                    const r = await fetch('/api/admin/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'same-origin',
+                        body: JSON.stringify({ key })
+                    });
+                    const j = await r.json().catch(() => ({}));
+                    if (!r.ok) {
+                        errEl.textContent = j.error || 'Неверный ключ';
+                        errEl.classList.remove('hidden');
+                        return;
+                    }
+                    keyInput.value = '';
+                    gate.classList.add('hidden');
+                    app.classList.remove('hidden');
+                    bootstrapAdminUi();
+                } catch (ex) {
+                    errEl.textContent = 'Ошибка сети';
+                    errEl.classList.remove('hidden');
+                }
+            });
+
+            document.getElementById('btn-admin-logout')?.addEventListener('click', async () => {
+                await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' });
+                location.reload();
+            });
+
+            document.getElementById('btn-admin-change-key')?.addEventListener('click', () => {
+                const m = document.getElementById('admin-change-key-modal');
+                document.getElementById('admin-change-key-error').classList.add('hidden');
+                document.getElementById('admin-change-key-form').reset();
+                m.classList.remove('hidden');
+                m.classList.add('flex');
+            });
+            document.getElementById('btn-close-admin-change-key')?.addEventListener('click', () => {
+                const m = document.getElementById('admin-change-key-modal');
+                m.classList.add('hidden');
+                m.classList.remove('flex');
+            });
+
+            document.getElementById('admin-change-key-form')?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const err = document.getElementById('admin-change-key-error');
+                err.classList.add('hidden');
+                const a = document.getElementById('admin-new-key').value;
+                const b = document.getElementById('admin-new-key-repeat').value;
+                if (a !== b) {
+                    err.textContent = 'Ключи не совпадают';
+                    err.classList.remove('hidden');
+                    return;
+                }
+                try {
+                    const r = await authorizedFetch('/api/admin/change-key', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ newKey: a })
+                    });
+                    const j = await r.json().catch(() => ({}));
+                    if (!r.ok) {
+                        err.textContent = j.error || 'Ошибка';
+                        err.classList.remove('hidden');
+                        return;
+                    }
+                    const m = document.getElementById('admin-change-key-modal');
+                    m.classList.add('hidden');
+                    m.classList.remove('flex');
+                    showToast('Ключ обновлён. Сохранён в admin-config.json на сервере.', 'success');
+                } catch (ex) {
+                    err.textContent = 'Ошибка сети';
+                    err.classList.remove('hidden');
+                }
+            });
+        }
+
+        function parseParamsRows(raw) {
+            return String(raw || '')
+                .split('\n')
+                .map((line) => line.trim())
+                .filter(Boolean)
+                .map((line) => {
+                    const idx = line.indexOf('|');
+                    if (idx === -1) return null;
+                    const label = line.slice(0, idx).trim();
+                    const value = line.slice(idx + 1).trim();
+                    if (!label || !value) return null;
+                    return { label, value };
+                })
+                .filter(Boolean);
+        }
+
+        function serializeParamsRows(params) {
+            if (!Array.isArray(params)) return '';
+            return params
+                .map((row) => {
+                    const label = String(row?.label || '').trim();
+                    const value = String(row?.value || '').trim();
+                    if (!label || !value) return '';
+                    return `${label}|${value}`;
+                })
+                .filter(Boolean)
+                .join('\n');
+        }
+
+        async function uploadProductImageFromModal() {
+            const fileInput = document.getElementById('prod-image-file');
+            const status = document.getElementById('prod-image-upload-status');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                status.textContent = 'Выберите файл перед загрузкой.';
+                status.className = 'text-[11px] text-red-500 mt-1';
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('image', file);
+
+            status.textContent = 'Загружаем...';
+            status.className = 'text-[11px] text-gray-500 mt-1';
+
+            try {
+                const res = await authorizedFetch('/api/upload', { method: 'POST', body: formData });
+                if (!res.ok) {
+                    const error = await res.json().catch(() => ({ error: 'Upload failed' }));
+                    throw new Error(error.error || 'Upload failed');
+                }
+                const data = await res.json();
+                const finalName = data.filename;
+                if (!finalName) throw new Error('Сервер не вернул имя файла');
+                document.getElementById('prod-image').value = finalName;
+                status.textContent = `Сохранено как ${finalName} (имя из вашего файла)`;
+                status.className = 'text-[11px] text-green-600 mt-1';
+                fileInput.value = '';
+            } catch (err) {
+                status.textContent = `Ошибка загрузки: ${err.message}`;
+                status.className = 'text-[11px] text-red-500 mt-1';
+            }
+        }
+
+        async function uploadCertificateImageFromModal() {
+            const fileInput = document.getElementById('cert-image-file');
+            const status = document.getElementById('cert-image-upload-status');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                status.textContent = 'Выберите файл перед загрузкой.';
+                status.className = 'text-[11px] text-red-500 mt-1';
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('image', file);
+
+            status.textContent = 'Загружаем...';
+            status.className = 'text-[11px] text-gray-500 mt-1';
+
+            try {
+                const res = await authorizedFetch('/api/upload', { method: 'POST', body: formData });
+                if (!res.ok) {
+                    const error = await res.json().catch(() => ({ error: 'Upload failed' }));
+                    throw new Error(error.error || 'Upload failed');
+                }
+                const data = await res.json();
+                const finalName = data.filename;
+                if (!finalName) throw new Error('Сервер не вернул имя файла');
+                document.getElementById('cert-image').value = finalName;
+                status.textContent = `Сохранено как ${finalName} (имя из вашего файла)`;
+                status.className = 'text-[11px] text-green-600 mt-1';
+                fileInput.value = '';
+            } catch (err) {
+                status.textContent = `Ошибка загрузки: ${err.message}`;
+                status.className = 'text-[11px] text-red-500 mt-1';
+            }
+        }
+
+        async function clearProductModalImage() {
+            const inp = document.getElementById('prod-image');
+            const fileInput = document.getElementById('prod-image-file');
+            const status = document.getElementById('prod-image-upload-status');
+            const raw = String(inp.value || '').trim();
+            const base = raw.replace(/^assets\//, '');
+            if (!base || base === 'product_placeholder.png') {
+                inp.value = 'product_placeholder.png';
+                fileInput.value = '';
+                status.textContent = 'Установлена заглушка product_placeholder.png';
+                status.className = 'text-[11px] text-gray-500 mt-1';
+                return;
+            }
+            if (!confirm(`Удалить файл «${base}» с сервера и сбросить на заглушку?`)) return;
+            try {
+                const res = await authorizedFetch(`/api/images/${encodeURIComponent(base)}`, { method: 'DELETE' });
+                if (!res.ok) {
+                    const errBody = await res.json().catch(() => ({}));
+                    throw new Error(errBody.error || `HTTP ${res.status}`);
+                }
+                inp.value = 'product_placeholder.png';
+                fileInput.value = '';
+                status.textContent = 'Файл удалён, заглушка product_placeholder.png';
+                status.className = 'text-[11px] text-green-600 mt-1';
+                markLastAction('Удалено изображение товара (модалка)');
+            } catch (err) {
+                status.textContent = `Ошибка: ${err.message}`;
+                status.className = 'text-[11px] text-red-500 mt-1';
+            }
+        }
+
+        async function clearCertificateModalImage() {
+            const inp = document.getElementById('cert-image');
+            const fileInput = document.getElementById('cert-image-file');
+            const status = document.getElementById('cert-image-upload-status');
+            const raw = String(inp.value || '').trim();
+            const base = raw.replace(/^assets\//, '');
+            if (!base) {
+                fileInput.value = '';
+                status.textContent = 'Поле изображения уже пустое';
+                status.className = 'text-[11px] text-gray-500 mt-1';
+                return;
+            }
+            if (!confirm(`Удалить файл «${base}» с сервера и очистить поле?`)) return;
+            try {
+                const res = await authorizedFetch(`/api/images/${encodeURIComponent(base)}`, { method: 'DELETE' });
+                if (!res.ok && res.status !== 404) {
+                    const errBody = await res.json().catch(() => ({}));
+                    throw new Error(errBody.error || `HTTP ${res.status}`);
+                }
+                inp.value = '';
+                fileInput.value = '';
+                status.textContent = 'Файл удалён, поле очищено';
+                status.className = 'text-[11px] text-green-600 mt-1';
+                markLastAction('Удалено изображение сертификата (модалка)');
+            } catch (err) {
+                status.textContent = `Ошибка: ${err.message}`;
+                status.className = 'text-[11px] text-red-500 mt-1';
+            }
+        }
+
+        async function clearSectionImages(section) {
+            const messages = {
+                media:
+                    'Удалить ВСЕ файлы из папки assets/? Потребуется заново загрузить логотипы и обязательные картинки.',
+                products:
+                    'Удалить все файлы изображений товаров (кроме заглушки) и сбросить каждый товар на product_placeholder.png?',
+                certificates: 'Удалить все файлы изображений сертификатов и очистить поля «картинка» в данных?'
+            };
+            if (!messages[section] || !confirm(messages[section])) return;
+            try {
+                const res = await authorizedFetch('/api/clear-section-images', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ section })
+                });
+                if (!res.ok) {
+                    const errBody = await res.json().catch(() => ({}));
+                    throw new Error(errBody.error || `HTTP ${res.status}`);
+                }
+                const data = await res.json().catch(() => ({}));
+                const n = typeof data.deletedFiles === 'number' ? data.deletedFiles : null;
+                showToast(
+                    section === 'media'
+                        ? 'Медиафайлы раздела очищены'
+                        : section === 'products'
+                          ? `Фото товаров очищены${n !== null ? ` (${n} файлов)` : ''}`
+                          : `Фото сертификатов очищены${n !== null ? ` (${n} файлов)` : ''}`,
+                    section === 'media' ? 'warning' : 'success'
+                );
+                markLastAction(`Очищен раздел: ${section}`);
+                if (section === 'products') await loadProducts();
+                else if (section === 'certificates') await loadCertificates();
+                else loadImages();
+            } catch (err) {
+                showToast(err.message || 'Ошибка очистки раздела', 'error');
+            }
+        }
+
+        const tabInactiveClass = 'px-4 py-2 rounded-md text-sm font-medium transition-all text-gray-600 hover:text-gray-800';
+        const tabActiveClass = 'px-4 py-2 rounded-md text-sm font-medium transition-all bg-white shadow-sm text-blue-600';
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.getElementById('content-media').classList.toggle('hidden', tab !== 'media');
+            document.getElementById('content-products').classList.toggle('hidden', tab !== 'products');
+            document.getElementById('content-certificates').classList.toggle('hidden', tab !== 'certificates');
+            document.getElementById('content-reviews').classList.toggle('hidden', tab !== 'reviews');
+            document.getElementById('content-texts').classList.toggle('hidden', tab !== 'texts');
+            document.getElementById('content-home').classList.toggle('hidden', tab !== 'home');
+
+            document.getElementById('tab-media').className = tab === 'media' ? tabActiveClass : tabInactiveClass;
+            document.getElementById('tab-products').className = tab === 'products' ? tabActiveClass : tabInactiveClass;
+            document.getElementById('tab-certificates').className = tab === 'certificates' ? tabActiveClass : tabInactiveClass;
+            document.getElementById('tab-reviews').className = tab === 'reviews' ? tabActiveClass : tabInactiveClass;
+            document.getElementById('tab-texts').className = tab === 'texts' ? tabActiveClass : tabInactiveClass;
+            document.getElementById('tab-home').className = tab === 'home' ? tabActiveClass : tabInactiveClass;
+
+            if (tab === 'products') loadProducts();
+            else if (tab === 'certificates') loadCertificates();
+            else if (tab === 'reviews') loadReviews();
+            else if (tab === 'texts') loadSiteTextEditor();
+            else if (tab === 'home') loadHomeContent();
+            else loadImages();
+        }
+
+        function syncSiteTextFromDom() {
+            document.querySelectorAll('[data-site-text-row]').forEach((row) => {
+                const key = row.getAttribute('data-site-text-row');
+                const ta = row.querySelector('textarea[data-st-value]');
+                if (key && ta) siteTextStrings[key] = ta.value;
+            });
+        }
+
+        function renderSiteTextEditor() {
+            const container = document.getElementById('site-text-editor');
+            if (!container) return;
+            const filter = String(document.getElementById('site-text-filter')?.value || '').toLowerCase().trim();
+            const keys = Object.keys(siteTextStrings).sort((a, b) => a.localeCompare(b));
+            container.innerHTML = '';
+            keys.forEach((key) => {
+                if (filter && !key.toLowerCase().includes(filter)) return;
+                const wrap = document.createElement('div');
+                wrap.className = 'border border-slate-200 rounded-lg p-3 bg-slate-50/50';
+                wrap.setAttribute('data-site-text-row', key);
+                const head = document.createElement('div');
+                head.className = 'flex justify-between items-center gap-2 mb-1';
+                const lab = document.createElement('span');
+                lab.className = 'font-mono text-xs text-slate-800 break-all';
+                lab.textContent = key;
+                const rm = document.createElement('button');
+                rm.type = 'button';
+                rm.className = 'text-xs text-red-600 hover:underline shrink-0';
+                rm.textContent = 'Удалить';
+                rm.setAttribute('data-site-text-remove', key);
+                head.appendChild(lab);
+                head.appendChild(rm);
+                const ta = document.createElement('textarea');
+                ta.className = 'w-full border border-slate-300 rounded-md px-2 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white';
+                ta.dataset.stValue = '1';
+                const val = siteTextStrings[key];
+                ta.value = typeof val === 'string' ? val : '';
+                const len = ta.value.length;
+                ta.rows = len > 400 ? 8 : len > 160 ? 4 : 2;
+                wrap.appendChild(head);
+                wrap.appendChild(ta);
+                container.appendChild(wrap);
+            });
+            if (!keys.length) {
+                container.innerHTML = '<p class="text-sm text-gray-500">Нет ключей. Нажмите «С сервера» или добавьте ключ.</p>';
+            }
+        }
+
+        async function loadSiteTextEditor() {
+            try {
+                const res = await fetch('/api/site-text');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                const s = data && data.strings;
+                siteTextStrings = s && typeof s === 'object' ? { ...s } : {};
+                renderSiteTextEditor();
+            } catch (err) {
+                console.error(err);
+                showToast('Не удалось загрузить тексты сайта.', 'error');
+            }
+        }
+
+        async function saveSiteTextPayload() {
+            syncSiteTextFromDom();
+            const payload = { strings: { ...siteTextStrings } };
+            try {
+                const res = await authorizedFetch('/api/site-text', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    showToast('Тексты сайта сохранены', 'success');
+                    markLastAction('Обновлены тексты сайта (site-text)');
+                    await loadSiteTextEditor();
+                } else {
+                    const errBody = await res.json().catch(() => ({}));
+                    showToast(errBody.error || 'Ошибка сохранения текстов', 'error');
+                }
+            } catch (err) {
+                showToast('Ошибка сети при сохранении текстов', 'error');
+            }
+        }
+
+        function addSiteTextKey() {
+            const raw = String(document.getElementById('site-text-new-key')?.value || '').trim();
+            if (!raw) {
+                showToast('Введите ключ', 'warning');
+                return;
+            }
+            if (!SITE_TEXT_KEY_RE.test(raw)) {
+                showToast('Ключ: латиница/цифры/._- , начинается с буквы, до 101 символа.', 'error');
+                return;
+            }
+            syncSiteTextFromDom();
+            if (Object.prototype.hasOwnProperty.call(siteTextStrings, raw)) {
+                showToast('Такой ключ уже есть', 'warning');
+                return;
+            }
+            siteTextStrings[raw] = '';
+            document.getElementById('site-text-new-key').value = '';
+            renderSiteTextEditor();
+        }
+
+        function removeSiteTextKey(key) {
+            if (!key || !confirm(`Удалить ключ «${key}» из файла при следующем сохранении?`)) return;
+            syncSiteTextFromDom();
+            delete siteTextStrings[key];
+            renderSiteTextEditor();
+        }
+
+        // --- Media Logic ---
+        async function loadImages() {
+            try {
+                const res = await authorizedFetch('/api/required-images');
+                if (!res.ok) throw new Error('Failed to fetch');
+                requiredImages = await res.json();
+                renderImages();
+                const stat = document.getElementById('stats-images');
+                if (stat) stat.textContent = String(requiredImages.length);
+            } catch (err) {
+                document.getElementById('images-list').innerHTML = `<p class="text-red-500">Ошибка загрузки: ${err.message}</p>`;
+            }
+        }
+
+        function renderImages() {
+            const container = document.getElementById('images-list');
+            container.innerHTML = '';
+            
+            if (requiredImages.length === 0) {
+                container.innerHTML = '<p class="text-gray-500">Изображения не требуются.</p>';
+                return;
+            }
+
+            const filter = String(document.getElementById('media-search')?.value || '').toLowerCase().trim();
+            requiredImages
+                .map((img, originalIndex) => ({ img, originalIndex }))
+                .filter(({ img }) => !filter || String(img.filename || '').toLowerCase().includes(filter))
+                .forEach(({ img, originalIndex: index }) => {
+                const div = document.createElement('div');
+                div.className = 'flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg hover:shadow-md transition-shadow bg-gray-50';
+                
+                const safeFile = encodeURIComponent(img.filename);
+                const imgSrc = img.exists ? `/assets/${safeFile}?t=${new Date().getTime()}` : '';
+                const imgPlaceholder = img.exists 
+                    ? `<img src="${imgSrc}" class="w-full h-full object-cover">` 
+                    : `<span class="text-[10px] text-gray-400 font-medium text-center leading-tight">Нет<br>фото</span>`;
+
+                div.innerHTML = `
+                    <div class="flex items-center space-x-4 mb-4 sm:mb-0">
+                        <div class="w-12 h-12 bg-gray-200 rounded-md flex-shrink-0 flex items-center justify-center overflow-hidden border">
+                            ${imgPlaceholder}
+                        </div>
+                        <div class="min-w-0">
+                            <p class="font-medium text-gray-800 text-sm truncate w-40" title="${escapeHtml(img.filename)}">${escapeHtml(img.filename)}</p>
+                            <p class="text-[10px] font-semibold ${img.exists ? 'text-green-600' : 'text-red-500'}">
+                                ${img.exists ? '✅ Есть' : '❌ Нет'}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label class="bg-blue-50 text-blue-700 px-3 py-1.5 rounded text-xs font-semibold cursor-pointer hover:bg-blue-100 transition-colors">
+                            Выбрать
+                            <input type="file" id="file-${index}" data-upload-index="${index}" accept="image/*,.tif,.tiff,.pdf,application/pdf" class="hidden image-upload-input">
+                        </label>
+                        ${img.exists ? `
+                            <button data-delete-image="${encodeURIComponent(img.filename)}" class="text-red-400 hover:text-red-600 p-1">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        async function uploadImage(index) {
+            const imgData = requiredImages[index];
+            const input = document.getElementById(`file-${index}`);
+            if (!input.files || input.files.length === 0) return;
+
+            const formData = new FormData();
+            formData.append('image', input.files[0]);
+            formData.append('targetFilename', imgData.filename);
+            
+            try {
+                const res = await authorizedFetch('/api/upload', { method: 'POST', body: formData });
+                if (res.ok) { showToast('Файл загружен', 'success'); markLastAction('Загружено изображение'); loadImages(); }
+                else showToast('Ошибка загрузки', 'error');
+            } catch (e) {
+                showToast('Ошибка сети: ' + e.message, 'error');
+            }
+        }
+
+        async function deleteImage(filename) {
+            if (!confirm(`Удалить ${filename}?`)) return;
+            try {
+                const res = await authorizedFetch(`/api/images/${encodeURIComponent(filename)}`, { method: 'DELETE' });
+                if (res.ok) { showToast('Изображение удалено', 'success'); markLastAction('Удалено изображение'); loadImages(); }
+            } catch (err) { showToast('Ошибка сети', 'error'); }
+        }
+
+        function deleteAllImages() {
+            clearSectionImages('media');
+        }
+
+        // --- Products Logic ---
+        async function loadProducts() {
+            try {
+                const res = await authorizedFetch('/api/products');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                productData = await res.json();
+                if (!Array.isArray(productData.categories)) productData.categories = [];
+                if (!Array.isArray(productData.products)) productData.products = [];
+                renderProducts();
+                populateCategorySelect();
+                renderCategoriesTable();
+                const stat = document.getElementById('stats-products');
+                if (stat) stat.textContent = String(productData.products.length);
+            } catch (err) {
+                console.error(err);
+                showToast('Не удалось загрузить товары. Проверьте доступ администратора.', 'error');
+            }
+        }
+
+        function renderProducts() {
+            const tbody = document.getElementById('products-table-body');
+            tbody.innerHTML = '';
+            
+            const filter = String(document.getElementById('products-search')?.value || '').toLowerCase().trim();
+            productData.products
+            .filter((p) => {
+                if (!filter) return true;
+                const cat = productData.categories.find(c => c.id === p.category);
+                return String(p.name || '').toLowerCase().includes(filter) || String(cat?.name || p.category || '').toLowerCase().includes(filter);
+            })
+            .forEach(p => {
+                const tr = document.createElement('tr');
+                const cat = productData.categories.find(c => c.id === p.category);
+                const safeName = escapeHtml(p.name);
+                const safeLink = escapeHtml(p.link);
+                const safeImage = escapeHtml(p.image || '');
+                const safeCategoryName = escapeHtml(cat ? cat.name : p.category);
+                
+                tr.innerHTML = `
+                    <td data-label="Фото" class="px-6 py-4 whitespace-nowrap">
+                        <div class="w-10 h-10 bg-gray-100 rounded overflow-hidden border">
+                            <img src="${safeImage}?t=${new Date().getTime()}" onerror="this.src='${FALLBACK_IMG}'" class="w-full h-full object-cover">
+                        </div>
+                    </td>
+                    <td data-label="Название" class="px-6 py-4">
+                        <div class="text-sm font-medium text-gray-900">${safeName}</div>
+                        <div class="text-xs text-gray-500">${safeLink}</div>
+                    </td>
+                    <td data-label="Категория" class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                            ${safeCategoryName}
+                        </span>
+                    </td>
+                    <td data-label="Действия" class="actions-cell px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button data-edit-product="${escapeHtml(p.id)}" class="text-indigo-600 hover:text-indigo-900 mr-4">Изменить</button>
+                        <button data-delete-product="${escapeHtml(p.id)}" class="text-red-600 hover:text-red-900">Удалить</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function populateCategorySelect() {
+            const select = document.getElementById('prod-category');
+            select.innerHTML = productData.categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        }
+
+        function mergeCategoryConfigAdmin(raw) {
+            const defaults = {
+                id: '',
+                name: '',
+                sortOrder: 0,
+                catalogMode: 'carousel',
+                listStyle: 'simple',
+                cardStyle: 'default',
+                gridCols: 4,
+                showCounter: false,
+                fields: { description: true, specs: true, parameters: true, gallery: true },
+                labels: { specsHeading: '', paramLabelCol: '', paramValueCol: '' }
+            };
+            const base = { ...defaults, fields: { ...defaults.fields }, labels: { ...defaults.labels } };
+            if (!raw || typeof raw !== 'object') return base;
+            const fields = { ...base.fields, ...(raw.fields && typeof raw.fields === 'object' ? raw.fields : {}) };
+            const labels = { ...base.labels, ...(raw.labels && typeof raw.labels === 'object' ? raw.labels : {}) };
+            let catalogMode = raw.catalogMode;
+            if (!catalogMode && raw.display === 'list') catalogMode = 'list';
+            if (!catalogMode && raw.display === 'grid') catalogMode = 'grid';
+            return {
+                ...base,
+                ...raw,
+                catalogMode: catalogMode || base.catalogMode,
+                fields,
+                labels
+            };
+        }
+
+        function catalogModeLabel(mode) {
+            const map = { list: 'Список', grid: 'Сетка', carousel: 'Карусель' };
+            return map[mode] || mode;
+        }
+
+        function cardStyleLabel(style) {
+            const map = { default: 'Стандарт', valve: 'Клапан', exchanger: 'Теплообменник' };
+            return map[style] || style;
+        }
+
+        function renderCategoriesTable() {
+            const tbody = document.getElementById('categories-table-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            const sorted = [...(productData.categories || [])].sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+            sorted.forEach((c) => {
+                const m = mergeCategoryConfigAdmin(c);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="py-2 px-3 text-slate-600">${escapeHtml(String(m.sortOrder ?? 0))}</td>
+                    <td class="py-2 px-3 font-mono text-xs">${escapeHtml(m.id)}</td>
+                    <td class="py-2 px-3">${escapeHtml(m.name)}</td>
+                    <td class="py-2 px-3">${escapeHtml(catalogModeLabel(m.catalogMode))}</td>
+                    <td class="py-2 px-3">${escapeHtml(cardStyleLabel(m.cardStyle))}</td>
+                    <td class="py-2 px-3 text-right whitespace-nowrap">
+                        <button type="button" data-edit-category="${escapeHtml(m.id)}" class="text-indigo-600 hover:text-indigo-900 text-sm mr-3">Изменить</button>
+                        <button type="button" data-delete-category="${escapeHtml(m.id)}" class="text-red-600 hover:text-red-900 text-sm">Удалить</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateCategoryModalDependentUi() {
+            const mode = document.getElementById('cat-catalog-mode')?.value || 'carousel';
+            const listWrap = document.getElementById('cat-list-style-wrap');
+            const gridWrap = document.getElementById('cat-grid-cols-wrap');
+            if (listWrap) listWrap.classList.toggle('hidden', mode !== 'list');
+            if (gridWrap) gridWrap.classList.toggle('hidden', mode !== 'grid');
+        }
+
+        function openCategoryModal(originalId = null) {
+            const modal = document.getElementById('category-modal');
+            const form = document.getElementById('category-form');
+            const idInput = document.getElementById('cat-id');
+            const title = document.getElementById('category-modal-title');
+            form?.reset();
+            document.getElementById('cat-edit-original-id').value = originalId || '';
+            if (idInput) idInput.readOnly = false;
+
+            if (!originalId) {
+                title.textContent = 'Новая категория';
+                document.getElementById('cat-sort-order').value = '0';
+                document.getElementById('cat-catalog-mode').value = 'carousel';
+                document.getElementById('cat-list-style').value = 'simple';
+                document.getElementById('cat-card-style').value = 'default';
+                document.getElementById('cat-grid-cols').value = '4';
+                document.getElementById('cat-show-counter').checked = false;
+                document.getElementById('cat-f-desc').checked = true;
+                document.getElementById('cat-f-specs').checked = true;
+                document.getElementById('cat-f-params').checked = true;
+                document.getElementById('cat-f-gallery').checked = true;
+                document.getElementById('cat-l-specs').value = '';
+                document.getElementById('cat-l-pl').value = '';
+                document.getElementById('cat-l-pv').value = '';
+            } else {
+                const c = productData.categories.find((x) => x.id === originalId);
+                if (!c) return;
+                const m = mergeCategoryConfigAdmin(c);
+                title.textContent = 'Категория';
+                idInput.value = m.id;
+                idInput.readOnly = true;
+                document.getElementById('cat-name').value = m.name;
+                document.getElementById('cat-sort-order').value = String(m.sortOrder ?? 0);
+                document.getElementById('cat-catalog-mode').value = m.catalogMode;
+                document.getElementById('cat-list-style').value = m.listStyle;
+                document.getElementById('cat-card-style').value = m.cardStyle;
+                document.getElementById('cat-grid-cols').value = String(m.gridCols ?? 4);
+                document.getElementById('cat-show-counter').checked = !!m.showCounter;
+                document.getElementById('cat-f-desc').checked = m.fields.description !== false;
+                document.getElementById('cat-f-specs').checked = m.fields.specs !== false;
+                document.getElementById('cat-f-params').checked = m.fields.parameters !== false;
+                document.getElementById('cat-f-gallery').checked = m.fields.gallery !== false;
+                document.getElementById('cat-l-specs').value = m.labels.specsHeading || '';
+                document.getElementById('cat-l-pl').value = m.labels.paramLabelCol || '';
+                document.getElementById('cat-l-pv').value = m.labels.paramValueCol || '';
+            }
+            updateCategoryModalDependentUi();
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeCategoryModal() {
+            const modal = document.getElementById('category-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            const idInput = document.getElementById('cat-id');
+            if (idInput) idInput.readOnly = false;
+        }
+
+        async function postProductDataToServer(successMessage, actionText) {
+            const res = await authorizedFetch('/api/products', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(productData)
+            });
+            if (res.ok) {
+                showToast(successMessage, 'success');
+                if (actionText) markLastAction(actionText);
+                await loadProducts();
+                return true;
+            }
+            const errBody = await res.json().catch(() => ({}));
+            showToast(errBody.error || 'Ошибка сохранения', 'error');
+            await loadProducts();
+            return false;
+        }
+
+        async function saveCategoryForm(e) {
+            e.preventDefault();
+            const originalId = document.getElementById('cat-edit-original-id').value.trim();
+            const idRaw = document.getElementById('cat-id').value.trim();
+            const name = document.getElementById('cat-name').value.trim();
+            if (!idRaw || !name) {
+                alert('Укажите ID и название.');
+                return;
+            }
+            if (!CATEGORY_ID_RE_ADMIN.test(idRaw)) {
+                alert('ID: латиница в нижнем регистре, цифры и _, первый символ — буква.');
+                return;
+            }
+            const sortOrder = Number(document.getElementById('cat-sort-order').value);
+            if (!Number.isFinite(sortOrder)) {
+                alert('Порядок должен быть числом.');
+                return;
+            }
+            const catalogMode = document.getElementById('cat-catalog-mode').value;
+            const listStyle = document.getElementById('cat-list-style').value;
+            const cardStyle = document.getElementById('cat-card-style').value;
+            const gridCols = Number(document.getElementById('cat-grid-cols').value);
+            const showCounter = document.getElementById('cat-show-counter').checked;
+            const fields = {
+                description: document.getElementById('cat-f-desc').checked,
+                specs: document.getElementById('cat-f-specs').checked,
+                parameters: document.getElementById('cat-f-params').checked,
+                gallery: document.getElementById('cat-f-gallery').checked
+            };
+            const labels = {
+                specsHeading: document.getElementById('cat-l-specs').value.trim(),
+                paramLabelCol: document.getElementById('cat-l-pl').value.trim(),
+                paramValueCol: document.getElementById('cat-l-pv').value.trim()
+            };
+            const display = catalogMode === 'list' ? 'list' : 'grid';
+
+            const newCat = {
+                id: idRaw,
+                name,
+                sortOrder,
+                catalogMode,
+                listStyle,
+                cardStyle,
+                gridCols,
+                showCounter,
+                fields,
+                labels,
+                display
+            };
+
+            if (!originalId) {
+                if (productData.categories.some((c) => c.id === idRaw)) {
+                    alert('Категория с таким ID уже есть.');
+                    return;
+                }
+                productData.categories.push(newCat);
+            } else {
+                const idx = productData.categories.findIndex((c) => c.id === originalId);
+                if (idx < 0) return;
+                productData.categories[idx] = { ...productData.categories[idx], ...newCat, id: originalId };
+            }
+
+            try {
+                const ok = await postProductDataToServer('Сохранено', originalId ? 'Обновлена категория' : 'Добавлена категория');
+                if (ok) closeCategoryModal();
+            } catch (err) {
+                showToast('Ошибка сети', 'error');
+            }
+        }
+
+        async function deleteCategory(id) {
+            const used = productData.products.filter((p) => p.category === id).length;
+            if (used > 0) {
+                alert(`Нельзя удалить: на эту категорию ссылается ${used} товар(ов). Сначала переназначьте категорию.`);
+                return;
+            }
+            if (!confirm('Удалить категорию «' + id + '»?')) return;
+            productData.categories = productData.categories.filter((c) => c.id !== id);
+            try {
+                await postProductDataToServer('Категория удалена', 'Удалена категория');
+            } catch (err) {
+                showToast('Ошибка сети', 'error');
+            }
+        }
+
+        async function saveCategoriesToDisk() {
+            try {
+                await postProductDataToServer('Сохранено на сервер', 'Сохранены категории и товары');
+            } catch (err) {
+                showToast('Ошибка сети', 'error');
+            }
+        }
+
+        function applyProductFormFieldsForCategory() {
+            const sel = document.getElementById('prod-category');
+            const catId = sel?.value;
+            const c = productData.categories.find((x) => x.id === catId);
+            const m = mergeCategoryConfigAdmin(c);
+            const show = (key) => m.fields[key] !== false;
+            const d = document.getElementById('product-field-description');
+            const s = document.getElementById('product-field-specs');
+            const p = document.getElementById('product-field-params');
+            if (d) d.classList.toggle('hidden', !show('description'));
+            if (s) s.classList.toggle('hidden', !show('specs'));
+            if (p) p.classList.toggle('hidden', !show('parameters'));
+        }
+
+        function openProductModal(id = null) {
+            const modal = document.getElementById('product-modal');
+            const form = document.getElementById('product-form');
+            const title = document.getElementById('modal-title');
+            
+            form.reset();
+            document.getElementById('edit-id').value = id || '';
+            document.getElementById('prod-image-upload-status').textContent = '';
+            
+            if (id) {
+                const p = productData.products.find(x => x.id === id);
+                if (p) {
+                    title.innerText = 'Изменить товар';
+                    document.getElementById('prod-name').value = p.name;
+                    document.getElementById('prod-category').value = p.category;
+                    document.getElementById('prod-image').value = p.image.replace('assets/', '');
+                    document.getElementById('prod-link').value = p.link;
+                    document.getElementById('prod-description').value = p.description || '';
+                    document.getElementById('prod-specs').value = Array.isArray(p.specs) ? p.specs.join('\n') : '';
+                    document.getElementById('prod-params').value = serializeParamsRows(p.parameters);
+                }
+            } else {
+                title.innerText = 'Добавить товар';
+                document.getElementById('prod-image').value = 'product_placeholder.png';
+                document.getElementById('prod-description').value = '';
+                document.getElementById('prod-specs').value = '';
+                document.getElementById('prod-params').value = '';
+            }
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            applyProductFormFieldsForCategory();
+        }
+
+        function closeProductModal() {
+            const modal = document.getElementById('product-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        async function saveProduct(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit-id').value;
+            const specs = document.getElementById('prod-specs').value
+                .split('\n')
+                .map(s => s.trim())
+                .filter(Boolean);
+            const rawParams = document.getElementById('prod-params').value;
+            const parameters = parseParamsRows(rawParams);
+            const existing = id ? productData.products.find((x) => x.id === id) : null;
+            const newProd = {
+                ...(existing || {}),
+                id: id || Date.now().toString(),
+                name: document.getElementById('prod-name').value.trim(),
+                category: document.getElementById('prod-category').value.trim(),
+                image: normalizeImagePath(document.getElementById('prod-image').value),
+                link: document.getElementById('prod-link').value.trim() || '/product',
+                description: document.getElementById('prod-description').value.trim(),
+                specs,
+                parameters
+            };
+
+            if (!newProd.name || !newProd.category || !newProd.image || !newProd.link) {
+                alert('Заполните все обязательные поля.');
+                return;
+            }
+            if (String(rawParams).trim() && parameters.length === 0) {
+                alert('Параметры заполнены в неверном формате. Используйте: Показатель|Значение');
+                return;
+            }
+            let link = newProd.link;
+            if (/^product\.html(\?|$)/i.test(link)) {
+                link = '/product' + link.slice('product.html'.length);
+            }
+            if (/^\/product(?:\?|$)/.test(link) && !/[?&]id=/.test(link)) {
+                link += (link.includes('?') ? '&' : '?') + `id=${encodeURIComponent(newProd.id)}`;
+            }
+            newProd.link = link;
+            
+            if (id) {
+                const idx = productData.products.findIndex(x => x.id === id);
+                productData.products[idx] = newProd;
+            } else {
+                productData.products.push(newProd);
+            }
+            
+            try {
+                const res = await authorizedFetch('/api/products', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(productData)
+                });
+                if (res.ok) {
+                    closeProductModal();
+                    showToast(id ? 'Товар обновлен' : 'Товар добавлен', 'success');
+                    markLastAction(id ? 'Обновлен товар' : 'Добавлен товар');
+                    loadProducts();
+                }
+            } catch (err) { showToast('Ошибка сохранения', 'error'); }
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm('Удалить этот товар?')) return;
+            productData.products = productData.products.filter(x => x.id !== id);
+            try {
+                const res = await authorizedFetch('/api/products', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(productData)
+                });
+                if (res.ok) { showToast('Товар удален', 'warning'); markLastAction('Удален товар'); loadProducts(); }
+            } catch (err) { showToast('Ошибка удаления', 'error'); }
+        }
+
+        // --- Certificates Logic ---
+        async function loadCertificates() {
+            try {
+                const res = await authorizedFetch('/api/certificates');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                certificateData = await res.json();
+                if (!Array.isArray(certificateData.certificates)) certificateData.certificates = [];
+                renderCertificates();
+                const stat = document.getElementById('stats-certificates');
+                if (stat) stat.textContent = String(certificateData.certificates.length);
+            } catch (err) {
+                console.error(err);
+                showToast('Не удалось загрузить сертификаты. Проверьте доступ администратора.', 'error');
+            }
+        }
+
+        function renderCertificates() {
+            const tbody = document.getElementById('certificates-table-body');
+            tbody.innerHTML = '';
+
+            const filter = String(document.getElementById('certificates-search')?.value || '').toLowerCase().trim();
+            certificateData.certificates
+            .filter((cert) => !filter || String(cert.title || '').toLowerCase().includes(filter) || String(cert.description || '').toLowerCase().includes(filter))
+            .forEach((cert) => {
+                const tr = document.createElement('tr');
+                const safeTitle = escapeHtml(cert.title || '');
+                const safeDescription = escapeHtml(cert.description || '');
+                const safeImage = escapeHtml(cert.image || '');
+
+                tr.innerHTML = `
+                    <td data-label="Превью" class="px-6 py-4 whitespace-nowrap">
+                        <div class="w-10 h-10 bg-gray-100 rounded overflow-hidden border flex items-center justify-center">
+                            ${safeImage
+                                ? `<img src="${safeImage}?t=${new Date().getTime()}" onerror="this.src='${FALLBACK_IMG}'" class="w-full h-full object-cover">`
+                                : '<span class="text-[9px] text-gray-400">Нет</span>'}
+                        </div>
+                    </td>
+                    <td data-label="Название" class="px-6 py-4">
+                        <div class="text-sm font-medium text-gray-900">${safeTitle}</div>
+                    </td>
+                    <td data-label="Описание" class="px-6 py-4">
+                        <div class="text-xs text-gray-500 max-w-[420px] line-clamp-3 whitespace-pre-line">${safeDescription}</div>
+                    </td>
+                    <td data-label="Действия" class="actions-cell px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button data-edit-certificate="${escapeHtml(cert.id)}" class="text-indigo-600 hover:text-indigo-900 mr-4">Изменить</button>
+                        <button data-delete-certificate="${escapeHtml(cert.id)}" class="text-red-600 hover:text-red-900">Удалить</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function openCertificateModal(id = null) {
+            const modal = document.getElementById('certificate-modal');
+            const form = document.getElementById('certificate-form');
+            const title = document.getElementById('certificate-modal-title');
+
+            form.reset();
+            document.getElementById('edit-certificate-id').value = id || '';
+            document.getElementById('cert-image-upload-status').textContent = '';
+
+            if (id) {
+                const cert = certificateData.certificates.find((x) => x.id === id);
+                if (cert) {
+                    title.innerText = 'Изменить сертификат';
+                    document.getElementById('cert-title').value = cert.title || '';
+                    document.getElementById('cert-image').value = (cert.image || '').replace('assets/', '');
+                    document.getElementById('cert-description').value = cert.description || '';
+                }
+            } else {
+                title.innerText = 'Добавить сертификат';
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeCertificateModal() {
+            const modal = document.getElementById('certificate-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        async function saveCertificate(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit-certificate-id').value;
+            const existing = id ? certificateData.certificates.find((x) => x.id === id) : null;
+            const newCert = {
+                ...(existing || {}),
+                id: id || `cert_${Date.now()}`,
+                title: document.getElementById('cert-title').value.trim(),
+                image: normalizeImagePath(document.getElementById('cert-image').value),
+                description: document.getElementById('cert-description').value.trim()
+            };
+
+            if (!newCert.title || !newCert.description) {
+                alert('Заполните название и описание сертификата.');
+                return;
+            }
+
+            if (id) {
+                const idx = certificateData.certificates.findIndex((x) => x.id === id);
+                certificateData.certificates[idx] = newCert;
+            } else {
+                certificateData.certificates.push(newCert);
+            }
+
+            try {
+                const res = await authorizedFetch('/api/certificates', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(certificateData)
+                });
+                if (res.ok) {
+                    closeCertificateModal();
+                    showToast(id ? 'Сертификат обновлен' : 'Сертификат добавлен', 'success');
+                    markLastAction(id ? 'Обновлен сертификат' : 'Добавлен сертификат');
+                    loadCertificates();
+                }
+            } catch (err) {
+                showToast('Ошибка сохранения сертификата', 'error');
+            }
+        }
+
+        async function deleteCertificate(id) {
+            if (!confirm('Удалить этот сертификат?')) return;
+            certificateData.certificates = certificateData.certificates.filter((x) => x.id !== id);
+            try {
+                const res = await authorizedFetch('/api/certificates', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(certificateData)
+                });
+                if (res.ok) { showToast('Сертификат удален', 'warning'); markLastAction('Удален сертификат'); loadCertificates(); }
+            } catch (err) {
+                showToast('Ошибка удаления сертификата', 'error');
+            }
+        }
+
+        // --- Reviews (production page) ---
+        async function loadReviews() {
+            try {
+                const res = await authorizedFetch('/api/reviews');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                reviewData = await res.json();
+                if (!Array.isArray(reviewData.reviews)) reviewData.reviews = [];
+                renderReviews();
+                const stat = document.getElementById('stats-reviews');
+                if (stat) stat.textContent = String(reviewData.reviews.length);
+            } catch (err) {
+                console.error(err);
+                showToast('Не удалось загрузить отзывы.', 'error');
+            }
+        }
+
+        function renderReviews() {
+            const tbody = document.getElementById('reviews-table-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            const filter = String(document.getElementById('reviews-search')?.value || '').toLowerCase().trim();
+            reviewData.reviews
+                .filter((r) => {
+                    if (!filter) return true;
+                    return (
+                        String(r.text || '').toLowerCase().includes(filter) ||
+                        String(r.author || '').toLowerCase().includes(filter)
+                    );
+                })
+                .forEach((r) => {
+                    const tr = document.createElement('tr');
+                    const safeText = escapeHtml(r.text || '');
+                    const safeAuthor = escapeHtml(r.author || '');
+                    tr.innerHTML = `
+                        <td data-label="Текст" class="px-6 py-4">
+                            <div class="text-sm text-gray-800 max-w-xl whitespace-pre-line line-clamp-4">${safeText}</div>
+                        </td>
+                        <td data-label="Автор" class="px-6 py-4">
+                            <div class="text-sm font-medium text-gray-900">${safeAuthor}</div>
+                        </td>
+                        <td data-label="Действия" class="actions-cell px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button data-edit-review="${escapeHtml(r.id)}" class="text-indigo-600 hover:text-indigo-900 mr-4">Изменить</button>
+                            <button data-delete-review="${escapeHtml(r.id)}" class="text-red-600 hover:text-red-900">Удалить</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+        }
+
+        function openReviewModal(id = null) {
+            if (!id && reviewData.reviews.length >= 8) {
+                alert('Максимум 8 отзывов для страницы каталога (4 страницы по 2 отзыва). Удалите или отредактируйте существующие.');
+                return;
+            }
+            const modal = document.getElementById('review-modal');
+            const form = document.getElementById('review-form');
+            const title = document.getElementById('review-modal-title');
+            form.reset();
+            document.getElementById('edit-review-id').value = id || '';
+            if (id) {
+                const r = reviewData.reviews.find((x) => x.id === id);
+                if (r) {
+                    title.innerText = 'Изменить отзыв';
+                    document.getElementById('review-text').value = r.text || '';
+                    document.getElementById('review-author').value = r.author || '';
+                }
+            } else {
+                title.innerText = 'Добавить отзыв';
+            }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeReviewModal() {
+            const modal = document.getElementById('review-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        async function saveReview(e) {
+            e.preventDefault();
+            if (reviewData.reviews.length >= 8 && !document.getElementById('edit-review-id').value) {
+                alert('Максимум 8 отзывов для каталога. Удалите лишние или отредактируйте существующие.');
+                return;
+            }
+            const id = document.getElementById('edit-review-id').value;
+            const existing = id ? reviewData.reviews.find((x) => x.id === id) : null;
+            const newRev = {
+                ...(existing || {}),
+                id: id || `rev_${Date.now()}`,
+                text: document.getElementById('review-text').value.trim(),
+                author: document.getElementById('review-author').value.trim()
+            };
+            if (!newRev.text || !newRev.author) {
+                alert('Заполните текст и подпись.');
+                return;
+            }
+            if (id) {
+                const idx = reviewData.reviews.findIndex((x) => x.id === id);
+                reviewData.reviews[idx] = newRev;
+            } else {
+                reviewData.reviews.push(newRev);
+            }
+            try {
+                const res = await authorizedFetch('/api/reviews', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(reviewData)
+                });
+                if (res.ok) {
+                    closeReviewModal();
+                    showToast(id ? 'Отзыв обновлен' : 'Отзыв добавлен', 'success');
+                    markLastAction(id ? 'Обновлен отзыв' : 'Добавлен отзыв');
+                    loadReviews();
+                } else {
+                    const errBody = await res.json().catch(() => ({}));
+                    showToast(errBody.error || 'Ошибка сохранения', 'error');
+                }
+            } catch (err) {
+                showToast('Ошибка сохранения отзыва', 'error');
+            }
+        }
+
+        async function deleteReview(id) {
+            if (!confirm('Удалить этот отзыв?')) return;
+            reviewData.reviews = reviewData.reviews.filter((x) => x.id !== id);
+            try {
+                const res = await authorizedFetch('/api/reviews', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(reviewData)
+                });
+                if (res.ok) {
+                    showToast('Отзыв удален', 'warning');
+                    markLastAction('Удален отзыв');
+                    loadReviews();
+                }
+            } catch (err) {
+                showToast('Ошибка удаления', 'error');
+            }
+        }
+
+        async function loadHomeContent() {
+            try {
+                const res = await authorizedFetch('/api/home-content');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                if (!data || !Array.isArray(data.technologyTiles) || data.technologyTiles.length !== 4) {
+                    throw new Error('Invalid payload');
+                }
+                homeContentData = data;
+                for (let i = 0; i < 4; i++) {
+                    const el = document.getElementById(`home-tile-${i}`);
+                    if (el) el.value = data.technologyTiles[i] || '';
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Не удалось загрузить тексты главной страницы.', 'error');
+            }
+        }
+
+        async function saveHomeContent() {
+            const tiles = [0, 1, 2, 3].map((i) =>
+                String(document.getElementById(`home-tile-${i}`)?.value || '').trim()
+            );
+            if (tiles.some((t) => !t)) {
+                showToast('Заполните все четыре поля.', 'error');
+                return;
+            }
+            const payload = { technologyTiles: tiles };
+            try {
+                const res = await authorizedFetch('/api/home-content', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    homeContentData = payload;
+                    showToast('Тексты сохранены', 'success');
+                    markLastAction('Обновлены плитки технологий на главной');
+                } else {
+                    const errBody = await res.json().catch(() => ({}));
+                    showToast(errBody.error || 'Ошибка сохранения', 'error');
+                }
+            } catch (err) {
+                showToast('Ошибка сети', 'error');
+            }
+        }
+
+        async function clearCache() {
+            if (!confirm('Очистить кэш сайта и перезагрузить страницу?')) return;
+            try {
+                const res = await authorizedFetch('/api/clear-cache', { method: 'POST' });
+                if (res.ok) {
+                    showToast('Кэш очищен. Страница перезагружается...', 'success');
+                    window.location.reload(true);
+                }
+            } catch (err) { showToast('Ошибка сети', 'error'); }
+        }
+        
+        function initEventHandlers() {
+            if (window.__respoAdminHandlersOnce) return;
+            window.__respoAdminHandlersOnce = true;
+
+            const mediaTab = document.getElementById('tab-media');
+            const productsTab = document.getElementById('tab-products');
+            const certificatesTab = document.getElementById('tab-certificates');
+            const reviewsTab = document.getElementById('tab-reviews');
+            const textsTab = document.getElementById('tab-texts');
+            const homeTab = document.getElementById('tab-home');
+            const saveHomeBtn = document.getElementById('btn-save-home-content');
+            const siteTextSaveBtn = document.getElementById('btn-site-text-save');
+            const siteTextReloadBtn = document.getElementById('btn-site-text-reload');
+            const siteTextAddBtn = document.getElementById('btn-site-text-add');
+            const siteTextFilter = document.getElementById('site-text-filter');
+            const siteTextEditor = document.getElementById('site-text-editor');
+            const clearCacheBtn = document.getElementById('btn-clear-cache');
+            const deleteAllBtn = document.getElementById('btn-delete-all-images');
+            const clearProductsSectionBtn = document.getElementById('btn-clear-section-products');
+            const clearCertificatesSectionBtn = document.getElementById('btn-clear-section-certificates');
+            const addProductBtn = document.getElementById('btn-add-product');
+            const btnAddCategory = document.getElementById('btn-add-category');
+            const btnSaveCategoriesDisk = document.getElementById('btn-save-categories-disk');
+            const categoryForm = document.getElementById('category-form');
+            const btnCloseCategoryModal = document.getElementById('btn-close-category-modal');
+            const catCatalogMode = document.getElementById('cat-catalog-mode');
+            const prodCategorySelect = document.getElementById('prod-category');
+            const addCertificateBtn = document.getElementById('btn-add-certificate');
+            const addReviewBtn = document.getElementById('btn-add-review');
+            const productForm = document.getElementById('product-form');
+            const certificateForm = document.getElementById('certificate-form');
+            const reviewForm = document.getElementById('review-form');
+            const uploadProductImageBtn = document.getElementById('btn-upload-product-image');
+            const uploadCertificateImageBtn = document.getElementById('btn-upload-certificate-image');
+            const clearProductModalImageBtn = document.getElementById('btn-clear-product-modal-image');
+            const clearCertModalImageBtn = document.getElementById('btn-clear-cert-modal-image');
+            const closeModalBtn = document.getElementById('btn-close-product-modal');
+            const closeCertificateModalBtn = document.getElementById('btn-close-certificate-modal');
+            const closeReviewModalBtn = document.getElementById('btn-close-review-modal');
+            const imagesList = document.getElementById('images-list');
+            const productsTableBody = document.getElementById('products-table-body');
+            const categoriesTableBody = document.getElementById('categories-table-body');
+            const certificatesTableBody = document.getElementById('certificates-table-body');
+            const reviewsTableBody = document.getElementById('reviews-table-body');
+            const mediaSearch = document.getElementById('media-search');
+            const productsSearch = document.getElementById('products-search');
+            const certificatesSearch = document.getElementById('certificates-search');
+            const reviewsSearch = document.getElementById('reviews-search');
+
+            mediaTab?.addEventListener('click', () => switchTab('media'));
+            productsTab?.addEventListener('click', () => switchTab('products'));
+            certificatesTab?.addEventListener('click', () => switchTab('certificates'));
+            reviewsTab?.addEventListener('click', () => switchTab('reviews'));
+            textsTab?.addEventListener('click', () => switchTab('texts'));
+            homeTab?.addEventListener('click', () => switchTab('home'));
+            saveHomeBtn?.addEventListener('click', saveHomeContent);
+            siteTextSaveBtn?.addEventListener('click', saveSiteTextPayload);
+            siteTextReloadBtn?.addEventListener('click', () => loadSiteTextEditor());
+            siteTextAddBtn?.addEventListener('click', addSiteTextKey);
+            siteTextFilter?.addEventListener('input', () => {
+                syncSiteTextFromDom();
+                renderSiteTextEditor();
+            });
+            siteTextEditor?.addEventListener('click', (event) => {
+                if (!(event.target instanceof Element)) return;
+                const btn = event.target.closest('[data-site-text-remove]');
+                if (!btn) return;
+                const key = btn.getAttribute('data-site-text-remove');
+                if (key) removeSiteTextKey(key);
+            });
+            clearCacheBtn?.addEventListener('click', clearCache);
+            deleteAllBtn?.addEventListener('click', deleteAllImages);
+            clearProductsSectionBtn?.addEventListener('click', () => clearSectionImages('products'));
+            clearCertificatesSectionBtn?.addEventListener('click', () => clearSectionImages('certificates'));
+            addProductBtn?.addEventListener('click', () => openProductModal());
+            btnAddCategory?.addEventListener('click', () => openCategoryModal(null));
+            btnSaveCategoriesDisk?.addEventListener('click', saveCategoriesToDisk);
+            categoryForm?.addEventListener('submit', saveCategoryForm);
+            btnCloseCategoryModal?.addEventListener('click', closeCategoryModal);
+            catCatalogMode?.addEventListener('change', updateCategoryModalDependentUi);
+            prodCategorySelect?.addEventListener('change', applyProductFormFieldsForCategory);
+            addCertificateBtn?.addEventListener('click', () => openCertificateModal());
+            addReviewBtn?.addEventListener('click', () => openReviewModal());
+            productForm?.addEventListener('submit', saveProduct);
+            certificateForm?.addEventListener('submit', saveCertificate);
+            reviewForm?.addEventListener('submit', saveReview);
+            uploadProductImageBtn?.addEventListener('click', uploadProductImageFromModal);
+            uploadCertificateImageBtn?.addEventListener('click', uploadCertificateImageFromModal);
+            clearProductModalImageBtn?.addEventListener('click', clearProductModalImage);
+            clearCertModalImageBtn?.addEventListener('click', clearCertificateModalImage);
+            closeModalBtn?.addEventListener('click', closeProductModal);
+            closeCertificateModalBtn?.addEventListener('click', closeCertificateModal);
+            closeReviewModalBtn?.addEventListener('click', closeReviewModal);
+            mediaSearch?.addEventListener('input', renderImages);
+            productsSearch?.addEventListener('input', renderProducts);
+            certificatesSearch?.addEventListener('input', renderCertificates);
+            reviewsSearch?.addEventListener('input', renderReviews);
+
+            const fullInstructionsModal = document.getElementById('admin-full-instructions-modal');
+            const fullInstructionsBody = document.getElementById('admin-full-instructions-body');
+            const btnFullInstructions = document.getElementById('btn-admin-full-instructions');
+            const btnCloseFullInstructions = document.getElementById('btn-close-admin-full-instructions');
+            function closeFullInstructionsModal() {
+                if (!fullInstructionsModal) return;
+                fullInstructionsModal.classList.add('hidden');
+                fullInstructionsModal.classList.remove('flex');
+            }
+            function openFullInstructionsModal() {
+                if (!fullInstructionsModal || !fullInstructionsBody) return;
+                fullInstructionsModal.classList.remove('hidden');
+                fullInstructionsModal.classList.add('flex');
+                fullInstructionsBody.textContent = 'Загрузка…';
+                fetch('/admin-instructions.txt', { credentials: 'same-origin' })
+                    .then((r) => (r.ok ? r.text() : Promise.reject(new Error(String(r.status)))))
+                    .then((t) => { fullInstructionsBody.textContent = t; })
+                    .catch(() => {
+                        fullInstructionsBody.textContent = 'Не удалось загрузить инструкцию. Проверьте подключение к серверу или обновите страницу.';
+                    });
+            }
+            btnFullInstructions?.addEventListener('click', openFullInstructionsModal);
+            btnCloseFullInstructions?.addEventListener('click', closeFullInstructionsModal);
+            fullInstructionsModal?.addEventListener('click', (e) => {
+                if (e.target === fullInstructionsModal) closeFullInstructionsModal();
+            });
+
+            window.addEventListener('keydown', (e) => {
+                if (e.key !== 'Escape') return;
+                const fi = document.getElementById('admin-full-instructions-modal');
+                if (fi && !fi.classList.contains('hidden')) {
+                    closeFullInstructionsModal();
+                    return;
+                }
+                const ak = document.getElementById('admin-change-key-modal');
+                if (ak && !ak.classList.contains('hidden')) {
+                    ak.classList.add('hidden');
+                    ak.classList.remove('flex');
+                    return;
+                }
+                closeProductModal();
+                closeCategoryModal();
+                closeCertificateModal();
+                closeReviewModal();
+            });
+
+            imagesList?.addEventListener('change', (event) => {
+                const target = event.target;
+                if (!(target instanceof HTMLInputElement)) return;
+                if (!target.classList.contains('image-upload-input')) return;
+                const rawIndex = target.dataset.uploadIndex;
+                const index = Number(rawIndex);
+                if (Number.isNaN(index)) return;
+                uploadImage(index);
+            });
+
+            imagesList?.addEventListener('click', (event) => {
+                if (!(event.target instanceof Element)) return;
+                const btn = event.target.closest('[data-delete-image]');
+                if (!btn) return;
+                const encoded = btn.getAttribute('data-delete-image');
+                if (!encoded) return;
+                deleteImage(decodeURIComponent(encoded));
+            });
+
+            productsTableBody?.addEventListener('click', (event) => {
+                if (!(event.target instanceof Element)) return;
+                const editBtn = event.target.closest('[data-edit-product]');
+                if (editBtn) {
+                    const id = editBtn.getAttribute('data-edit-product');
+                    if (id) openProductModal(id);
+                    return;
+                }
+                const deleteBtn = event.target.closest('[data-delete-product]');
+                if (deleteBtn) {
+                    const id = deleteBtn.getAttribute('data-delete-product');
+                    if (id) deleteProduct(id);
+                }
+            });
+
+            categoriesTableBody?.addEventListener('click', (event) => {
+                if (!(event.target instanceof Element)) return;
+                const editBtn = event.target.closest('[data-edit-category]');
+                if (editBtn) {
+                    const id = editBtn.getAttribute('data-edit-category');
+                    if (id) openCategoryModal(id);
+                    return;
+                }
+                const deleteBtn = event.target.closest('[data-delete-category]');
+                if (deleteBtn) {
+                    const id = deleteBtn.getAttribute('data-delete-category');
+                    if (id) deleteCategory(id);
+                }
+            });
+
+            certificatesTableBody?.addEventListener('click', (event) => {
+                if (!(event.target instanceof Element)) return;
+                const editBtn = event.target.closest('[data-edit-certificate]');
+                if (editBtn) {
+                    const id = editBtn.getAttribute('data-edit-certificate');
+                    if (id) openCertificateModal(id);
+                    return;
+                }
+                const deleteBtn = event.target.closest('[data-delete-certificate]');
+                if (deleteBtn) {
+                    const id = deleteBtn.getAttribute('data-delete-certificate');
+                    if (id) deleteCertificate(id);
+                }
+            });
+
+            reviewsTableBody?.addEventListener('click', (event) => {
+                if (!(event.target instanceof Element)) return;
+                const editBtn = event.target.closest('[data-edit-review]');
+                if (editBtn) {
+                    const id = editBtn.getAttribute('data-edit-review');
+                    if (id) openReviewModal(id);
+                    return;
+                }
+                const deleteBtn = event.target.closest('[data-delete-review]');
+                if (deleteBtn) {
+                    const id = deleteBtn.getAttribute('data-delete-review');
+                    if (id) deleteReview(id);
+                }
+            });
+        }
+
+        initAdminAccess();
+    </script>
+</body>
+</html>
