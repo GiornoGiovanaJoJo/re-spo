@@ -13,10 +13,10 @@ jobs:
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: "60f67cfaba8e.vps.myjino.ru"
+          host: "76ebca3744d5.vps.myjino.ru"
           username: "root"
           password: "Nikitoso02"
-          port: 49340
+          port: 49268
           script: |
             # Set up base directory
             mkdir -p /var/www

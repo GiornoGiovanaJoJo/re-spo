@@ -29,8 +29,8 @@ conn.on('ready', () => {
   });
 }).on('error', (err) => console.error('Connection error:', err))
   .connect({
-    host: '60f67cfaba8e.vps.myjino.ru',
-    port: 49340,
+    host: '76ebca3744d5.vps.myjino.ru',
+    port: 49268,
     username: 'root',
     password: 'Nikitoso02'
   });
