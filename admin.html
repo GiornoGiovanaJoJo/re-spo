@@ -1145,13 +1145,20 @@
             if (!input.files || input.files.length === 0) return;
 
             const formData = new FormData();
-            formData.append('image', input.files[0]);
             formData.append('targetFilename', imgData.filename);
-            
+            formData.append('image', input.files[0]);
+
             try {
                 const res = await authorizedFetch('/api/upload', { method: 'POST', body: formData });
-                if (res.ok) { showToast('Файл загружен', 'success'); markLastAction('Загружено изображение'); loadImages(); }
-                else showToast('Ошибка загрузки', 'error');
+                if (res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    showToast(`Файл загружен: ${data.filename || imgData.filename}`, 'success');
+                    markLastAction('Загружено изображение');
+                    loadImages();
+                } else {
+                    const err = await res.json().catch(() => ({}));
+                    showToast(err.error || 'Ошибка загрузки', 'error');
+                }
             } catch (e) {
                 showToast('Ошибка сети: ' + e.message, 'error');
             }

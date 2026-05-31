@@ -78,6 +78,27 @@ function serveTiffAsPng(req, res, next) {
 }
 
 /** After multer: replace .tif/.tiff on disk with .png so JSON and URLs use a web-safe name. */
+/** После multer: переименовать файл в targetFilename (поле формы может прийти после файла). */
+function applyUploadTargetFilename(uploadedFilename, body) {
+    const raw =
+        body && typeof body.targetFilename === 'string' ? body.targetFilename.trim() : '';
+    const safeTarget = raw ? safeImageFilename(raw) : null;
+    if (!safeTarget || safeTarget === uploadedFilename) return uploadedFilename;
+
+    const src = path.join(assetsDir, uploadedFilename);
+    const dest = path.join(assetsDir, safeTarget);
+    if (!fs.existsSync(src)) return uploadedFilename;
+    try {
+        if (fs.existsSync(dest) && fs.lstatSync(dest).isFile()) {
+            fs.unlinkSync(dest);
+        }
+        fs.renameSync(src, dest);
+        return safeTarget;
+    } catch (e) {
+        return uploadedFilename;
+    }
+}
+
 async function convertTiffUploadToPngIfNeeded(file) {
     if (!file || !file.path || !file.filename) return file.filename;
     if (!/\.tiff?$/i.test(path.extname(file.filename))) return file.filename;
@@ -715,11 +736,11 @@ app.get('/assets/favicon.svg', (req, res) => {
 
 app.use('/assets', serveTiffAsPng);
 app.use('/assets', express.static(assetsDir, {
-    maxAge: '7d',
+    maxAge: '1h',
     etag: true,
     setHeaders: (res, filePath) => {
         if (/\.(png|svg|jpe?g|gif|webp|tiff?|pdf)$/i.test(filePath)) {
-            res.setHeader('Cache-Control', 'public, max-age=604800, immutable');
+            res.setHeader('Cache-Control', 'public, max-age=3600, must-revalidate');
         }
     }
 }));
@@ -991,23 +1012,42 @@ app.post('/api/site-text', adminAuth, (req, res) => {
     }
 });
 
+function collectRequiredAssetFilenames() {
+    const required = new Set();
+    const srcRegex = /src=["']assets\/([^"']+\.(png|svg|jpe?g|gif|webp|tiff?|pdf))["']/gi;
+    const urlRegex = /url\(\s*['"]?\/assets\/([^'")]+\.(png|svg|jpe?g|gif|webp|tiff?|pdf))['"]?\s*\)/gi;
+
+    const pages = ['index.html', 'production.html', 'product.html', 'admin.html']
+        .map((name) => path.join(__dirname, name))
+        .filter((fp) => fs.existsSync(fp));
+
+    for (const page of pages) {
+        const html = fs.readFileSync(page, 'utf8');
+        let match;
+        srcRegex.lastIndex = 0;
+        while ((match = srcRegex.exec(html)) !== null) {
+            const cleaned = safeImageFilename(match[1]);
+            if (cleaned) required.add(cleaned);
+        }
+    }
+
+    const styleCss = path.join(__dirname, 'css', 'style.css');
+    if (fs.existsSync(styleCss)) {
+        const css = fs.readFileSync(styleCss, 'utf8');
+        let match;
+        urlRegex.lastIndex = 0;
+        while ((match = urlRegex.exec(css)) !== null) {
+            const cleaned = safeImageFilename(match[1]);
+            if (cleaned) required.add(cleaned);
+        }
+    }
+
+    return required;
+}
+
 app.get('/api/required-images', adminAuth, (req, res) => {
     try {
-        const pages = ['index.html', 'production.html', 'product.html', 'admin.html']
-            .map(name => path.join(__dirname, name))
-            .filter(fp => fs.existsSync(fp));
-
-        const required = new Set();
-        const regex = /src=["']assets\/([^"']+\.(png|svg|jpe?g|gif|webp|tiff?))["']/ig;
-
-        for (const page of pages) {
-            const html = fs.readFileSync(page, 'utf8');
-            let match;
-            while ((match = regex.exec(html)) !== null) {
-                const cleaned = safeImageFilename(decodeURIComponent(match[1]));
-                if (cleaned) required.add(cleaned);
-            }
-        }
+        const required = collectRequiredAssetFilenames();
 
         const images = Array.from(required).map((filename) => {
             const filepath = path.join(assetsDir, filename);
@@ -1028,7 +1068,8 @@ app.post('/api/upload', adminAuth, (req, res, next) => {
 }, async (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'Failed to upload' });
     try {
-        const filename = await convertTiffUploadToPngIfNeeded(req.file);
+        let filename = await convertTiffUploadToPngIfNeeded(req.file);
+        filename = applyUploadTargetFilename(filename, req.body);
         res.json({ success: true, filename });
     } catch (e) {
         res.status(500).json({ error: e.message || 'Не удалось обработать изображение (TIFF)' });
